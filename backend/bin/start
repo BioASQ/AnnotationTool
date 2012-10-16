@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+var
+    util = require('util'),
+    path = require('path'),
+    argv = require('optimist').argv;
+
+var help = [
+    "usage: sever [options]",
+    "",
+    "runs the BioASQ Annotation Tool server component.",
+    "",
+    "available options:",
+    "  -p, --port    Port to listen on (8000)",
+    "  -h, --help    This message"
+].join('\n');
+
+if (argv.h || argv.help) {
+  return util.puts(help);
+}
+
+var options = {
+  port: argv.p || argv.port || 8000
+};
+
+var server = require(path.join('..', 'src', 'server.js'));
+server.start(options, function (err, server) {
+  if (err) {
+    return util.puts('Error starting annotation server: ' + err.message);
+  }
+
+  util.puts('Annotation server listening on http://127.0.0.1:' + options.port);
+});
+
