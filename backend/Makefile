@@ -1,12 +1,14 @@
 CD=cd
-NPM=npm
+NPM=npm install
+LIB=.
+DEPS=journey optimist mongodb
 
 all:
+	@echo ""
 	@echo "BioASQ Annotation Tool"
 	@echo ""
 	@echo "available targets:"
-	@echo "  libs -- install dependencies via npm"
+	@echo "  libs -- locally installs node dependencies via npm"
 
 libs:
-	$(CD) lib && $(NPM) install journey
-	$(CD) lib && $(NPM) install optimist
+	$(CD) $(LIB) && $(NPM) $(DEPS)
