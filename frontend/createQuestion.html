@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+    
+        <title>BioASQ - select question</title>
+        <!-- Bootstrap -->
+        <link href="./css/bootstrap.min.css" rel="stylesheet">
+        <link href="./css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="./css/main.css" rel="stylesheet">
+        
+        <!-- javascript -->
+        <script data-main="./js/createQuestion" src="./js-libs/require.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Pick a question</h1>
+            <p>
+                <a class="btn" href="#newQuestionModal" data-toggle="modal" id="addQuestion">
+                    <i class="icon-plus"></i>New
+                </a>
+                <select name="question" id="question" style="margin-bottom: 0px;">
+                    <option value="Example question 1">Example question 1</option>
+                    <option value="Example question 1">Example question 1</option>
+                    <option value="Example question 1">Example question 1</option>
+                    <option value="Example question 1">Example question 1</option>
+                    <option value="Example question 1">Example question 1</option>
+                </select>
+                <a class="btn btn-primary" href="search.html" id="okButton">OK</a>
+            </p>
+            
+            <!-- Modal -->
+            <div class="modal" id="newQuestionModal" tabindex="-1" role="dialog" aria-labelledby="New question" aria-hidden="true" style="display: none;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="regModalLabel">New question</h3>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <label>Question label</label>
+                        <input type="text" placeholder="Type something…">
+                        <label>Question type</label>
+                        <select name="newQuestionType" id="newQuestionType">
+                            <option value="type1">Type 1</option>
+                            <option value="type2">Type 1</option>
+                            <option value="type3">Type 1</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">ОК</button>
+                </div>
+            </div>
+        </div> <!-- /container -->
+    </body>
+</html>
