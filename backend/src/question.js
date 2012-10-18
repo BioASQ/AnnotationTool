@@ -1,13 +1,21 @@
-var ObjectID = require('mongodb').ObjectID,
-    util = require('util');
+var ObjectID = require('mongodb').ObjectID;
 
 var Question = exports.Question = function (database) {
   this.db = database;
 };
 
+Question.prototype._collection = function (errCallback, callback) {
+  this.db.collection('questions', function (err, coll) {
+    if (err) {
+      errCallback(err);
+    }
+    callback(null, coll);
+  });
+};
+
 Question.prototype.list = function (callback) {
-  this.db.collection('questions', function (err, collection) {
-    var cursor = collection.find({}, { 'fields': [ 'body' ]});
+  this._collection(callback, function (err, coll) {
+    var cursor = coll.find({}, { 'fields': [ 'body', 'creator' ], 'sort': [ '_id' ]});
     cursor.toArray(function (err, res) {
       if (err) {
         callback(err);
@@ -18,7 +26,7 @@ Question.prototype.list = function (callback) {
 };
 
 Question.prototype.create = function (question, callback) {
-  this.db.collection('questions', function (err, coll) {
+  this._collection(callback, function (err, coll) {
     coll.insert(question, { 'save': true }, function (err, inserted) {
       if (err) {
         callback(err);
@@ -29,7 +37,7 @@ Question.prototype.create = function (question, callback) {
 };
 
 Question.prototype.load = function (id, callback) {
-  this.db.collection('questions', function (err, coll) {
+  this._collection(callback, function (err, coll) {
     coll.findOne({ '_id': ObjectID(id) }, function (err, res) {
       if (err) {
         callback(err);
@@ -40,28 +48,22 @@ Question.prototype.load = function (id, callback) {
 };
 
 Question.prototype.update = function (id, question, callback) {
-  this.db.collection('questions', function (err, coll) {
-    coll.update({ '_id': ObjectID(id) }, { $set: question }, { 'save': true }, function (err, count) {
+  this._collection(callback, function (err, coll) {
+    coll.update({ '_id': ObjectID(id) }, { $set: question }, { 'save': true }, function (err) {
       if (err) {
         callback(err);
       }
-      callback(null, count);
+      callback(null);
     });
   });
 };
 
 Question.prototype.delete = function (id, callback) {
-  this.db.collection('questions', function (err, coll) {
-    if (err) {
-      callback(err);
-    }
-    coll.remove({ '_id': ObjectID(id) }, { 'save': true }, function (err, count) {
+  this._collection(callback, function (err, coll) {
+    coll.remove({ '_id': ObjectID(id) }, { 'save': true }, function (err) {
       if (err) {
         callback(err);
       }
-      assert.equal(null, err);
-      assert.equal(1, count);
-      util.puts('deleted ' + count + ' records.')
       callback(null);
     });
   });
