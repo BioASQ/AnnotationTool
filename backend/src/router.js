@@ -1,6 +1,5 @@
 var
-  journey = require('journey'),
-  util = require('util');
+  journey = require('journey');
 
 exports.createRouter = function (model) {
   var router = new journey.Router;
@@ -46,11 +45,11 @@ exports.createRouter = function (model) {
      * POST or PUT to /questions/:id updates existing question
      */
     this.route([ 'POST', 'PUT' ], idRegEx).bind(function (req, res, id, question) {
-      model.update(id, question, function (err, count) {
+      model.update(id, question, function (err) {
         if (err) {
           res.send(500);
         }
-        res.send(200, {}, { 'updated': count });
+        res.send(200);
       });
     });
 
