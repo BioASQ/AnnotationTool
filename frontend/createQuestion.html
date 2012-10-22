@@ -20,21 +20,49 @@
         <script data-main="./js/createQuestion" src="./js-libs/require.js"></script>
     </head>
     <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <img class="brand logo-top" src="img/BioASQ_logo.png">
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class="active"><a>Question</a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+    
         <div class="container">
-            <h1>Pick a question</h1>
-            <p>
-                <a class="btn" href="#newQuestionModal" data-toggle="modal" id="addQuestion">
-                    <i class="icon-plus"></i>New
-                </a>
-                <select name="question" id="question" style="margin-bottom: 0px;">
-                    <option value="Example question 1">Example question 1</option>
-                    <option value="Example question 1">Example question 1</option>
-                    <option value="Example question 1">Example question 1</option>
-                    <option value="Example question 1">Example question 1</option>
-                    <option value="Example question 1">Example question 1</option>
-                </select>
-                <a class="btn btn-primary" href="search.html" id="okButton">OK</a>
-            </p>
+        <div class="row">
+            <div class="span3"></div>
+            <div class="span6">
+                <h1>
+                    Pick a question 
+                    <sup style="font-size: 0.5em;">or create a new one</sup>
+                </h1>
+                <hr/>
+                <p>
+                    <a class="btn" href="#newQuestionModal" data-toggle="modal" id="addQuestion">
+                        <i class="icon-plus"></i>New
+                    </a>
+                    <select name="question" id="question" style="margin-bottom: 0px; width: 70%;">
+                        <option value="Example question 1">Example question 1</option>
+                        <option value="Example question 1">Example question 1</option>
+                        <option value="Example question 1">Example question 1</option>
+                        <option value="Example question 1">Example question 1</option>
+                        <option value="Example question 1">Example question 1</option>
+                    </select>
+                    <a class="btn btn-primary" href="search.html" id="okButton">OK</a>
+                </p>
+            </div>
+            <div class="span3"></div>
+        </div> 
             
             <!-- Modal -->
             <div class="modal" id="newQuestionModal" tabindex="-1" role="dialog" aria-labelledby="New question" aria-hidden="true" style="display: none;">

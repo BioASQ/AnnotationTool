@@ -1,3 +1,97 @@
 body {
 	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
 }
+
+/* toolbar logo style */
+.logo-top {
+    max-height: 20px;
+}
+
+/* search results from source style */
+.search-source {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: #eee;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.search-source .span3 {
+    text-align: right;
+}
+
+.search-source .span3 a {
+    padding-right: 16px;
+}
+
+/* search result in specific source style */
+.search-result .span8 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 16px;
+    margin-bottom: 5px;
+    border: 1px solid #aaa;
+    border-right: none;
+    /* border */
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.search-result .span2 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 16px;
+    margin-bottom: 5px;
+    margin-left: 0;
+    text-align: right;
+    border: 1px solid #aaa;
+    border-left: none;
+    /* border */
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.search-result .span8 .more-info {
+    padding-left: 20px;
+}
+
+/* result info style */
+.search-result-info .span7 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* border */
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.search-result-info .span2 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: right;
+    /* border */
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+
+
