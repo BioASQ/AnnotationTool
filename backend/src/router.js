@@ -71,54 +71,15 @@ exports.createRouter = function (model) {
 
   router.path(/\/login\/?/, function () {
       /*
-      * GET to /loginWebid
+      * GET to /login
       */
       this.get().bind(function (req, res) {
-          //TODO
-          var callback = "http://123.123.123.123:8000";
-          var query_data = url.parse(req.url, true).query;
-          var webid = '', ts = '', sig = '';
+               
+          var login = require('./login');
+          login = new login.Login("http://" + req.headers.host + "/login");
+          var login_res = login.login(url.parse(req.url, true).query);
 
-          if (query_data) {
-              var splited = query_data.split("&");
-
-              for (var i = 0; i < splited.length; i++) {
-                  if (splited[i].indexOf("webid=") == 0) 
-                      webid = decodeURIComponent(splited[i].split("=")[1]);                  
-                  else if (splited[i].indexOf("ts=") == 0) 
-                      ts = decodeURIComponent(splited[i].split("=")[1]);                  
-                  else if (splited[i].indexOf("sig=") == 0) {
-                      sig = splited[i].split("=")[1];
-                      //  base64-URL-safe to base64
-                      sig = sig.replace(/-/g, "+").replace(/\_/g, "/") + "==";
-                  }
-              }
-          }
-          if (webid != '' && ts != '' && sig != '') {
-
-              cert = ["-----BEGIN PUBLIC KEY-----",
-              "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkJOsAoUbVJfNfK59t125",
-              "efvukOqKlOjS6OIfOlhtH/8VxVXaMQO/n90cOiILwFDjlixbOFYywRHmoPcTNpfE",
-              "nzePpaLqbztyO0XarSaxBEKZ6aRgdDBcgvnhMqmIjOUB5TiYtN1DdpaRnIZlklUq",
-              "dvcIzM7df+rSMgzwTNFHM53Y15zUhLosWh3KC5C/v7lLNIg0m2YR2Py36oqsO0+A",
-              "aH4aGOKdsbKjZEN2Ld0Rn3HxEEMPSTpGpUOlULf65prN1oNK8EnijPjlgLz9q2w4",
-              "CFwjOzzyd40fO7zPRejwOxPdWaf/DdF2+KArSurqovF+XtGZK2sGneEOXU5QY8qM",
-              "3wIDAQAB",
-               "-----END PUBLIC KEY-----"].join("\n");
-
-              // check
-              verifier = require('crypto').createVerify("RSA-SHA1");
-              var data = callback + '/login' + "?" + splited[0] + "&" + splited[1];
-              verifier.update(data);
-              bool = verifier.verify(cert, sig, 'base64');
-
-              // TODO: check ts
-
-             
-              res.send(200, {}, { 'login': bool });
-          } else {            
-              res.send(200, {}, { 'login_url': 'https://foafssl.org/srv/idp?rs=' + callback + '/login' });
-          }
+          res.send(200, {}, { 'login': login_res });        
       });
   });
 
