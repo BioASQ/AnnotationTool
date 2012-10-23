@@ -1,6 +1,7 @@
 var
   journey = require('journey'),
-  url = require('url');
+  url = require('url'),
+  session = require('sesh').magicSession();
 
 exports.createRouter = function (model) {
   var router = new journey.Router;
@@ -74,12 +75,15 @@ exports.createRouter = function (model) {
       * GET to /login
       */
       this.get().bind(function (req, res) {
-               
+
           var login = require('./login');
           login = new login.Login("http://" + req.headers.host + "/login");
           var login_res = login.login(url.parse(req.url, true).query);
-
-          res.send(200, {}, { 'login': login_res });        
+          if (login_res.loggedin === true) {
+              // TODO: user in DB?
+              req.session.data.user = login_res.webid;
+          }
+          res.send(200, {}, { 'loginURL': login_res.loginURL, 'session': req.session.id, 'user': req.session.data.user });
       });
   });
 

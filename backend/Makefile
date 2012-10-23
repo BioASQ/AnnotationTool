@@ -1,7 +1,7 @@
 CD=cd
 NPM=npm install
 LIB=.
-DEPS=journey optimist mongodb
+DEPS=journey optimist mongodb sesh response eyes
 
 all:
 	@echo ""
