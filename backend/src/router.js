@@ -85,6 +85,26 @@ exports.createRouter = function (model) {
       });
   });
 
+  /*
+   * POST to /search
+   */
+  router.path(/\/search\/?/, function () {
+    this.post().bind(function (req, res, keywords) {
+      var response = {
+        documents: [ { title: 'Test document', uri: 'http://ns.bioasq.org/documents/1' } ],
+        concepts: [ { title: 'Test concept', uri: 'http://ns.bioasq.org/concepts/1' } ],
+        statements: [ {
+          s: 'http://ns.bioasq.org/resource/1',
+          p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+          o: 'http://ns.bioasq.org/Disease' } ]
+      };
+      // simulate ongoing search
+      setTimeout(function () {
+        res.send(200, {}, { results: response });
+      }, 2000);
+    });
+  });
+
   router.path(/\/login\/?/, function () {
       /*
        * GET to /login
