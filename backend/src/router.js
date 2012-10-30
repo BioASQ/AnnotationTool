@@ -1,7 +1,9 @@
 var
   journey = require('journey'),
   url = require('url'),
-  session = require('sesh').magicSession();
+  session = require('sesh').magicSession(),
+  login = require('./login'),
+  util = require('util');
 
 var auth = exports.auth = {
     basicAuth: function (req, body, callback) { 
@@ -85,18 +87,20 @@ exports.createRouter = function (model) {
 
   router.path(/\/login\/?/, function () {
       /*
-      * GET to /login
-      */
+       * GET to /login
+       */
       this.get().bind(function (req, res) {
-
-          var login = require('./login');
-          login = new login.Login("http://" + req.headers.host + "/login");
-          var login_res = login.login(url.parse(req.url, true).query);
-          if (login_res.loggedin === true) {
+          var login = new login.Login('http://' + req.headers.host + '/login');
+          var loginResult = login.login(url.parse(req.url, true).query);
+          if (loginResult.loggedin === true) {
               // TODO: user in DB?
-              req.session.data.user = login_res.webid;
+              req.session.data.user = loginResult.webid;
           }
-          res.send(200, {}, { 'loginURL': login_res.loginURL, 'session': req.session.id, 'user': req.session.data.user });
+          res.send(200, {}, {
+            'loginURL': loginResult.loginURL,
+            'sessionID': req.session.id,
+            'user': req.session.data.user
+          });
       });
   });
 
