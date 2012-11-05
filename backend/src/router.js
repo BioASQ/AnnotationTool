@@ -126,5 +126,21 @@ exports.createRouter = function (model) {
       });
   });
 
+  router.path(/\/logout\/?/, function () {
+      router.filter(function () {
+          /*
+           * GET to /logout
+           */
+          this.get().bind(function (req, res) {
+              var user = req.session.data.user;
+              req.session.data.user = "Guest";
+
+              res.send(200, {}, {
+                  'loggedOut': user
+              });
+          });
+      });
+  });
+
   return router;
 }
