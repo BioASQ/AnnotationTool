@@ -110,8 +110,8 @@ exports.createRouter = function (model) {
        * GET to /login
        */
       this.get().bind(function (req, res) {
-          var login = new login.Login('http://' + req.headers.host + '/login');
-          var loginResult = login.login(url.parse(req.url, true).query);
+          var webidLogin = new login.Login('http://' + req.headers.host + '/login');
+          var loginResult = webidLogin.login(url.parse(req.url, true).query);
           if (loginResult.loggedin === true) {
               // TODO: user in DB?
               req.session.data.user = loginResult.webid;
