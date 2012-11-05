@@ -5,19 +5,15 @@ var
   login = require('./login'),
   util = require('util');
 
-var auth = exports.auth = {
-    basicAuth: function (req, body, callback) { 
-        if (req.session.data.user === 'Guest')
-            return callback(new journey.NotAuthorized("Invalid user"));
-        else
-            callback(null);// respond with no error
-    }
-};
-
 exports.createRouter = function (model) {
     var router = new (journey.Router)({
         strict: false,
-        filter: auth.basicAuth
+        filter: function (req, body, callback) {
+            if (req.session.data.user === 'Guest')
+                return callback(new journey.NotAuthorized("Invalid user"));
+            else
+                callback(null);// respond with no error
+        }
     });
     var idRegEx = /([0-9a-fA-F]{24})/;
 
