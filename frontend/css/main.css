@@ -7,6 +7,27 @@ body {
     max-height: 20px;
 }
 
+/* annotation stuff */
+
+.annotation-buttons {
+    padding-bottom: 10px;
+}
+
+.answer-caption {
+    padding-bottom: 5px;
+}
+
+.answer-buttons {
+    text-align: right;
+}
+
+.answer-text {
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: solid 1px #000;
+}
+
 /* search results from source style */
 .search-source {
     padding-top: 8px;
