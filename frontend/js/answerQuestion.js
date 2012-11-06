@@ -47,7 +47,7 @@ var getSelectionHtml = function() {
     return html;
 };
 
-require(["app", "../js-libs/handlebars.min", "../js-libs/pdf"], function() {
+require(["app", "../js-libs/handlebars.min"], function() {
     // cache pointers to DOM
     var $saveButton = $("#saveButton"),
         $questionAnswer = $("#questionAnswer"),
