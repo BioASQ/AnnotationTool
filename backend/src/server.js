@@ -1,11 +1,12 @@
 var
   http = require('http'),
-  util = require('util')
-  mongodb = require('mongodb')
+  util = require('util'),
+  mongodb = require('mongodb'),
+  login = require('./login'),
   question = require('./question');
 
-exports.createServer = function (port, model) {
-  var router = require('./router').createRouter(model);
+exports.createServer = function (port, model, authentication) {
+  var router = require('./router').createRouter(model, authentication);
   var server = http.createServer(function (request, response) {
     var body = '';
     request.on('data', function (chunk) {
@@ -36,7 +37,7 @@ exports.start = function (options, callback) {
       return callback({'message': 'Could not connect to database server.'});
     }
 
-    var server = exports.createServer(options.port, new question.Question(database));
+    var server = exports.createServer(options.port, new question.Question(database), new login.Login(database));
 
     callback(null, server);
   });

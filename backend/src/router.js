@@ -2,10 +2,9 @@ var
   journey = require('journey'),
   url = require('url'),
   session = require('sesh').magicSession(),
-  login = require('./login'),
   util = require('util');
 
-exports.createRouter = function (model) {
+exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
         strict: false,
         filter: function (req, body, callback) {
@@ -18,6 +17,9 @@ exports.createRouter = function (model) {
     var idRegEx = /([0-9a-fA-F]{24})/;
 
   router.path(/\/questions\/?/, function () {
+      /*
+       * user only
+       */
       router.filter(function () {
           /*
            * GET to /questions returns list of questions
@@ -103,26 +105,29 @@ exports.createRouter = function (model) {
 
   router.path(/\/login\/?/, function () {
       /*
-       * GET to /login
+       * POST to /login with parameters: body.name and body.password
        */
-      this.get().bind(function (req, res) {
-          var query = url.parse(req.url, true).query;
-          var webidLogin = new login.Login('http://' + req.headers.host + '/login');
-          var loginResult = webidLogin.login(query);
+      this.post().bind(function (req, res, body) {
 
-          if (query) {
-              if (loginResult.loggedin === true) {
-                  // TODO: user in DB?
-                  req.session.data.user = loginResult.webid;
-              }
-              res.send(200, {}, {
-                  'loginURL': loginResult.loginURL,
-                  'sessionID': req.session.id,
-                  'user': req.session.data.user
+          var rtn = function (res) {
+              res.send(401, {}, { 'loggedin': false });
+          };
+
+          if (body.email && body.password) {
+
+              authentication.standard(body.email, body.password, function (err, ok) {
+                  if (err)
+                      rtn(res);
+                  else if (ok) {
+                      req.session.data.user = body.email
+                      res.send(200, {}, {
+                          'loggedin': true,
+                          'sessionID': req.session.id,
+                          'user': req.session.data.user
+                      });
+                  } else rtn(res);
               });
-          } else {
-              res.send(302, { 'Location': loginResult.loginURL }, {});
-          }
+          } else rtn(res);
       });
   });
 
