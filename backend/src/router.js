@@ -2,7 +2,29 @@ var
   journey = require('journey'),
   url = require('url'),
   session = require('sesh').magicSession(),
-  util = require('util');
+  util = require('util'),
+  schemajs = require("schemajs");
+
+  var schema = {
+      question: {
+          type: "object", required: true, // "properties": { ... }, "error": { ... },
+          schema: {
+              id: { type: "string+", required: true },
+              body: { type: "string+", required: true },
+              creator: { type: "string+", required: true },
+              type: { type: "string+", required: true, properties: { regex: /(list|textual)/ } },
+              answer: {
+                  type: "object", required: true,
+                  schema: {
+                      id: { type: "string+", required: true },
+                      body: { type: "string+", required: true },
+                      annotations: { type: "array" }
+                  }
+              }
+          }
+      }
+  };
+  //util.puts(schemajs.create(schema).validate( { question: { id: "test", body: "test", creator: "test", type: "textual", answer: { id: "test", body: "test", annotations: new Array() }}}).valid); // true
 
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
@@ -105,7 +127,7 @@ exports.createRouter = function (model, authentication) {
 
   router.path(/\/login\/?/, function () {
       /*
-       * POST to /login with parameters: body.name and body.password
+       * POST to /login with parameters: body.email and body.password
        */
       this.post().bind(function (req, res, body) {
 
@@ -115,11 +137,14 @@ exports.createRouter = function (model, authentication) {
 
           if (body.email && body.password) {
 
-              authentication.standard(body.email, body.password, function (err, ok) {
+              authentication.standard(body.email, body.password, function (err, ok, result) {
                   if (err)
                       rtn(res);
                   else if (ok) {
-                      req.session.data.user = body.email
+
+                      var user = result[0]; // DB data
+
+                      req.session.data.user = user.email;
                       res.send(200, {}, {
                           'loggedin': true,
                           'sessionID': req.session.id,
