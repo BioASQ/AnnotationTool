@@ -113,6 +113,9 @@ body {
     border-bottom-right-radius: 5px;
 }
 
-
+/* hidden search results */
+.conceptResult { display: none; }
+.documentResult { display: none; }
+.statementResult { display: none; }
 
 

@@ -5,19 +5,11 @@ require(["app"], function(app) {
 
         window.location = 'createQuestion.html';
 
-        $.post(app.LogicServer, {email: login, password: pass}, function(data){
-            var res;
-
-            try{
-                res = $.parseJSON(data);
-            }catch(e){
-                alert("Something wrong with server");
-            }
-
-            console.log(res);
+        $.post(app.data.LogicServer, {email: login, password: pass}, function(data){
+            console.log(data);
 
             // set user
-            app.user = "";
+            app.data.user = "";
         });
     });
 });

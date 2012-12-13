@@ -15,10 +15,32 @@ define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], functio
     // define vars
     var logicServer = "http://localhost:8000/";
 
-    var app = {
-        LogicServer: logicServer,
-        user: "",
-        question: {}
+    var App = function(){
+        var that = this;
+
+        this.data = {
+            LogicServer: logicServer,
+            user: "",
+            question: {},
+            entities: []
+        };
+
+        this.save = function(){
+            var s = JSON.stringify(that.data);
+            localStorage.setItem("app.data", s);
+        };
+
+        this.load = function(){
+            var d = localStorage.getItem("app.data");
+            if( typeof d != 'undefined' && d !== null )
+                that.data = JSON.parse( d );
+        };
+
+        return this;
     };
-    return app;
+
+    var currentApp = new App();
+    currentApp.load();
+
+    return currentApp;
 });

@@ -36,7 +36,7 @@
                             <li class="active"><a href="#">Search</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
-                    <p class="navbar-text pull-right">Question text entered before will be here.</p>
+                    <p class="navbar-text pull-right" id="questionTitle"></p>
                 </div>
             </div>
         </div>
@@ -45,109 +45,93 @@
             <!-- Search box and results -->
             <div class="row">
                 <div class="span4">
-                    <input type="text" placeholder="Search.." style="margin-bottom: 0px;">
-                    <button class="btn" type="button">Search</button>
+                    <input type="text" placeholder="Search.." style="margin-bottom: 0px;" id="searchQuery">
+                    <button class="btn" type="button" id="searchButton">Search</button>
                 </div>
                 <div class="span4"></div>
                 <div class="span4">
-                    <select name="results" id="results" style="margin-bottom: 0px;">
-                        <option value="Selected result">Selected result</option>
-                        <option value="Selected result">Selected result</option>
-                        <option value="Selected result">Selected result</option>
-                        <option value="Selected result">Selected result</option>
-                        <option value="Selected result">Selected result</option>
-                    </select>
-                    <a href="answerQuestion.html" class="btn btn-primary" type="button">Done</a>
+                    <select name="results" id="results" style="margin-bottom: 0px;"></select>
+                    <a href="#" class="btn btn-primary" type="button" id="doneButton">Done</a>
                 </div>
             </div>
             <hr/>
             
             <!-- search results -->
-            
-            <!-- search source results row -->
-            <div class="row search-source">
+            <div class="row search-source" id="conceptsResult" style="display:none;">
                 <div class="span9">
-                    <img src="http://www.ncbi.nlm.nih.gov/favicon.ico" />
-                    Search results from source 1
+                    Concepts
                 </div>
                 <div class="span3">
-                    <a href="#">Expand</a>
+                    <a href="#" id="toggleConcepts" data-state="hidden">Expand</a>
                 </div>
             </div>
             
-            <!-- result 2 -->
-            <div class="row search-source">
+            <div class="row search-source" id="docsResult" style="display:none;">
                 <div class="span9">
-                    <img src="http://www.ncbi.nlm.nih.gov/favicon.ico" />
-                    Search results from source 2
+                    Documents
                 </div>
                 <div class="span3">
-                    <a href="#">Collapse</a>
+                    <a href="#" id="toggleDocs" data-state="hidden">Expand</a>
                 </div>
             </div>
             
-            <!-- search subrow -->
-            <div class="row search-result">
-                <div class="span8 offset1">
-                    Result 1
-                </div>
-                <div class="span2">
-                    <a href="#"><i class="icon-file"></i></a>
-                    <a href="#"><i class="icon-plus"></i></a>
-                </div>
-            </div>
-            
-            <!-- search subrow -->
-            <div class="row search-result">
-                <div class="span8 offset1">
-                    Result 2 
-                    <a class="more-info" href="#">More info</a>
-                </div>
-                <div class="span2">
-                    <a href="#"><i class="icon-file"></i></a>
-                    <a href="#"><i class="icon-minus"></i></a>
-                </div>
-            </div>
-            <!-- search subrow info -->
-            <div class="row search-result-info">
-                <div class="span7 offset2">
-                    <h4>Abstract:</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. 
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. 
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. 
-                    </p>
-                </div>
-                <div class="span2">
-                    <h4>Authors:</h4>
-                    <p>
-                        Author 1<br/>
-                        Author 1<br/>
-                        Author 1
-                    </p>
-                </div>
-            </div>
-            
-            <!-- search subrow -->
-            <div class="row search-result">
-                <div class="span8 offset1">
-                    Result 3
-                </div>
-                <div class="span2">
-                    <a href="#"><i class="icon-file"></i></a>
-                    <a href="#"><i class="icon-plus"></i></a>
-                </div>
-            </div>
-            
-            <!-- result 3 -->
-            <div class="row search-source">
+            <div class="row search-source" id="statementsResult" style="display:none;">
                 <div class="span9">
-                    <img src="http://www.ncbi.nlm.nih.gov/favicon.ico" />
-                    Search results from source 3
+                    Statements
                 </div>
                 <div class="span3">
-                    <a href="#">Fetching..</a>
+                    <a href="#" id="toggleStatments" data-state="hidden">Expand</a>
                 </div>
             </div>
         </div> <!-- /container -->
+        
+        <!-- TEMPLATES -->
+        
+        <!-- ANSWER ENTRY TEMPLATE -->
+        <script id="answerTemplate" type="text/x-handlebars-template">
+            <option value="{{_internalID}}">{{renderTitle}}</option>
+        </script>
+
+        <!-- search source results row -->
+        <script id="searchResultTemplate" type="text/x-handlebars-template">
+            <div class="row search-result {{domClass}}">
+                <div class="span8 offset1">
+                    {{title}}
+                    <a class="more-info" href="#">More info</a>
+                </div>
+                <div class="span2">
+                    <a href="{{uri}}" target="_blank"><i class="icon-file"></i></a>
+                    <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                </div>
+            </div>
+        </script>
+
+        <!-- search source results row for statements -->
+        <script id="statementSearchResultTemplate" type="text/x-handlebars-template">
+            <div class="row search-result {{domClass}}">
+                <div class="span8 offset1">
+                    {{s}}
+                    <a class="more-info" href="#">More info</a>
+                </div>
+                <div class="span2">
+                    <a href="{{s}}" target="_blank"><i class="icon-file"></i></a>
+                    <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                </div>
+            </div>
+        </script>
+
+        <!-- search subrow info -->
+        <script id="extendedSearchResultTemplate" type="text/x-handlebars-template">
+            <div class="row search-result-info">
+                <div class="span7 offset2">
+                    <h4>Abstract:</h4>
+                    <p>{{abstract}}</p>
+                </div>
+                <div class="span2">
+                    <h4>Authors:</h4>
+                    <p>{{authors}}</p>
+                </div>
+            </div>
+        </script>
     </body>
 </html>

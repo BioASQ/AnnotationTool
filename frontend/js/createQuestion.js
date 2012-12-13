@@ -15,7 +15,7 @@ require(["app"], function(app) {
 
 
     // fetch question list on load
-    $.getJSON(app.LogicServer+'questions', function(data){
+    $.getJSON(app.data.LogicServer+'questions', function(data){
         var i, question,
             html = "";
         for(i = 0; i < data.questions.length; i++){
@@ -37,11 +37,11 @@ require(["app"], function(app) {
     $("#newQuestionOK").click(function(){
         var label = newQuestionLabel.val(),
             type = newQuestionType.val(),
-            user = app.user,
+            user = app.data.user,
 
             question = {body:label, type:type, creator:user};
 
-        $.post(app.LogicServer+"questions", question, function(data){
+        $.post(app.data.LogicServer+"questions", question, function(data){
             question['_id'] = data.id;
             
             var html = questionTemplate(question);
@@ -58,8 +58,9 @@ require(["app"], function(app) {
     $("#okButton").click(function(){
         var questionID = questionList.val();
 
-        $.getJSON(app.LogicServer+'questions/'+questionID, function(data){
-            app.question = data;
+        $.getJSON(app.data.LogicServer+'questions/'+questionID, function(data){
+            app.data.question = data;
+            app.save();
 
             window.location = 'search.html';
         });
