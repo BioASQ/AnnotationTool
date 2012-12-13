@@ -47,7 +47,7 @@ var getSelectionHtml = function() {
     return html;
 };
 
-require(["app", "../js-libs/handlebars.min"], function() {
+require(["app"], function() {
     // cache pointers to DOM
     var $saveButton = $("#saveButton"),
         $questionAnswer = $("#questionAnswer"),

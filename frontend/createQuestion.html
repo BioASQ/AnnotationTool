@@ -51,17 +51,16 @@
                     <a class="btn" href="#newQuestionModal" data-toggle="modal" id="addQuestion">
                         <i class="icon-plus"></i>New
                     </a>
-                    <select name="question" id="question" style="margin-bottom: 0px; width: 70%;">
-                        <option value="Example question 1">Example question 1</option>
-                        <option value="Example question 1">Example question 1</option>
-                        <option value="Example question 1">Example question 1</option>
-                        <option value="Example question 1">Example question 1</option>
-                        <option value="Example question 1">Example question 1</option>
-                    </select>
-                    <a class="btn btn-primary" href="search.html" id="okButton">OK</a>
+                    <select name="question" id="question" style="margin-bottom: 0px; width: 70%;"></select>
+                    <a class="btn btn-primary" href="#" id="okButton">OK</a>
                 </p>
             </div>
             <div class="span3"></div>
+            
+            <!-- QUESTION TEMPLATE -->
+            <script id="questionTemplate" type="text/x-handlebars-template">
+                <option value="{{_id}}">{{body}}</option>
+            </script>
         </div> 
             
             <!-- Modal -->
@@ -73,18 +72,19 @@
                 <div class="modal-body">
                     <form>
                         <label>Question label</label>
-                        <input type="text" placeholder="Type something…">
+                        <input type="text" id="newQuestionLabel" placeholder="Type something…">
                         <label>Question type</label>
                         <select name="newQuestionType" id="newQuestionType">
-                            <option value="type1">Type 1</option>
-                            <option value="type2">Type 1</option>
-                            <option value="type3">Type 1</option>
+                            <option value="list">List</option>
+                            <option value="textual">Textual</option>
+                            <option value="decisive">Yes/No</option>
+                            <option value="other">Other</option>
                         </select>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                    <button class="btn btn-primary">ОК</button>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true" id="newQuestionCancel">Cancel</button>
+                    <button class="btn btn-primary" id="newQuestionOK">ОК</button>
                 </div>
             </div>
         </div> <!-- /container -->
