@@ -3,31 +3,31 @@ var
   url = require('url'),
   session = require('sesh').magicSession(),
   util = require('util'),
-  schemajs = require("schemajs");
+  schemajs = require('schemajs');
 
 var
   headers = {'Access-Control-Allow-Origin': 'http://127.0.0.1:8000/'}
 
   var schema = {
       question: {
-          type: "object", required: true, // "properties": { ... }, "error": { ... },
+          type: 'object', required: true, // 'properties': { ... }, 'error': { ... },
           schema: {
-              id: { type: "string+", required: true },
-              body: { type: "string+", required: true },
-              creator: { type: "string+", required: true },
-              type: { type: "string+", required: true, properties: { regex: /(list|textual)/ } },
+              id: { type: 'string+', required: true },
+              body: { type: 'string+', required: true },
+              creator: { type: 'string+', required: true },
+              type: { type: 'string+', required: true, properties: { regex: /(list|textual)/ } },
               answer: {
-                  type: "object", required: true,
+                  type: 'object', required: true,
                   schema: {
-                      id: { type: "string+", required: true },
-                      body: { type: "string+", required: true },
-                      annotations: { type: "array" }
+                      id: { type: 'string+', required: true },
+                      body: { type: 'string+', required: true },
+                      annotations: { type: 'array' }
                   }
               }
           }
       }
   };
-  //util.puts(schemajs.create(schema).validate( { question: { id: "test", body: "test", creator: "test", type: "textual", answer: { id: "test", body: "test", annotations: new Array() }}}).valid); // true
+  //util.puts(schemajs.create(schema).validate( { question: { id: 'test', body: 'test', creator: 'test', type: 'textual', answer: { id: 'test', body: 'test', annotations: new Array() }}}).valid); // true
 
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
@@ -134,17 +134,14 @@ exports.createRouter = function (model, authentication) {
       /*
        * POST to /login with parameters: body.email and body.password
        */
-      this.post().bind(function (req, res, body) {
-
-          var rtn = function (res) {
-              res.send(401, headers, { 'loggedin': false });
-          };
+      this.post().bind(function (req, res, body) { 
 
           if (body.email && body.password) {
 
               authentication.standard(body.email, body.password, function (err, ok, result) {
+
                   if (err)
-                      rtn(res);
+                      res.send(400, headers, { 'loggedin': false, 'errors': err });
                   else if (ok) {
 
                       var user = result[0]; // DB data
@@ -155,9 +152,11 @@ exports.createRouter = function (model, authentication) {
                           'sessionID': req.session.id,
                           'user': req.session.data.user
                       });
-                  } else rtn(res);
+                  }
+                  else res.send(401, headers, { 'loggedin': false});
               });
-          } else rtn(res);
+          }
+          else res.send(400, headers, { 'loggedin': false, 'errors': 'missing parameters' });
       });
   });
 
@@ -168,12 +167,36 @@ exports.createRouter = function (model, authentication) {
            */
           this.get().bind(function (req, res) {
               var user = req.session.data.user;
-              req.session.data.user = "Guest";
+              req.session.data.user = 'Guest';
 
               res.send(200, headers, {
                   'loggedOut': user
               });
           });
+      });
+  });
+
+  router.path(/\/register\/?/, function () {
+      /*
+       * POST to /register with email, password and name
+       */
+      this.post().bind(function (req, res, body) {   
+        
+          if (body.email && body.password && body.name) {
+              if (schemajs.create(authentication.userSchema).validate(body).valid) {
+                  authentication.createUser(body, function (err, results) {
+                      if (err) {
+                          res.send(400, headers, { 'createUser': false, 'errors': err });
+                      } else {
+                          res.send(200, headers, {});
+                      }
+                  });
+              } else {
+                  res.send(400, headers, { 'register': false, 'error': schemajs.create(authentication.userSchema).validate(body).errors });
+              }
+          } else {
+              res.send(400, headers, { 'register': false, 'error': 'missing parameters' });              
+          }
       });
   });
 

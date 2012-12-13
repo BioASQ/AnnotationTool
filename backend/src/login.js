@@ -1,47 +1,46 @@
-﻿var util = require('util');
-var crypto = require('crypto');
-var schemajs = require("schemajs");
-
-// user schema for login
-var schema = {
-    user: {
-        type: "object", required: true,
-        schema: {
-            email: { type: "string+", required: true },
-            password: { type: "string+", required: true },
-            name: { type: "string+", required: true }
-        }
-    }
-};
-//util.puts(schemajs.create(schema).validate({ user: { email: "test", password: "test", name: "test"} }).valid); // true
-
+﻿var
+    util = require('util'),
+    crypto = require('crypto'),
+    schemajs = require('schemajs'),
+    mymail = require('./mail');
+   
 var Login = exports.Login = function (database) {
+
+    this.mail = new mymail.Mail();    
     this.db = database;
     this.db.ensureIndex({ email: 1 }, { unique: true, dropDups: true });
-    this.blob = '"§$%&/()(/&%$'; // md5 blob
-
-    /*insert test data
-    var user = {
-        email: 'foo@bar.de',
-        password: crypto.createHash('md5').update('foobar' + this.blob).digest('hex'),
-        name: "foobar"
+    //this.md5Blob = '§$%&/()(/&%$';
+    this.userSchema = {
+        email: { type: 'email',  error: 'wrong email', required: true },
+        password: { type: 'string+', properties: { max: 255, min: 8 }, error: { max: 'too many chars', min: 'too few chars' }, required: true },
+        name: { type: 'string+', error: 'wrong name', required: true }
     };
-    this.createUser(user, function (err, res) { });
-    /**/
 };
 
 Login.prototype.createUser = function (user, callback) {
     this._collection(callback, function (err, coll) {
         coll.find({ email: user.email }).toArray(function (err, docs) {
             if (docs.length == 0) {
+                //util.puts(user.password);
+                //user.password = crypto.createHash('md5').update(user.password + this.md5Blob).digest('hex');
+                //util.puts(user.password);
                 coll.insert(user, function (err, res) {
                     if (err) {
                         callback(err);
+                    } else {
+                        var txt = 'Welcome to BioASQ Annotation Tool. <br /><br />User: ' + user.email + '<br />Password: ' + user.password;
+                        var mail = new mymail.Mail();
+                        mail.sendEMail(user.email, txt, function (error, responseStatus) {
+                            // TODO: handle errors
+                            if (error) {
+                                util.puts(error);
+                            } else util.puts(responseStatus.message);
+                        });
+                        callback(null, res);
                     }
-                    callback(null, res);
                 });
             } else {
-                util.puts("User already exists");
+                callback('User already exists, nothing changed');
             }
         });
     });
@@ -69,7 +68,8 @@ Login.prototype.list = function (email, password, callback) {
 };
 
 Login.prototype.standard = function (email, password, callback) {
-    password = crypto.createHash('md5').update(password + this.blob).digest('hex')
+   // password = crypto.createHash('md5').update(password + this.md5Blob).digest('hex');
+   // util.puts(password);
     this.list(email, password, function (err, result) {
         if (err)
             callback(err);
