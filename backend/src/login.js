@@ -17,7 +17,9 @@ var schema = {
 
 var Login = exports.Login = function (database) {
     this.db = database;
+    this.db.ensureIndex({ email: 1 }, { unique: true, dropDups: true });
     this.blob = '"§$%&/()(/&%$'; // md5 blob
+
     /*insert test data
     var user = {
         email: 'foo@bar.de',
@@ -39,7 +41,7 @@ Login.prototype.createUser = function (user, callback) {
                     callback(null, res);
                 });
             } else {
-                //TODO more than one user
+                util.puts("User already exists");
             }
         });
     });
