@@ -30,7 +30,7 @@ require(["app"], function(app) {
         questionList.html(html);
     });
 
-    // bind create question
+    // bind create question stuff
     $("#newQuestionCancel").click(function(){
         newQuestionLabel.val("");
     });
@@ -51,6 +51,17 @@ require(["app"], function(app) {
             newQuestionModal.modal('hide');
         }).error(function(){
             alert("Something went wrong");
+        });
+    });
+
+    // bind ok action
+    $("#okButton").click(function(){
+        var questionID = questionList.val();
+
+        $.getJSON(app.LogicServer+'questions/'+questionID, function(data){
+            app.question = data;
+
+            window.location = 'search.html';
         });
     });
 });

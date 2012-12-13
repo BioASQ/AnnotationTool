@@ -17,7 +17,8 @@ define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], functio
 
     var app = {
         LogicServer: logicServer,
-        user: ""
+        user: "",
+        question: {}
     };
     return app;
 });
