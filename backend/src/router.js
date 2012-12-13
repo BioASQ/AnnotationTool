@@ -5,6 +5,9 @@ var
   util = require('util'),
   schemajs = require("schemajs");
 
+var
+  headers = {'Access-Control-Allow-Origin': 'http://127.0.0.1:8000/'}
+
   var schema = {
       question: {
           type: "object", required: true, // "properties": { ... }, "error": { ... },
@@ -30,10 +33,12 @@ exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
         strict: false,
         filter: function (req, body, callback) {
-            if (req.session.data.user === 'Guest')
-                return callback(new journey.NotAuthorized("Invalid user"));
-            else
-                callback(null);// respond with no error
+            if (req.session.data.user === 'Guest') {
+                return callback(new journey.NotAuthorized('Invalid user'));
+            }
+            else {
+                callback();// respond with no error
+            }
         }
     });
     var idRegEx = /([0-9a-fA-F]{24})/;
@@ -51,7 +56,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(404);
                   }
-                  res.send(200, {}, { 'questions': list });
+                  res.send(200, headers, { 'questions': list });
               });
           });
 
@@ -63,7 +68,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(500);
                   }
-                  res.send(200, {}, { 'id': id });
+                  res.send(200, headers, { 'id': id });
               });
           });
 
@@ -75,7 +80,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(404);
                   }
-                  res.send(200, {}, question);
+                  res.send(200, headers, question);
               });
           });
 
@@ -120,7 +125,7 @@ exports.createRouter = function (model, authentication) {
       };
       // simulate ongoing search
       setTimeout(function () {
-        res.send(200, {}, { results: response });
+        res.send(200, headers, { results: response });
       }, 2000);
     });
   });
@@ -132,7 +137,7 @@ exports.createRouter = function (model, authentication) {
       this.post().bind(function (req, res, body) {
 
           var rtn = function (res) {
-              res.send(401, {}, { 'loggedin': false });
+              res.send(401, headers, { 'loggedin': false });
           };
 
           if (body.email && body.password) {
@@ -145,7 +150,7 @@ exports.createRouter = function (model, authentication) {
                       var user = result[0]; // DB data
 
                       req.session.data.user = user.email;
-                      res.send(200, {}, {
+                      res.send(200, headers, {
                           'loggedin': true,
                           'sessionID': req.session.id,
                           'user': req.session.data.user
@@ -165,7 +170,7 @@ exports.createRouter = function (model, authentication) {
               var user = req.session.data.user;
               req.session.data.user = "Guest";
 
-              res.send(200, {}, {
+              res.send(200, headers, {
                   'loggedOut': user
               });
           });
