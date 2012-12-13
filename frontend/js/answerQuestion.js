@@ -197,7 +197,7 @@ require(["app"], function(app) {
         // set current doc
         var i;
         for(i = 0; i < selectedDocuments.length; i++){
-            if( selectedDocuments[i].num === num ){
+            if( selectedDocuments[i]["_internalID"] === num ){
                 currentDocument = selectedDocuments[i];
                 break;
             }
