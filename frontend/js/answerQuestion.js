@@ -1,7 +1,7 @@
 ///
 /// for debugging, can be removed later
 ///
-var selectedDocuments = [
+/*var selectedDocuments = [
     {
         "num": 1,
         "title": "Assessing Linked Data Mappings Using Network Measures",
@@ -26,32 +26,14 @@ var selectedDocuments = [
         "web": "http://www.bibsonomy.org/bibtex/2e41de3cef8add9cb0d1da416ef894311/aksw",
         "pdf": "linked_mapping_qa.pdf"
     }
-];
+];*/
 
-var getSelectionHtml = function() {
-    var html = "";
-    if (typeof window.getSelection != "undefined") {
-        var sel = window.getSelection();
-        if (sel.rangeCount) {
-            var container = document.createElement("div");
-            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                container.appendChild(sel.getRangeAt(i).cloneContents());
-            }
-            html = container.innerHTML;
-        }
-    } else if (typeof document.selection != "undefined") {
-        if (document.selection.type == "Text") {
-            html = document.selection.createRange().htmlText;
-        }
-    }
-    return html;
-};
-
-require(["app"], function() {
+require(["app"], function(app) {
     // cache pointers to DOM
     var $saveButton = $("#saveButton"),
         $questionAnswer = $("#questionAnswer"),
-        $answerSpace = $("#answerSpace");
+        $answerSpace = $("#answerSpace"),
+        $questionTitle = $("#questionTitle");
 
     // annotation btns
     var $startAnn = $("#startAnn"),
@@ -68,9 +50,33 @@ require(["app"], function() {
         currentAnnotation = null,
         currentDocument = null;
 
+    var selectedDocuments = app.data.entities;
 
+    // set question text
+    $questionTitle.text(app.data.question.body);
+
+    //
     var updateQuestionText = function(){
         $answerSpace.html(answer.html);
+    };
+
+    var getSelectionHtml = function() {
+        var html = "";
+        if (typeof window.getSelection != "undefined") {
+            var sel = window.getSelection();
+            if (sel.rangeCount) {
+                var container = document.createElement("div");
+                for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                    container.appendChild(sel.getRangeAt(i).cloneContents());
+                }
+                html = container.innerHTML;
+            }
+        } else if (typeof document.selection != "undefined") {
+            if (document.selection.type == "Text") {
+                html = document.selection.createRange().htmlText;
+            }
+        }
+        return html;
     };
 
     // event for freezing answer
@@ -226,7 +232,4 @@ require(["app"], function() {
     }
     // append to dom
     $("#resultList").html(html);
-
-    // cleanup
-    html = null;
 });

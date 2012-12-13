@@ -38,7 +38,7 @@
                             <li class="active"><a href="#">Answer</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
-                    <p class="navbar-text pull-right">Question text entered before will be here.</p>
+                    <p class="navbar-text pull-right" id="questionTitle"></p>
                 </div>
             </div>
         </div>
@@ -75,9 +75,9 @@
                 <!-- RESULT TEMPLATE -->
                 <script id="resultTemplate" type="text/x-handlebars-template">
                     <tr>
-                        <td><a href="#" class="resultDocument" data-num="{{num}}" data-url="{{pdf}}">{{title}}</a></td>
+                        <td><a href="#" class="resultDocument" data-num="{{_internalID}}" data-url="#">{{renderTitle}}</a></td>
                         <td width="20px">
-                            <a href="{{web}}"><i class="icon-file"></i></a>
+                            <a href="#"><i class="icon-file"></i></a>
                         </td>
                         <td width="20px">
                             <a href="#" class="removeFromResults"><i class="icon-minus"></i></a>
