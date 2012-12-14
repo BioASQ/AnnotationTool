@@ -140,8 +140,9 @@ exports.createRouter = function (model, authentication) {
 
               authentication.standard(body.email, body.password, function (err, ok, result) {
 
-                  if (err)
-                      res.send(400, headers, { 'loggedin': false, 'errors': err });
+                  if (err) {
+                      res.send(500, headers, { 'loggedin': false, 'error': err });
+                  }
                   else if (ok) {
 
                       var user = result[0]; // DB data
@@ -153,10 +154,10 @@ exports.createRouter = function (model, authentication) {
                           'user': req.session.data.user
                       });
                   }
-                  else res.send(401, headers, { 'loggedin': false});
+                  else res.send(401, headers, { 'loggedin': false });
               });
           }
-          else res.send(400, headers, { 'loggedin': false, 'errors': 'missing parameters' });
+          else res.send(400, headers, { 'loggedin': false, 'error': 'missing parameters' });
       });
   });
 
@@ -186,7 +187,7 @@ exports.createRouter = function (model, authentication) {
               if (schemajs.create(authentication.userSchema).validate(body).valid) {
                   authentication.createUser(body, function (err, results) {
                       if (err) {
-                          res.send(400, headers, { 'createUser': false, 'errors': err });
+                          res.send(403, headers, { 'register': false, 'error': err });
                       } else {
                           res.send(200, headers, {});
                       }
