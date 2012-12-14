@@ -189,7 +189,7 @@ exports.createRouter = function (model, authentication) {
                       if (err) {
                           res.send(403, headers, { 'register': false, 'error': err });
                       } else {
-                          res.send(200, headers, {});
+                          res.send(200, headers, { 'register': true });
                       }
                   });
               } else {

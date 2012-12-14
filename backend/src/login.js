@@ -23,7 +23,8 @@ Login.prototype.createUser = function (user, callback) {
         coll.find({ email: user.email }).toArray(function (err, docs) {
 
             if (docs.length == 0) {
-
+              
+                var txt = 'Welcome to BioASQ Annotation Tool. <br /><br />User: ' + user.email + '<br />Password: ' + user.password;
                 user.password = crypto.createHash('md5').update(user.password + md5Blob).digest('hex');
 
                 coll.insert(user, function (err, res) {
@@ -31,7 +32,6 @@ Login.prototype.createUser = function (user, callback) {
                         callback(err);
                     } else {
 
-                        var txt = 'Welcome to BioASQ Annotation Tool. <br /><br />User: ' + user.email + '<br />Password: ' + user.password;
                         var mail = new mymail.Mail();
                         mail.sendEMail(user.email, txt, function (error, responseStatus) {
                             // TODO: handle errors
