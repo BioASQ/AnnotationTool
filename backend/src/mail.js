@@ -3,7 +3,7 @@
 
 var Mail = exports.Mail = function () {
     this.mail = 'BioAsqAT@gmail.com';
-    this.pass = '*****';
+    this.pass = '****';
 
     this.transport = nodemailer.createTransport('SMTP', {
         service: 'Gmail',
@@ -30,14 +30,14 @@ Mail.prototype.createUser = function (user,url,  callback) {
     });
 };
 
-Mail.prototype.generateTmpPassword = function (email,tmpPassword, url, callback) {
+Mail.prototype.resetPassword = function (email, tmpPassword, url, callback) {
 
     var html =
-        'Click the link to get an one time login and to change your password.<br /><br />' +
+        'Click the link to reset your password to: ' + tmpPassword + '<br /><br />' +
         '<a href="' + url +
             '?email=' + encodeURIComponent(email) +
-            '&password=' + encodeURIComponent(tmpPassword) +
-            '">Login and change password.</a>';
+            '&code=' + encodeURIComponent(tmpPassword) +
+            '">Reset password now.</a>';
 
     this.transport.sendMail(
         this._mailOptions(email, html),

@@ -14,6 +14,7 @@ var Login = exports.Login = function (database) {
         name: { type: 'string+', error: 'wrong name', required: true }
     };
 };
+
 Login.prototype.addUser = function (email, password, userEmail, callback) {
     // check admin account
     if (email == this.mail.mail && password == this.mail.pass) {
@@ -38,7 +39,8 @@ Login.prototype.addUser = function (email, password, userEmail, callback) {
         callback('account not found');
     }
 };
-Login.prototype.createUser = function (user, url, callback) {       
+
+Login.prototype.createUser = function (user, url, callback) {
     var md5Password = this._createPasswordHash(user.password);
     var activationCode = this._createRandomPassword();
     var mail = this.mail;
@@ -108,52 +110,6 @@ Login.prototype.standardLogin = function (email, password, callback) {
     });
 };
 
-Login.prototype.generateTmpPassword = function (url, email, callback) {
-
-    var mail = this.mail;
-    var tmpPassword = this._createRandomPassword();
-    var md5tmpPassword = this._createPasswordHash(tmpPassword);
-    // find activ user by mail
-    this._collection(callback, function (err, coll) {
-        coll.find({ email: email, activ: true }).toArray(function (err, res) {
-            if (err) {
-                callback(err);
-            } else if (res.length >= 1) {    
-                //TODO: 
-                //set timestemp?
-                coll.update({ email: email, activ: true }, { $set: { code: md5tmpPassword } });
-
-                mail.generateTmpPassword(email,tmpPassword,url, function (error, responseStatus) {
-                    // TODO: handle errors
-                    if (error) {
-                        util.puts(error);
-                    } else util.puts(responseStatus.message);
-                });
-                callback(null, res);
-            } else {
-                callback(null, null);
-            }
-        });
-    });
-};
-
-Login.prototype.oneTimeLogin = function (email, tmpPassword, callback) {
-    var md5tmpPassword = this._createPasswordHash(tmpPassword);
-    this._collection(callback, function (err, coll) {
-        coll.find({ email: email, code: md5tmpPassword, activ: true }).toArray(function (err, result) {
-            if (err) 
-                callback(err);            
-            else if (result.length >= 1) {
-                coll.update({ email: email, code: md5tmpPassword, activ: true }, { $set: { code: '' } });
-
-                callback(null, result);
-            }
-            else
-                callback(null, null);
-        });
-    });
-};
-
 Login.prototype.changePassword = function (oldPassword, newPassword, email, callback) {
 
     oldPassword = this._createPasswordHash(oldPassword);
@@ -168,6 +124,53 @@ Login.prototype.changePassword = function (oldPassword, newPassword, email, call
                 // changePassword
                 coll.update({ email: email, password: oldPassword, activ: true }, { $set: { password: newPassword, code: '' } });
                           
+                callback(null, res);
+            } else {
+                callback(null, null);
+            }
+        });
+    });
+};
+
+Login.prototype.resetPassword = function (url, email, callback) {
+
+    var mail = this.mail;
+    var tmpPassword = this._createRandomPassword();
+    var md5tmpPassword = this._createPasswordHash(tmpPassword);
+    // find activ user by mail
+    this._collection(callback, function (err, coll) {
+        coll.find({ email: email, activ: true }).toArray(function (err, res) {
+            if (err) {
+                callback(err);
+            } else if (res.length >= 1) {
+                //TODO: 
+                //set timestamp?
+                coll.update({ email: email, activ: true }, { $set: { code: md5tmpPassword } });
+
+                mail.resetPassword(email, tmpPassword, url, function (error, responseStatus) {
+                    // TODO: handle errors
+                    if (error) {
+                        util.puts(error);
+                    } else util.puts(responseStatus.message);
+                });
+                callback(null, res);
+            } else {
+                callback(null, null);
+            }
+        });
+    });
+};
+
+Login.prototype.activatePassword = function (email, code, callback) {
+    var md5tmpPassword = this._createPasswordHash(code);
+    // find activ user by mail
+    this._collection(callback, function (err, coll) {
+        coll.find({ email: email, activ: true, code: md5tmpPassword }).toArray(function (err, res) {
+            if (err) {
+                callback(err);
+            } else if (res.length >= 1) {
+                coll.update({ email: email, activ: true, code: md5tmpPassword }, { $set: { code: '', password: md5tmpPassword } });
+
                 callback(null, res);
             } else {
                 callback(null, null);
