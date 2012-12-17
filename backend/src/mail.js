@@ -2,28 +2,56 @@
     nodemailer = require('nodemailer');
 
 var Mail = exports.Mail = function () {
+    this.mail = 'BioAsqAT@gmail.com';
+    this.pass = '*****';
 
     this.transport = nodemailer.createTransport('SMTP', {
         service: 'Gmail',
         auth: {
-            user: 'BioAsqAT@gmail.com',
-            pass: '******'
+            user: this.mail,
+            pass: this.pass
         }
     });
 };
 
+Mail.prototype.createUser = function (user,url,  callback) {
 
-Mail.prototype.sendEMail = function (email, html, callback) {
+    var html =
+        'Welcome to BioASQ Annotation Tool. <br /><br />' +
+        'user: ' + user.email + '<br />' +
+        'password: ' + user.password + '<br />' +
+        '<a href="' + url +
+            '?email=' + encodeURIComponent(user.email) +
+             '&code=' + encodeURIComponent(user.activ) +
+             '">Click the link to activate your account.</a>';
 
-    var mailOptions = {
-        from: 'BioAsqAT@gmail.com',
+   this.transport.sendMail(this._mailOptions(user.email, html), function (error, responseStatus) {
+        callback(error, responseStatus);
+    });
+};
+
+Mail.prototype.generateTmpPassword = function (email,tmpPassword, url, callback) {
+
+    var html =
+        'Click the link to get an one time login and to change your password.<br /><br />' +
+        '<a href="' + url +
+            '?email=' + encodeURIComponent(email) +
+            '&password=' + encodeURIComponent(tmpPassword) +
+            '">Login and change password.</a>';
+
+    this.transport.sendMail(
+        this._mailOptions(email, html),
+        function (error, responseStatus) {           
+            callback(error, responseStatus);
+    });
+};
+
+Mail.prototype._mailOptions = function (email, html) {
+    return {
+        from: this.mail,
         to: email,
         generateTextFromHTML: true,
         subject: 'BioASQ Annotation Tool ',
         html: html
     };
-
-    this.transport.sendMail(mailOptions, function (error, responseStatus) {
-        callback(error, responseStatus);
-    });
-};
+}
