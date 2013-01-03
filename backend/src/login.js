@@ -6,7 +6,7 @@
 
 var Login = exports.Login = function (database) {
     this.md5Blob = '§$%&/()(/&%$';
-    this.mail = new mymail.Mail();    
+    this.mail = new mymail.Mail();
     this.db = database;
     this.userSchema = {
         email: { type: 'email',  error: 'wrong email', required: true },
@@ -24,7 +24,7 @@ Login.prototype.addUser = function (email, password, userEmail, callback) {
                 if (docs.length != 0) {
                     callback('user already exists, nothing changed');
                 } else {
-                    var user = { email: userEmail, activ : false };
+                    var user = { email: userEmail, active : false };
                     coll.insert(user, function (err, res) {
                         if (err) {
                             callback(err);
@@ -48,43 +48,43 @@ Login.prototype.createUser = function (user, url, callback) {
     this._collection(callback, function (err, coll) {
         coll.find({ email: user.email }).toArray(function (err, docs) {
 
-            if (docs.length == 0) {           
-                callback('User not exists, ask for an account!');
+            if (docs.length == 0) {
+                callback('Registration for this email addres not allowed. Ask for an account!');
 
-            } else if (docs[0].activ != false) {
-                callback('User in use!');
-            } else { 
+            } else if (docs[0].active != false) {
+                callback('Email address already registered.');
+            } else {
                 // update to DB
-                coll.update({ email: user.email }, { $set: { activ: activationCode, password: md5Password } }, function (err, res) {
+                coll.update({ email: user.email }, { $set: { active: activationCode, password: md5Password } }, function (err, res) {
                     if (err) {
                         callback(err);
                     } else {
-                        // send mail                       
-                        user.activ = activationCode;
+                        // send mail
+                        user.active = activationCode;
                         mail.createUser(user, url, function (error, responseStatus) {
                             // TODO: handle errors
                             if (error) {
                                 util.puts(error);
                             } else util.puts(responseStatus.message);
                         });
-                        
+
                         callback(null, res);
                     }
                 });
-            } 
+            }
         });
     });
 };
 
-Login.prototype.activateUser = function (email, activ, callback) {
+Login.prototype.activateUser = function (email, active, callback) {
     this._collection(callback, function (err, coll) {
-        var cursor = coll.find({ email: email, activ: activ });
+        var cursor = coll.find({ email: email, active: active });
         cursor.toArray(function (err, res) {
             if (err) {
                 callback(err);
             }
-            else if (res.length >= 1) {                    
-                coll.update({ email: email, activ: activ }, { $set: { activ: true } });
+            else if (res.length >= 1) {
+                coll.update({ email: email, active: active }, { $set: { active: true } });
                callback(null, res);
             } else {
                 callback(null, null);
@@ -96,12 +96,12 @@ Login.prototype.activateUser = function (email, activ, callback) {
 Login.prototype.standardLogin = function (email, password, callback) {
     var md5Password = this._createPasswordHash(password);
     this._collection(callback, function (err, coll) {
-        var cursor = coll.find({ email: email, password: md5Password, activ: true });
+        var cursor = coll.find({ email: email, password: md5Password, active: true });
         cursor.toArray(function (err, res) {
             if (err)
                 callback(err);
             else if (res.length >= 1) {
-                coll.update({ email: email, password: md5Password, activ: true }, { $set: { code: '' } });
+                coll.update({ email: email, password: md5Password, active: true }, { $set: { code: '' } });
                 callback(null, res);
             }
             else
@@ -115,15 +115,15 @@ Login.prototype.changePassword = function (oldPassword, newPassword, email, call
     oldPassword = this._createPasswordHash(oldPassword);
     newPassword = this._createPasswordHash(newPassword);
 
-    // find activ user by email and password
+    // find active user by email and password
     this._collection(callback, function (err, coll) {
-        coll.find({ email: email, password: oldPassword, activ: true }).toArray(function (err, res) {
+        coll.find({ email: email, password: oldPassword, active: true }).toArray(function (err, res) {
             if (err) {
                 callback(err);
             } else if (res.length >= 1) {
                 // changePassword
-                coll.update({ email: email, password: oldPassword, activ: true }, { $set: { password: newPassword, code: '' } });
-                          
+                coll.update({ email: email, password: oldPassword, active: true }, { $set: { password: newPassword, code: '' } });
+
                 callback(null, res);
             } else {
                 callback(null, null);
@@ -137,15 +137,15 @@ Login.prototype.resetPassword = function (url, email, callback) {
     var mail = this.mail;
     var tmpPassword = this._createRandomPassword();
     var md5tmpPassword = this._createPasswordHash(tmpPassword);
-    // find activ user by mail
+    // find active user by mail
     this._collection(callback, function (err, coll) {
-        coll.find({ email: email, activ: true }).toArray(function (err, res) {
+        coll.find({ email: email, active: true }).toArray(function (err, res) {
             if (err) {
                 callback(err);
             } else if (res.length >= 1) {
-                //TODO: 
+                //TODO:
                 //set timestamp?
-                coll.update({ email: email, activ: true }, { $set: { code: md5tmpPassword } });
+                coll.update({ email: email, active: true }, { $set: { code: md5tmpPassword } });
 
                 mail.resetPassword(email, tmpPassword, url, function (error, responseStatus) {
                     // TODO: handle errors
@@ -163,13 +163,13 @@ Login.prototype.resetPassword = function (url, email, callback) {
 
 Login.prototype.activatePassword = function (email, code, callback) {
     var md5tmpPassword = this._createPasswordHash(code);
-    // find activ user by mail
+    // find active user by mail
     this._collection(callback, function (err, coll) {
-        coll.find({ email: email, activ: true, code: md5tmpPassword }).toArray(function (err, res) {
+        coll.find({ email: email, active: true, code: md5tmpPassword }).toArray(function (err, res) {
             if (err) {
                 callback(err);
             } else if (res.length >= 1) {
-                coll.update({ email: email, activ: true, code: md5tmpPassword }, { $set: { code: '', password: md5tmpPassword } });
+                coll.update({ email: email, active: true, code: md5tmpPassword }, { $set: { code: '', password: md5tmpPassword } });
 
                 callback(null, res);
             } else {
@@ -180,7 +180,7 @@ Login.prototype.activatePassword = function (email, code, callback) {
 };
 
 Login.prototype._collection = function (errCallback, callback) {
-    this.db.collection('login', function (err, coll) {       
+    this.db.collection('login', function (err, coll) {
         coll.ensureIndex({ email: 1 }, { unique: true, dropDups: true });
         if (err) {
             errCallback(err);
@@ -198,6 +198,6 @@ Login.prototype._createRandomPassword = function () {
     var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (var i = 0; i < 20; i++)
         code += alpha.charAt(Math.floor(Math.random() * alpha.length));
-    
+
     return code;
 };

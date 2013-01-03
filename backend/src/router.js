@@ -147,16 +147,16 @@ exports.createRouter = function (model, authentication) {
 
   router.path(/\/addUser\/?/, function () {
       /*
-      * POST to /addUser with parameters: email, password and userEmail
-      * 
-      */
+       * POST to /addUser with parameters: email, password and userEmail
+       *
+       */
       this.post().bind(function (req, res, body) {
           if (body.email && body.password && body.userEmail) {
               authentication.addUser(body.email, body.password, body.userEmail, function (err, result) {
-                  if (err) {                     
+                  if (err) {
                       res.send(400, headers, { 'error': err });
-                  }                 
-                  res.send(200, headers, { 'error': '' });             
+                  }
+                  res.send(200, headers, { 'error': '' });
               });
           } else {
               res.send(400, headers, { 'error': 'missing parameters' });
@@ -166,10 +166,10 @@ exports.createRouter = function (model, authentication) {
 
   router.path(/\/login\/?/, function () {
        /*
-       * POST to /login with parameters: email and password
-       *
-       * This is the standard login function.  
-       */
+        * POST to /login with parameters: email and password
+        *
+        * This is the standard login function.
+        */
       this.post().bind(function (req, res, body) {
           if (body.email && body.password) {
               authentication.standardLogin(body.email, body.password, function (err, result) {
@@ -220,11 +220,11 @@ exports.createRouter = function (model, authentication) {
           });
       });
   });
-    
+
   router.path(/\/resetPassword\/?/, function () {
       /*
-      * GET to /resetPassword with parameters: email and/or code
-      */
+       * GET to /resetPassword with parameters: email and/or code
+       */
       this.get().bind(function (req, res, body) {
           if (body.email && body.code) {
               authentication.activatePassword(body.email,body.code, function (err, result) {
@@ -237,7 +237,7 @@ exports.createRouter = function (model, authentication) {
                   } else {
                       accountBody.error = 'account not found';
                       res.send(401, headers, accountBody);
-                  }              
+                  }
               });
           }else if (body.email) {
               var url = 'http://' + req.headers.host + '/resetPassword'
@@ -263,14 +263,14 @@ exports.createRouter = function (model, authentication) {
 
   router.path(/\/changePassword\/?/, function () {
       /*
-      * user only
-      */
+       * user only
+       */
       router.filter(function () {
           /*
-          * POST to /changePassword with parameters: oldPassword and newPassword
-          *
-          * Allows an user to change the password.
-          */
+           * POST to /changePassword with parameters: oldPassword and newPassword
+           *
+           * Allows an user to change the password.
+           */
           this.post().bind(function (req, res, body) {
               if (body.oldPassword && body.newPassword) {
                   authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
@@ -295,10 +295,10 @@ exports.createRouter = function (model, authentication) {
 
   router.path(/\/activate\/?/, function () {
         /*
-        * GET to /activate with parameters: email and code
-        */
+         * GET to /activate with parameters: email and code
+         */
         this.get().bind(function (req, res,body) {
-            if (body.email && body.code) {                
+            if (body.email && body.code) {
                 authentication.activateUser(body.email, body.code, function (err, result) {
                     if (err) {
                         accountBody.error = err;
@@ -319,17 +319,17 @@ exports.createRouter = function (model, authentication) {
                 res.send(400, headers, accountBody);
             }
             clearAccountBody();
-        });      
+        });
   });
 
   router.path(/\/register\/?/, function () {
       /*
        * POST to /register with parameters: email, password and name
-       * 
-       * Registers an inactiv user. 
+       *
+       * Registers an inactiv user.
        * Sends an email with user data and an activation link.
        */
-      this.post().bind(function (req, res, body) {        
+      this.post().bind(function (req, res, body) {
           if (body.email && body.password && body.name) {
               if (schemajs.create(authentication.userSchema).validate(body).valid) {
                   var url = 'http://' + req.headers.host + '/activate'
