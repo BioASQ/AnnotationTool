@@ -3,7 +3,7 @@ var
   url = require('url'),
   qstr = require('querystring');
 
-var Search = exports.Search = function (URL) {
+var TIService = exports.TIService = function (URL) {
   this.serviceURL = URL;
   this.timeout = 600000; // 10 min in ms
   this.currentTimeout = null;
@@ -13,14 +13,14 @@ var Search = exports.Search = function (URL) {
 /*
  * Retrieves the token URL from the server
  */
-Search.prototype._tokenURL = function (cb) {
+TIService.prototype._tokenURL = function (cb) {
   var self = this;
   if (this.tokenURL) {
     cb(this.tokenURL);
     return;
   }
   // token invalid
-  this._request(null, function (data) {
+  this._request(function (err, data) {
     self.tokenURL = data;
     cb(self.tokenURL);
   }, this.serviceURL, { 'method': 'GET' });
@@ -29,7 +29,7 @@ Search.prototype._tokenURL = function (cb) {
 /*
  * Basic request wrapper function
  */
-Search.prototype._request = function (ecb, cb, URL, options, /* Object */ data) {
+TIService.prototype._request = function (cb, URL, options, /* Object */ data) {
   this._resetTimeout();
   var urlObj = url.parse(URL);
   var dataStr = '';
@@ -52,13 +52,13 @@ Search.prototype._request = function (ecb, cb, URL, options, /* Object */ data) 
      res.on('data', function (chunk) {
        responseData += chunk;
      }).on('end', function () {
-       cb(responseData);
+       cb(null, responseData);
      }).on('close', function () {
        res.emit('end');
      });
   });
   req.on('error', function (e) {
-    ecb(e.message);
+    cb(e.message);
   });
   req.write(dataStr);
   req.end();
@@ -67,7 +67,7 @@ Search.prototype._request = function (ecb, cb, URL, options, /* Object */ data) 
 /*
  * Clears the current timeout (if any) and creates a new one.
  */
-Search.prototype._resetTimeout = function () {
+TIService.prototype._resetTimeout = function () {
   var self = this;
   if (this.currentTimeout) {
     clearTimeout(this.currentTimeout);
@@ -77,28 +77,28 @@ Search.prototype._resetTimeout = function () {
   }, this.timeout);
 };
 
-Search.prototype.find = function (ecb, cb, /* String */ keywords) {
+TIService.prototype.find = function (/* String */ keywords, cb) {
   var self = this;
   this._tokenURL(function (URL) {
-    self._request(function (err) {
-      if (ecb) {
-        ecb(err);
+    self._request(function (err, response) {
+      if (err) {
+        cb(err);
+      } else {
+        cb(null, JSON.parse(response).result);
       }
-    }, function (response) {
-      cb(JSON.parse(response).result);
     }, URL, { 'method': 'POST' }, { 'findEntities': [ keywords ]});
   });
 };
 
-Search.prototype.annotate = function (ecb, cb, /* String */ keywords) {
+TIService.prototype.annotate = function (/* String */ keywords, cb) {
   var self = this;
   this._tokenURL(function (URL) {
-    self._request(function (err) {
-      if (ecb) {
-        ecb(err);
+    self._request(function (err, response) {
+      if (err) {
+        cb(err);
+      } else {
+        cb(null, JSON.parse(response).result);
       }
-    }, function (response) {
-      cb(JSON.parse(response).result);
     }, URL, { 'method': 'POST' }, { 'annotateText': [ keywords ]});
   });
 };

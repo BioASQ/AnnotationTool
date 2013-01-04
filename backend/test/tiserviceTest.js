@@ -1,14 +1,15 @@
 var
-  Search = require('../src/search').Search,
-  assert = require('assert');
+  TIService = require('../src/tiservice').TIService,
+  assert = require('assert'),
+  util = require('util');
 
-var go = new Search('http://www.gopubmed.org/web/bioasq/go/json');
-go.find(function (err) {
-}, function (res) {
-  assert.ok(res.hasOwnProperty('findings'));
-}, 'Foxp2');
+var go = new TIService('http://www.gopubmed.org/web/bioasq/go/json');
+var s = new Search();
 
-go.annotate(function (err) {
-}, function (res) {
+go.find('Foxp2', function (err, res) {
   assert.ok(res.hasOwnProperty('findings'));
-}, 'Foxp2');
+});
+
+go.annotate('Foxp2', function (err, res) {
+  assert.ok(res.hasOwnProperty('findings'));
+});
