@@ -41,7 +41,7 @@ exports.createServer = function (port, model, authentication) {
         });
       } else {
         send(request, parsedURL.pathname)
-          .root('../frontend')
+          .root(__dirname + '/../../frontend')
           .pipe(response);
       }
     });
