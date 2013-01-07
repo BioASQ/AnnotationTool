@@ -5,7 +5,8 @@ var
 
 var s = new Search();
 
-s.find('Foxp2', function (err, res) {
+s.find('foxp1', function (err, res) {
+  console.log(res);
   assert.ifError(err);
   process.exit(0);
 });

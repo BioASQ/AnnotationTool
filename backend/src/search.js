@@ -13,7 +13,12 @@ var Search = exports.Search = function () {
 Search.prototype._merge = function (sectionName/* variadic arguments */) {
   var mergedResult = [];
   for (var i = 1; i < arguments.length; i++) {
-    mergedResult = mergedResult.concat(arguments[i][sectionName]);
+    for (var j = 0; j < arguments[i][sectionName].length; ++j) {
+      var current = arguments[i][sectionName][j];
+      if ('concept' in current) {
+        mergedResult.push({ 'title': current.concept.label, 'uri': current.concept.uri });
+      }
+    }
   }
   return mergedResult;
 };

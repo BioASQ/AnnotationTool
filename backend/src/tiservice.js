@@ -84,7 +84,13 @@ TIService.prototype.find = function (/* String */ keywords, cb) {
       if (err) {
         cb(err);
       } else {
-        cb(null, JSON.parse(response).result);
+        try {
+          var result = JSON.parse(response).result;
+          cb(null, result);
+        } catch (e) {
+          console.log('Could not parse response: ' + response);
+          cb(e);
+        }
       }
     }, URL, { 'method': 'POST' }, { 'findEntities': [ keywords ]});
   });

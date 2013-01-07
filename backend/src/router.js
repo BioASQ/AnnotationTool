@@ -3,7 +3,8 @@ var
   url = require('url'),
   session = require('sesh').magicSession(),
   util = require('util'),
-  schemajs = require('schemajs');
+  schemajs = require('schemajs'),
+  Search = require('./search').Search;
 
 var
   headers = { 'Access-Control-Allow-Origin': 'http://127.0.0.1:8000/' },
@@ -129,19 +130,15 @@ exports.createRouter = function (model, authentication) {
    * POST to /search
    */
   router.path(/\/search\/?/, function () {
+    var searchBackend = new Search();
     this.post().bind(function (req, res, keywords) {
-      var response = {
-        documents: [ { title: 'Test document', uri: 'http://ns.bioasq.org/documents/1' } ],
-        concepts: [ { title: 'Test concept', uri: 'http://ns.bioasq.org/concepts/1' } ],
-        statements: [ {
-          s: 'http://ns.bioasq.org/resource/1',
-          p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-          o: 'http://ns.bioasq.org/Disease' } ]
-      };
-      // simulate ongoing search
-      setTimeout(function () {
-        res.send(200, headers, { results: response });
-      }, 2000);
+      searchBackend.find(keywords.query, function (err, response) {
+        if (err) {
+          res.send(502);
+        } else {
+          res.send(200, headers, { 'results': { 'concepts': response, 'documents': [], 'statements': [] } });
+        }
+      });
     });
   });
 
