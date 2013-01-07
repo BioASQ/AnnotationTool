@@ -13,14 +13,29 @@ require(["app"], function(app) {
                 window.location = 'createQuestion.html';
             },
             'error': function (xhr, status, httpStatus) {
-                switch (xhr.status) {
-                case 401:
+                if (xhr.status == 401){
                     alert('User not found.');
-                    break;
-                default:
-                    alert('Could not login.')
+                }else{
+                    alert('Could not login.');
                 }
             }
+        });
+    });
+
+    $("#doRegister").click(function(){
+        var email = $("#userEmail").val(),
+            pass = $("#userPass").val(),
+            passAgain = $("#userPassRepeat").val();
+
+        if(pass != passAgain){
+            alert("Passwords doesn't match");
+            return;
+        }
+
+        $.post(app.data.LogicServer + 'register',
+            {email: email, password: pass, name: "doweneedthat"},
+            function(data){
+                console.log(data);
         });
     });
 });
