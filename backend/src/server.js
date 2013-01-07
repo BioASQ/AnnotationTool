@@ -5,6 +5,9 @@ var
   login = require('./login'),
   question = require('./question');
 
+var
+  corsHeaderName = 'Access-Control-Allow-Origin';
+
 exports.createServer = function (port, model, authentication) {
   var router = require('./router').createRouter(model, authentication);
   var server = http.createServer(function (request, response) {
@@ -14,7 +17,10 @@ exports.createServer = function (port, model, authentication) {
     });
     request.on('end', function () {
       var emitter = router.handle(request, body, function (route) {
-        response.writeHead(route.status, route.headers);
+        var headers = route.headers;
+        // aleays inject CORS header
+        headers[corsHeaderName] = 'http://' + request.headers.host;
+        response.writeHead(route.status, headers);
         response.end(route.body);
       });
     });

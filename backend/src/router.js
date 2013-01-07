@@ -7,7 +7,6 @@ var
   Search = require('./search').Search;
 
 var
-  headers = { 'Access-Control-Allow-Origin': 'http://127.0.0.1:8000/' },
   accountBody = {
       'SID': '',
       'error': '',
@@ -44,7 +43,6 @@ var
   //util.puts(schemajs.create(schema).validate( { question: { id: 'test', body: 'test', creator: 'test', type: 'textual', answer: { id: 'test', body: 'test', annotations: new Array() }}}).valid); // true
   */
 exports.createRouter = function (model, authentication) {
-
     var router = new (journey.Router)({
         strict: false,
         filter: function (req, body, callback) {
@@ -52,7 +50,7 @@ exports.createRouter = function (model, authentication) {
                 return callback(new journey.NotAuthorized('Invalid user'));
             }
             else {
-                callback();// respond with no error
+                callback(); // respond with no error
             }
         }
     });
@@ -72,7 +70,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(404);
                   }
-                  res.send(200, headers, { 'questions': list });
+                  res.send(200, {}, { 'questions': list });
               });
           });
 
@@ -84,7 +82,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(500);
                   }
-                  res.send(200, headers, { 'id': id });
+                  res.send(200, {}, { 'id': id });
               });
           });
 
@@ -96,7 +94,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(404);
                   }
-                  res.send(200, headers, question);
+                  res.send(200, {}, question);
               });
           });
 
@@ -136,7 +134,7 @@ exports.createRouter = function (model, authentication) {
         if (err) {
           res.send(502);
         } else {
-          res.send(200, headers, { 'results': { 'concepts': response, 'documents': [], 'statements': [] } });
+          res.send(200, {}, { 'results': { 'concepts': response, 'documents': [], 'statements': [] } });
         }
       });
     });
@@ -151,12 +149,12 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.password && body.userEmail) {
               authentication.addUser(body.email, body.password, body.userEmail, function (err, result) {
                   if (err) {
-                      res.send(400, headers, { 'error': err });
+                      res.send(400, {}, { 'error': err });
                   }
-                  res.send(200, headers, { 'error': '' });
+                  res.send(200, {}, { 'error': '' });
               });
           } else {
-              res.send(400, headers, { 'error': 'missing parameters' });
+              res.send(400, {}, { 'error': 'missing parameters' });
           }
       });
   });
@@ -172,7 +170,7 @@ exports.createRouter = function (model, authentication) {
               authentication.standardLogin(body.email, body.password, function (err, result) {
                   if (err) {
                       accountBody.error = err;
-                      res.send(500, headers, accountBody);
+                      res.send(500, {}, accountBody);
                   }
                   else if (result) {
                       var user = result[0]; // DB data
@@ -182,17 +180,17 @@ exports.createRouter = function (model, authentication) {
                       // response
                       accountBody.SID = req.session.id;
                       accountBody.usermail = req.session.data.user
-                      res.send(200, headers, accountBody);
+                      res.send(200, {}, accountBody);
                   }
                   else {
                       accountBody.error = 'account not found'
-                      res.send(401, headers, accountBody);
+                      res.send(401, {}, accountBody);
                   }
               });
           }
           else {
               accountBody.error = 'missing parameters';
-              res.send(400, headers, accountBody);
+              res.send(400, {}, accountBody);
           }
           clearAccountBody();
       });
@@ -212,7 +210,7 @@ exports.createRouter = function (model, authentication) {
               req.session.data.user = 'Guest';
 
               accountBody.usermail = user;
-              res.send(200, headers, accountBody);
+              res.send(200, {}, accountBody);
               clearAccountBody();
           });
       });
@@ -227,13 +225,13 @@ exports.createRouter = function (model, authentication) {
               authentication.activatePassword(body.email,body.code, function (err, result) {
                   if (err) {
                       accountBody.error = err;
-                      res.send(500, headers, accountBody);
+                      res.send(500, {}, accountBody);
                   } else if (result) {
                       accountBody.usermail = body.email;
-                      res.send(200, headers, accountBody);
+                      res.send(200, {}, accountBody);
                   } else {
                       accountBody.error = 'account not found';
-                      res.send(401, headers, accountBody);
+                      res.send(401, {}, accountBody);
                   }
               });
           }else if (body.email) {
@@ -241,18 +239,18 @@ exports.createRouter = function (model, authentication) {
               authentication.resetPassword(url, body.email, function (err, result) {
                   if (err) {
                       accountBody.error = err;
-                      res.send(500, headers, accountBody);
+                      res.send(500, {}, accountBody);
                   } else if (result) {
                       accountBody.usermail = body.email;
-                      res.send(200, headers, accountBody);
+                      res.send(200, {}, accountBody);
                   } else {
                       accountBody.error = 'account not found';
-                      res.send(401, headers, accountBody);
+                      res.send(401, {}, accountBody);
                   }
               });
           } else {
               accountBody.error = 'missing parameters';
-              res.send(400, headers, accountBody);
+              res.send(400, {}, accountBody);
           }
           clearAccountBody();
       });
@@ -273,17 +271,17 @@ exports.createRouter = function (model, authentication) {
                   authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
                       if (err) {
                           accountBody.error = err;
-                          res.send(500, headers, accountBody);
+                          res.send(500, {}, accountBody);
                       } else if (result) {
-                          res.send(200, headers, accountBody);
+                          res.send(200, {}, accountBody);
                       } else {
                           accountBody.error = 'account not found';
-                          res.send(401, headers, accountBody);
+                          res.send(401, {}, accountBody);
                       }
                   });
               } else {
                   accountBody.error = 'missing parameters';
-                  res.send(400, headers, accountBody);
+                  res.send(400, {}, accountBody);
               }
               clearAccountBody();
           });
@@ -299,21 +297,21 @@ exports.createRouter = function (model, authentication) {
                 authentication.activateUser(body.email, body.code, function (err, result) {
                     if (err) {
                         accountBody.error = err;
-                        res.send(500, headers, accountBody);
+                        res.send(500, {}, accountBody);
                     } else if (result) {
-                        res.send(200, headers, accountBody);
+                        res.send(200, {}, accountBody);
                     } else {
                         accountBody.error = 'account not found';
-                        res.send(401, headers, accountBody);
+                        res.send(401, {}, accountBody);
                     }
                 });
             } else if (body.email) {
                 //TODO send activation mail again?
                 accountBody.error = 'missing parameters';
-                res.send(400, headers, accountBody);
+                res.send(400, {}, accountBody);
             } else {
                 accountBody.error = 'missing parameters';
-                res.send(400, headers, accountBody);
+                res.send(400, {}, accountBody);
             }
             clearAccountBody();
         });
@@ -333,18 +331,18 @@ exports.createRouter = function (model, authentication) {
                   authentication.createUser(body, url, function (err, results) {
                       if (err) {
                           accountBody.error = err;
-                          res.send(403, headers, accountBody);
+                          res.send(403, {}, accountBody);
                       } else {
-                          res.send(200, headers, accountBody);
+                          res.send(200, {}, accountBody);
                       }
                   });
               } else {
                   accountBody.error = schemajs.create(authentication.userSchema).validate(body).errors;
-                  res.send(400, headers, accountBody);
+                  res.send(400, {}, accountBody);
               }
           } else {
               accountBody.error = 'missing parameters';
-              res.send(400, headers, accountBody);
+              res.send(400, {}, accountBody);
           }
           clearAccountBody();
       });
