@@ -1,8 +1,7 @@
 CD=cd
 NPM=npm install
-LIB=.
 MODULES_DIR=node_modules
-DEPS=journey optimist mongodb sesh response eyes schemajs nodemailer step
+DEPS=journey optimist mongodb sesh eyes schemajs nodemailer step send
 EXISTING=$(subst $(MODULES_DIR)/,, $(wildcard $(MODULES_DIR)/*))
 MISSING=$(filter-out $(EXISTING), $(DEPS))
 
@@ -15,5 +14,5 @@ all:
 
 libs:
 ifneq ($(MISSING),)
-	$(CD) $(LIB) && $(NPM) $(MISSING)
+	$(NPM) $(MISSING)
 endif
