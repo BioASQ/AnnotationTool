@@ -1,7 +1,6 @@
 var
   journey = require('journey'),
   url = require('url'),
-  session = require('sesh').magicSession(),
   util = require('util'),
   schemajs = require('schemajs'),
   Search = require('./search').Search;
@@ -56,6 +55,8 @@ exports.createRouter = function (model, authentication) {
     });
 
     var idRegEx = /([0-9a-fA-F]{24})/;
+
+  router.path(/\/backend\/?/, function () {
 
   router.path(/\/questions\/?/, function () {
       /*
@@ -346,6 +347,8 @@ exports.createRouter = function (model, authentication) {
           }
           clearAccountBody();
       });
+  });
+
   });
 
   return router;

@@ -1,7 +1,16 @@
 var
   http = require('http'),
   util = require('util'),
+  url = require('url'),
   mongodb = require('mongodb'),
+  send = require('send');
+
+var _setHeader = http.ServerResponse.prototype.setHeader;
+var session = require('sesh').session;
+// undo response's monkey patching madness
+http.ServerResponse.prototype.setHeader = _setHeader;
+
+var
   login = require('./login'),
   question = require('./question');
 
@@ -9,20 +18,32 @@ var
   corsHeaderName = 'Access-Control-Allow-Origin';
 
 exports.createServer = function (port, model, authentication) {
-  var router = require('./router').createRouter(model, authentication);
   var server = http.createServer(function (request, response) {
     var body = '';
     request.on('data', function (chunk) {
       body += chunk;
     });
     request.on('end', function () {
-      var emitter = router.handle(request, body, function (route) {
-        var headers = route.headers;
-        // aleays inject CORS header
-        headers[corsHeaderName] = 'http://' + request.headers.host;
-        response.writeHead(route.status, headers);
-        response.end(route.body);
-      });
+      var parsedURL = url.parse(request.url);
+
+      if (parsedURL.pathname.search(/backend/) > -1) {
+        session(request, response, function (request, response) {
+          var router = require('./router').createRouter(model, authentication);
+          var emitter = router.handle(request, body, function (route) {
+            var headers = route.headers;
+            // aleays inject CORS header
+            headers[corsHeaderName] = 'http://' + request.headers.host;
+
+            // send response
+            response.writeHead(route.status, headers);
+            response.end(route.body);
+          });
+        });
+      } else {
+        send(request, parsedURL.pathname)
+          .root('../frontend')
+          .pipe(response);
+      }
     });
   });
 

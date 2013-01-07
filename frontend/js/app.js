@@ -13,7 +13,7 @@ requirejs.config({
 // load common libraries
 define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], function(){
     // define vars
-    var logicServer = "http://localhost:8000/";
+    var logicServer = '/backend/';
 
     var App = function(){
         var that = this;
