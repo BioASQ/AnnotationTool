@@ -22,7 +22,7 @@ Mail.prototype.createUser = function (user,url,  callback) {
         'password: ' + user.password + '<br />' +
         '<a href="' + url +
             '?email=' + encodeURIComponent(user.email) +
-             '&code=' + encodeURIComponent(user.activ) +
+             '&code=' + encodeURIComponent(user.active) +
              '">Click the link to activate your account.</a>';
 
    this.transport.sendMail(this._mailOptions(user.email, html), function (error, responseStatus) {
