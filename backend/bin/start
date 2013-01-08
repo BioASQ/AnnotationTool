@@ -2,8 +2,16 @@
 
 var
   util = require('util'),
-  path = require('path'),
+  path = require('path');
+
+var config;
+try {
   config = require(path.join(__dirname, '..', 'config')).defaults;
+} catch (error) {
+  console.log('Could not find config.js.');
+  console.log('Please copy config.js-dist to config.js, adapt it to your needs and try again.');
+  process.exit();
+}
 
 var options = {
   'port': config.server.port,
