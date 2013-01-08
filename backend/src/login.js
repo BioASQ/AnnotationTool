@@ -18,7 +18,7 @@ var Login = exports.Login = function (database) {
 
 Login.prototype.addUser = function (email, password, userEmail, callback) {
     // check admin account
-    if (email == this.mail.mail && password == this.mail.pass) {
+    if (email == config.mail.address && password == config.mail.password) {
         // find user
         this._collection(callback, function (err, coll) {
             coll.find({ email: userEmail }).toArray(function (err, docs) {
