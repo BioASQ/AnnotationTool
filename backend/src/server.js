@@ -3,7 +3,8 @@ var
   util = require('util'),
   url = require('url'),
   mongodb = require('mongodb'),
-  send = require('send');
+  send = require('send'),
+  path = require('path');
 
 var _setHeader = http.ServerResponse.prototype.setHeader;
 var session = require('sesh').session;
@@ -41,7 +42,7 @@ exports.createServer = function (port, model, authentication) {
         });
       } else {
         send(request, parsedURL.pathname)
-          .root(__dirname + '/../../frontend')
+          .root(path.join(__dirname, '..', '..', 'frontend'))
           .pipe(response);
       }
     });
