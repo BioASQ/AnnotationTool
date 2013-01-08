@@ -57,7 +57,7 @@ exports.createServer = function (port, model, authentication) {
 exports.start = function (options, callback) {
   var
     dbServer = new mongodb.Server(options.database.host, options.database.port, {}),
-    dbConn = new mongodb.Db('bioasq-at', dbServer, {safe: false});
+    dbConn = new mongodb.Db(options.database.name, dbServer, { safe: false });
 
   dbConn.open(function (err, database) {
     if (err) {

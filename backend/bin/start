@@ -9,7 +9,8 @@ var options = {
   'port': config.server.port,
   'database': {
     'host': config.database.host,
-    'port': config.database.port
+    'port': config.database.port,
+    'name': config.database.name
   }
 };
 

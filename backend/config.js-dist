@@ -13,7 +13,8 @@ exports.defaults.mail = {
  */
 exports.defaults.database = {
   host: '127.0.0.1',
-  port: 27017
+  port: 27017,
+  name: 'bioasq-at'
 };
 
 /*
@@ -25,6 +26,11 @@ exports.defaults.server = {
 
 exports.defaults.login = {
   salt: '§$%&/()(/&%$'
+};
+
+exports.defaults.logging = {
+  exceptionsFile : 'exceptions.log',
+  level : 'info'
 };
 
 exports.defaults.search = {
