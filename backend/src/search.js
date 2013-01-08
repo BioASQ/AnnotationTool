@@ -1,13 +1,14 @@
 var
   TIService = require('./tiservice').TIService,
-  step = require('step');
+  step = require('step'),
+  config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
 var Search = exports.Search = function () {
-  this.doid = new TIService('http://www.gopubmed.org/web/bioasq/doid/json');
-  this.go = new TIService('http://www.gopubmed.org/web/bioasq/go/json');
-  this.jochem = new TIService('http://www.gopubmed.org/web/bioasq/jochem/json');
-  this.mesh = new TIService('http://www.gopubmed.org/web/bioasq/mesh/json');
-  this.uniprot = new TIService('http://www.gopubmed.org/web/bioasq/uniprot/json');
+  this.doid = new TIService(config.search.concepts.doid);
+  this.go = new TIService(config.search.concepts.go);
+  this.jochem = new TIService(config.search.concepts.jochem);
+  this.mesh = new TIService(config.search.concepts.mesh);
+  this.uniprot = new TIService(config.search.concepts.uniprot);
 };
 
 Search.prototype._merge = function (sectionName/* variadic arguments */) {

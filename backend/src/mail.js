@@ -1,15 +1,13 @@
 ﻿var
-    nodemailer = require('nodemailer');
+    nodemailer = require('nodemailer')
+    config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
 var Mail = exports.Mail = function () {
-    this.mail = 'BioAsqAT@gmail.com';
-    this.pass = '****';
-
     this.transport = nodemailer.createTransport('SMTP', {
         service: 'Gmail',
         auth: {
-            user: this.mail,
-            pass: this.pass
+            user: config.mail.address,
+            pass: config.mail.password
         }
     });
 };

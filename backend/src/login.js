@@ -2,10 +2,11 @@
     util = require('util'),
     crypto = require('crypto'),
     schemajs = require('schemajs'),
-    mymail = require('./mail');
+    mymail = require('./mail'),
+    config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
 var Login = exports.Login = function (database) {
-    this.md5Blob = '§$%&/()(/&%$';
+    this.md5Blob = config.login.salt,
     this.mail = new mymail.Mail();
     this.db = database;
     this.userSchema = {

@@ -1,0 +1,38 @@
+var defaults = exports.defaults = {}; 
+
+/*
+ * Google account from which to send password and activation e-mails.
+ */
+exports.defaults.mail = {
+  address: 'BioAsqAT@gmail.com',
+  password: '...'
+};
+
+/*
+ * MongoDB server configuration.
+ */
+exports.defaults.database = {
+  host: '127.0.0.1',
+  port: 27017
+};
+
+/*
+ * Annotation tool server configuration.
+ */
+exports.defaults.server = {
+  port: 8000
+};
+
+exports.defaults.login = {
+  salt: '§$%&/()(/&%$'
+};
+
+exports.defaults.search = {
+  concepts: {
+    doid: 'http://www.gopubmed.org/web/bioasq/doid/json',
+    go: 'http://www.gopubmed.org/web/bioasq/go/json',
+    jochem: 'http://www.gopubmed.org/web/bioasq/jochem/json',
+    mesh: 'http://www.gopubmed.org/web/bioasq/mesh/json',
+    uniprot: 'http://www.gopubmed.org/web/bioasq/uniprot/json'
+  }
+};
