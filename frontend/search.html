@@ -106,6 +106,19 @@
             </div>
         </script>
 
+        <!-- search source results row -->
+        <script id="searchResultConceptTemplate" type="text/x-handlebars-template">
+            <div class="row search-result {{domClass}}">
+                <div class="span8 offset1">
+                    {{title}}
+                </div>
+                <div class="span2">
+                    <a href="{{uri}}" target="_blank"><i class="icon-file"></i></a>
+                    <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                </div>
+            </div>
+        </script>
+
         <!-- search source results row for statements -->
         <script id="statementSearchResultTemplate" type="text/x-handlebars-template">
             <div class="row search-result {{domClass}}">

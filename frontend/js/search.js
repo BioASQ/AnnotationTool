@@ -1,12 +1,16 @@
 require(["app"], function(app) {
     // compile templates
     var searchResultTemplate,
+        searchResultConceptTemplate,
         statementSearchResultTemplate,
         answerTemplate,
         source;
     // search res templaet
     source = $("#searchResultTemplate").html();
     searchResultTemplate = Handlebars.compile(source);
+    // concept result template
+    source = $("#searchResultConceptTemplate").html();
+    searchResultConceptTemplate = Handlebars.compile(source);
     // statement search res
     source = $("#statementSearchResultTemplate").html();
     statementSearchResultTemplate = Handlebars.compile(source);
@@ -48,6 +52,26 @@ require(["app"], function(app) {
         var query = searchQuery.val();
         searchQuery.val("");
 
+        // reset toggles
+        var tc = $("#toggleConcepts");
+        if( tc.data('state') !== "hidden" )
+            toggleClass("conceptResult", tc);
+    
+        var td = $("#toggleDocs");
+        if( td.data('state') !== "hidden" )
+            toggleClass("documentResult", td);
+
+        var ts = $("#toggleStatments");
+        if( ts.data('state') !== "hidden" )
+            toggleClass("statementResult", ts);
+
+        // clean old
+        $('.conceptResult').remove();
+        $('.documentResult').remove();
+        $('.statementResult').remove();
+
+
+        // do request
         $.post(app.data.LogicServer+"search", {query:query}, function(data){
             var i, res, html, internalID = 0;
 
@@ -68,7 +92,7 @@ require(["app"], function(app) {
                     results.push(res);
 
                     // render to string
-                    html += searchResultTemplate(res);
+                    html += searchResultConceptTemplate(res);
                 }
 
                 // append to dom
