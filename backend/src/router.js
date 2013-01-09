@@ -5,6 +5,7 @@ var
   journey = require('journey'),
   url = require('url'),
   util = require('util'),
+  http = require('http'),
   schemajs = require('schemajs'),
   step = require('step'),
   Search = require('./search').Search,
@@ -299,6 +300,44 @@ exports.createRouter = function (model, authentication) {
                   // schemajs.create(authentication.userSchema).validate(body).errors;
                   res.send(400, {}, 'invalid user schema');
               }
+          } else {
+              res.send(400, {}, 'missing parameters');
+          }
+      });
+  });
+
+  router.path(/\/corsProxy\/?/, function () {
+      /*
+       * GET to /corsProxy with parameter: url
+       */
+      this.get().bind(function (req, res, body) {
+          if (body.url) {
+
+              var para = url.parse(body.url);
+              var options = {
+                  host : para.host,
+                  port : 80,
+                  path : para.path,
+                  method : 'GET'
+              };
+
+              var req = http.request(options, function(response) {
+
+                  var content = '';
+                  response.on('data', function(chunk) {
+                      content += chunk;
+                  });
+
+                  response.on('end', function() {
+                      res.send(200, {} , content)
+                  });
+              });
+
+              req.on('error', function(e) {
+                  res.send(503, {}, 'error');
+              });
+              req.end();
+
           } else {
               res.send(400, {}, 'missing parameters');
           }
