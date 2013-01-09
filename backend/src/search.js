@@ -1,14 +1,14 @@
 var
-  TIService = require('./tiservice').TIService,
   step = require('step'),
-  config = require(require('path').join(__dirname, '..', 'config')).defaults;
+  config = require(require('path').join(__dirname, '..', 'config')).defaults,
+  TIConcepts = require('./ticoncepts').TIConcepts;
 
 var Search = exports.Search = function () {
-  this.doid = new TIService(config.search.concepts.doid);
-  this.go = new TIService(config.search.concepts.go);
-  this.jochem = new TIService(config.search.concepts.jochem);
-  this.mesh = new TIService(config.search.concepts.mesh);
-  this.uniprot = new TIService(config.search.concepts.uniprot);
+  this.doid = new TIConcepts(config.search.concepts.doid);
+  this.go = new TIConcepts(config.search.concepts.go);
+  this.jochem = new TIConcepts(config.search.concepts.jochem);
+  this.mesh = new TIConcepts(config.search.concepts.mesh);
+  this.uniprot = new TIConcepts(config.search.concepts.uniprot);
 };
 
 Search.prototype._merge = function (sectionName/* variadic arguments */) {

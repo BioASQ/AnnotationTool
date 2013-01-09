@@ -1,5 +1,5 @@
 var
-  Search = require('../src/search').Search,
+  Search = require('../src/ticoncepts').Search,
   assert = require('assert'),
   util = require('util');
 

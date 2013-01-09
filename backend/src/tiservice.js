@@ -20,16 +20,24 @@ TIService.prototype._tokenURL = function (cb) {
     return;
   }
   // token invalid
-  this._request(function (err, data) {
-    self.tokenURL = data;
-    cb(self.tokenURL);
-  }, this.serviceURL, { 'method': 'GET' });
+  this._request(this.serviceURL, { 'method': 'GET' },
+      function (err, data) {
+        self.tokenURL = data;
+        cb(self.tokenURL);
+      }
+    );
 };
 
 /*
  * Basic request wrapper function
  */
-TIService.prototype._request = function (cb, URL, options, /* Object */ data) {
+TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
+  /*
+   * If cb is undefined we have been given only three parameters, the last of which is
+   * the callback.
+   */
+  cb = cb || data;
+
   this._resetTimeout();
   var urlObj = url.parse(URL);
   var dataStr = '';
@@ -77,34 +85,4 @@ TIService.prototype._resetTimeout = function () {
   }, this.timeout);
 };
 
-TIService.prototype.find = function (/* String */ keywords, cb) {
-  var self = this;
-  this._tokenURL(function (URL) {
-    self._request(function (err, response) {
-      if (err) {
-        cb(err);
-      } else {
-        try {
-          var result = JSON.parse(response).result;
-          cb(null, result);
-        } catch (e) {
-          console.log('Could not parse response: ' + response);
-          cb(e);
-        }
-      }
-    }, URL, { 'method': 'POST' }, { 'findEntities': [ keywords ]});
-  });
-};
 
-TIService.prototype.annotate = function (/* String */ keywords, cb) {
-  var self = this;
-  this._tokenURL(function (URL) {
-    self._request(function (err, response) {
-      if (err) {
-        cb(err);
-      } else {
-        cb(null, JSON.parse(response).result);
-      }
-    }, URL, { 'method': 'POST' }, { 'annotateText': [ keywords ]});
-  });
-};

@@ -41,5 +41,6 @@ exports.defaults.search = {
     jochem: 'http://www.gopubmed.org/web/bioasq/jochem/json',
     mesh: 'http://www.gopubmed.org/web/bioasq/mesh/json',
     uniprot: 'http://www.gopubmed.org/web/bioasq/uniprot/json'
-  }
+  },
+  documents: 'http://www.gopubmed.org/web/gopubmedbeta/bioasq/pubmed'
 };

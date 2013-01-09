@@ -1,9 +1,15 @@
+const
+  itemsPerPage = 10;
+
 var
   journey = require('journey'),
   url = require('url'),
   util = require('util'),
   schemajs = require('schemajs'),
-  Search = require('./search').Search;
+  step = require('step'),
+  Search = require('./search').Search,
+  TIDocuments = require('./tidocuments').TIDocuments,
+  config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
 var
   accountBody = {
@@ -47,8 +53,7 @@ exports.createRouter = function (model, authentication) {
         filter: function (req, body, callback) {
             if (req.session.data.user === 'Guest') {
                 return callback(new journey.NotAuthorized('Invalid user'));
-            }
-            else {
+            } else {
                 callback(); // respond with no error
             }
         }
@@ -129,15 +134,31 @@ exports.createRouter = function (model, authentication) {
    * POST to /search
    */
   router.path(/\/search\/?/, function () {
-    var searchBackend = new Search();
-    this.post().bind(function (req, res, keywords) {
-      searchBackend.find(keywords.query, function (err, response) {
-        if (err) {
-          res.send(502);
-        } else {
-          res.send(200, {}, { 'results': { 'concepts': response, 'documents': [], 'statements': [] } });
+    var
+      conceptSearch = new Search(),
+      documentSearch = new TIDocuments(config.search.documents);
+
+    this.post().bind(function (req, res, keywords, page) {
+      page = page || 0;
+      step(
+        function () {
+          conceptSearch.find(keywords.query, this.parallel()),
+          documentSearch.find(keywords.query, 0, itemsPerPage, this.parallel())
+        },
+        function (err, conceptResult, documentResult) {
+          if (err) {
+            res.send(502);
+          } else {
+            res.send(200, {}, {
+              'results': {
+                'concepts': conceptResult,
+                'documents': documentResult,
+                'statements': [] /* TODO: */
+              }
+            });
+          }
         }
-      });
+      );
     });
   });
 
