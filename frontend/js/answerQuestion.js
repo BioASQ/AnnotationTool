@@ -230,6 +230,7 @@ require(["app"], function(app) {
     for(i = 0; i < selectedDocuments.length; i++){
         html += template(selectedDocuments[i]);
     }
+
     // append to dom
     $("#resultList").html(html);
 });
