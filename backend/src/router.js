@@ -262,7 +262,8 @@ exports.createRouter = function (model, authentication) {
                     if (err) {
                         res.send(500, {}, err);
                     } else if (result) {
-                        res.send(200, {}, {});
+                        var url = 'http://' + req.headers.host;
+                        res.send(302, {'Location': url }, {});
                     } else {
                         res.send(401, {}, 'account not found');
                     }
