@@ -41,6 +41,10 @@ require(["app"], function(app) {
 
             question = {body:label, type:type, creator:user};
 
+        // clean
+        newQuestionType.val("list");
+        newQuestionLabel.val("");
+
         $.post(app.data.LogicServer+"questions", question, function(data){
             question['_id'] = data.id;
             
