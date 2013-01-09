@@ -25,7 +25,8 @@ require(["app"], function(app) {
     $("#doRegister").click(function(){
         var email = $("#userEmail").val(),
             pass = $("#userPass").val(),
-            passAgain = $("#userPassRepeat").val();
+            passAgain = $("#userPassRepeat").val(),
+            name = $("#userName").val();
 
         if(pass != passAgain){
             alert("Passwords doesn't match");
@@ -33,9 +34,14 @@ require(["app"], function(app) {
         }
 
         $.post(app.data.LogicServer + 'register',
-            {email: email, password: pass, name: "doweneedthat"},
+            {email: email, password: pass, name: name},
             function(data){
-                console.log(data);
+                $("#regModal").modal("hide");
+            }
+        )
+        .error(function(resp){
+            var data = $.parseJSON(resp.responseText);
+            alert(data.error);
         });
     });
 });
