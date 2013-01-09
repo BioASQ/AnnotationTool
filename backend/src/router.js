@@ -11,42 +11,6 @@ var
   TIDocuments = require('./tidocuments').TIDocuments,
   config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
-var
-  accountBody = {
-      'SID': '',
-      'error': '',
-      'usermail': ''
-  },
-  clearAccountBody = function () {
-      accountBody = {
-          'SID': '',
-          'error': '',
-          'usermail': ''
-      };
-  };
-
-  /*
-  var schema = {
-      question: {
-          type: 'object', required: true, // 'properties': { ... }, 'error': { ... },
-          schema: {
-              id: { type: 'string+', required: true },
-              body: { type: 'string+', required: true },
-              creator: { type: 'string+', required: true },
-              type: { type: 'string+', required: true, properties: { regex: /(list|textual)/ } },
-              answer: {
-                  type: 'object', required: true,
-                  schema: {
-                      id: { type: 'string+', required: true },
-                      body: { type: 'string+', required: true },
-                      annotations: { type: 'array' }
-                  }
-              }
-          }
-      }
-  };
-  //util.puts(schemajs.create(schema).validate( { question: { id: 'test', body: 'test', creator: 'test', type: 'textual', answer: { id: 'test', body: 'test', annotations: new Array() }}}).valid); // true
-  */
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
         strict: false,
@@ -171,12 +135,12 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.password && body.userEmail) {
               authentication.addUser(body.email, body.password, body.userEmail, function (err, result) {
                   if (err) {
-                      res.send(400, {}, { 'error': err });
+                      res.send(400, {}, err);
                   }
-                  res.send(200, {}, { 'error': '' });
+                  res.send(200, {}, { });
               });
           } else {
-              res.send(400, {}, { 'error': 'missing parameters' });
+              res.send(400, {}, 'missing parameters');
           }
       });
   });
@@ -191,8 +155,7 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.password) {
               authentication.standardLogin(body.email, body.password, function (err, result) {
                   if (err) {
-                      accountBody.error = err;
-                      res.send(500, {}, accountBody);
+                      res.send(500, {}, err);
                   }
                   else if (result) {
                       var user = result[0]; // DB data
@@ -200,21 +163,16 @@ exports.createRouter = function (model, authentication) {
                       req.session.data.user = user.email;
 
                       // response
-                      accountBody.SID = req.session.id;
-                      accountBody.usermail = req.session.data.user
-                      res.send(200, {}, accountBody);
+                      res.send(200, {}, {SID: req.session.id, usermail: req.session.data.user });
                   }
                   else {
-                      accountBody.error = 'account not found'
-                      res.send(401, {}, accountBody);
+                      res.send(401, {}, 'account not found');
                   }
               });
           }
           else {
-              accountBody.error = 'missing parameters';
-              res.send(400, {}, accountBody);
+              res.send(400, {}, 'missing parameters');
           }
-          clearAccountBody();
       });
   });
 
@@ -227,13 +185,9 @@ exports.createRouter = function (model, authentication) {
            * GET to /logout
            */
           this.get().bind(function (req, res) {
-
-              var user = req.session.data.user;
+              // logout
               req.session.data.user = 'Guest';
-
-              accountBody.usermail = user;
-              res.send(200, {}, accountBody);
-              clearAccountBody();
+              res.send(200, {}, {});
           });
       });
   });
@@ -246,35 +200,27 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.code) {
               authentication.activatePassword(body.email,body.code, function (err, result) {
                   if (err) {
-                      accountBody.error = err;
-                      res.send(500, {}, accountBody);
+                      res.send(500, {}, err);
                   } else if (result) {
-                      accountBody.usermail = body.email;
-                      res.send(200, {}, accountBody);
+                      res.send(200, {}, {});
                   } else {
-                      accountBody.error = 'account not found';
-                      res.send(401, {}, accountBody);
+                      res.send(401, {}, 'account not found');
                   }
               });
           }else if (body.email) {
               var url = 'http://' + req.headers.host + '/resetPassword'
               authentication.resetPassword(url, body.email, function (err, result) {
                   if (err) {
-                      accountBody.error = err;
-                      res.send(500, {}, accountBody);
+                      res.send(500, {}, err);
                   } else if (result) {
-                      accountBody.usermail = body.email;
-                      res.send(200, {}, accountBody);
+                      res.send(200, {}, {});
                   } else {
-                      accountBody.error = 'account not found';
-                      res.send(401, {}, accountBody);
+                      res.send(401, {}, 'account not found');
                   }
               });
           } else {
-              accountBody.error = 'missing parameters';
-              res.send(400, {}, accountBody);
-          }
-          clearAccountBody();
+              res.send(400, {}, 'missing parameters');
+          };
       });
   });
 
@@ -292,20 +238,16 @@ exports.createRouter = function (model, authentication) {
               if (body.oldPassword && body.newPassword) {
                   authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
                       if (err) {
-                          accountBody.error = err;
-                          res.send(500, {}, accountBody);
+                          res.send(500, {}, err);
                       } else if (result) {
-                          res.send(200, {}, accountBody);
+                          res.send(200, {}, {});
                       } else {
-                          accountBody.error = 'account not found';
-                          res.send(401, {}, accountBody);
+                          res.send(401, {}, 'account not found');
                       }
                   });
               } else {
-                  accountBody.error = 'missing parameters';
-                  res.send(400, {}, accountBody);
+                  res.send(400, {}, 'missing parameters');
               }
-              clearAccountBody();
           });
       });
   });
@@ -318,24 +260,19 @@ exports.createRouter = function (model, authentication) {
             if (body.email && body.code) {
                 authentication.activateUser(body.email, body.code, function (err, result) {
                     if (err) {
-                        accountBody.error = err;
-                        res.send(500, {}, accountBody);
+                        res.send(500, {}, err);
                     } else if (result) {
-                        res.send(200, {}, accountBody);
+                        res.send(200, {}, {});
                     } else {
-                        accountBody.error = 'account not found';
-                        res.send(401, {}, accountBody);
+                        res.send(401, {}, 'account not found');
                     }
                 });
             } else if (body.email) {
                 //TODO send activation mail again?
-                accountBody.error = 'missing parameters';
-                res.send(400, {}, accountBody);
+                res.send(400, {}, 'missing parameters');
             } else {
-                accountBody.error = 'missing parameters';
-                res.send(400, {}, accountBody);
+                res.send(400, {}, 'missing parameters');
             }
-            clearAccountBody();
         });
   });
 
@@ -352,21 +289,18 @@ exports.createRouter = function (model, authentication) {
                   var url = 'http://' + req.headers.host + '/backend/activate';
                   authentication.createUser(body, url, function (err, results) {
                       if (err) {
-                          accountBody.error = err;
-                          res.send(403, {}, accountBody);
+                          res.send(403, {}, err);
                       } else {
-                          res.send(200, {}, accountBody);
+                          res.send(200, {}, {});
                       }
                   });
               } else {
-                  accountBody.error = schemajs.create(authentication.userSchema).validate(body).errors;
-                  res.send(400, {}, accountBody);
+                  // schemajs.create(authentication.userSchema).validate(body).errors;
+                  res.send(400, {}, 'invalid user schema');
               }
           } else {
-              accountBody.error = 'missing parameters';
-              res.send(400, {}, accountBody);
+              res.send(400, {}, 'missing parameters');
           }
-          clearAccountBody();
       });
   });
 
