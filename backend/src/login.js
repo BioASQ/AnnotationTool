@@ -11,7 +11,12 @@ var Login = exports.Login = function (database) {
     this.db = database;
     this.userSchema = {
         email: { type: 'email',  error: 'wrong email', required: true },
-        password: { type: 'string+', properties: { max: 255, min: 8 }, error: { max: 'too many chars', min: 'too few chars' }, required: true },
+        password: {
+            type: 'string+',
+            properties: { regex: config.login.passwordRegEx },
+            error: { regex: 'password wrong' },
+            required: true
+        },
         name: { type: 'string+', error: 'wrong name', required: true }
     };
 };

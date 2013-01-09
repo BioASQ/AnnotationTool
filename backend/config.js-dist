@@ -25,7 +25,8 @@ exports.defaults.server = {
 };
 
 exports.defaults.login = {
-  salt: '§$%&/()(/&%$'
+  salt: '§$%&/()(/&%$',
+  passwordRegEx : /^[a-z0-9_-]{8,20}$/
 };
 
 exports.defaults.logging = {
