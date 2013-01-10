@@ -24,11 +24,18 @@ exports.defaults.server = {
   port: 8000
 };
 
+/*
+ *  Login config
+ */
 exports.defaults.login = {
   salt: '§$%&/()(/&%$',
-  passwordRegEx : /^[a-z0-9_-]{8,20}$/
+  // at least 8 characters long, 1 digit and 1 symbol
+  passwordRegEx: /^.*(?=.{8,})(?=.*[\d])(?=.*[\W]).*$/
 };
 
+/*
+ *  Logging config
+ */
 exports.defaults.logging = {
   exceptionsFile : 'exceptions.log',
   level : 'info'
