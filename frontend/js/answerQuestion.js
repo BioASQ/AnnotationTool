@@ -116,9 +116,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             });
             currentAnnotation = answer.annotations[answer.annotations.length-1];
 
-            console.log(answer);
-            console.log(currentAnnotation);
-
             // render
             answer.html = answer.html.replace(text, currentAnnotation.html);
             updateQuestionText();
@@ -158,8 +155,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         currentAnnotation["annotationDocument"] = currentDocument.uri;
         currentAnnotation["annotationText"] = null;
 
-        console.log(answer);
-
         // show buttons
         $startAnn.show();
         $annCancel.hide();
@@ -181,8 +176,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             // add doc data to annotation
             currentAnnotation["annotationDocument"] = currentDocument.uri;
             currentAnnotation["annotationText"] = text;
-
-            console.log(answer);
 
             // show buttons
             $startAnn.show();
@@ -217,8 +210,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         }
 
         var url = currentDocument.uri;
-        
-        console.log(app.data);
 
         // set title
         $("#docTitle").text( $(this).text() );
