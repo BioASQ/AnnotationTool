@@ -152,7 +152,8 @@ require(["app"], function(app) {
         updateQuestionText();
 
         // add doc data to annotation
-        currentAnnotation["annotationDocument"] = currentDocument.num;
+        currentAnnotation["annotationDocument"] = currentDocument.uri;
+        currentAnnotation["annotationText"] = null;
 
         console.log(answer);
 
@@ -175,6 +176,7 @@ require(["app"], function(app) {
             updateQuestionText();
 
             // add doc data to annotation
+            currentAnnotation["annotationDocument"] = currentDocument.uri;
             currentAnnotation["annotationText"] = text;
 
             console.log(answer);
@@ -187,6 +189,13 @@ require(["app"], function(app) {
         }
     });
 
+    $saveButton.on('click', function(){
+        var question = app.data.question;
+        question.answer = answer;
+        $.post(app.data.LogicServer+"questions", question, function(){
+            $("#saveSuccess").show();
+        });
+    });
 
     // on result docs click
     $("body").on("click", ".resultDocument", function(){
