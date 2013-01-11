@@ -16,7 +16,10 @@ TIDocuments.prototype = Object.create(TIService.prototype);
 TIDocuments.prototype._transform = function (results) {
   var results = [];
   return results.map(function(result) {
-    return { 'uri': pubMedBaseURI + result.pmid, 'title': result.title };
+    return {
+      'uri': pubMedBaseURI + result.pmid,
+      'title': result.title ? result.title : result.documentAbstract
+    };
   });
 };
 
