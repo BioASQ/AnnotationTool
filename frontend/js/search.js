@@ -79,6 +79,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             var i, res, html, internalID = 0;
 
             results = [];
+            console.log(data);
 
             // show concepts
             if(data.results.concepts.length > 0){
