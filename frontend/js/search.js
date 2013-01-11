@@ -4,6 +4,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         searchResultConceptTemplate,
         statementSearchResultTemplate,
         answerTemplate,
+        paginationTemplate,
         source;
     // search res templaet
     source = $("#searchResultTemplate").html();
@@ -17,6 +18,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // answer stuff
     source = $("#answerTemplate").html();
     answerTemplate = Handlebars.compile(source);
+    // pagination stuff
+    source = $("#paginationTemplate").html();
+    paginationTemplate = Handlebars.compile(source);
 
     // cache dom pointers
     var questionTitle = $("#questionTitle"),
@@ -119,6 +123,12 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                     // render to string
                     html += searchResultTemplate(res);
                 }
+
+                // TODO: fixme
+                // Pagination example
+                var pages = {pages: ["1","2","3","4","5"], rclass:'documentResult'};
+                var paginationHTML = paginationTemplate(pages);
+                $(paginationHTML).insertAfter(docsResult);
 
                 // append to dom
                 $(html).insertAfter(docsResult);

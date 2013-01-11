@@ -108,6 +108,7 @@
                     <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
                 </div>
             </div>
+            <div class="row search-result separator {{domClass}}"></div>
         </script>
 
         <!-- search source results row -->
@@ -121,6 +122,7 @@
                     <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
                 </div>
             </div>
+            <div class="row search-result separator {{domClass}}"></div>
         </script>
 
         <!-- search source results row for statements -->
@@ -135,6 +137,7 @@
                     <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
                 </div>
             </div>
+            <div class="row search-result separator {{domClass}}"></div>
         </script>
 
         <!-- search subrow info -->
@@ -148,6 +151,24 @@
                     <h4>Authors:</h4>
                     <p>{{authors}}</p>
                 </div>
+            </div>
+        </script>
+
+        <!-- search subrow info -->
+        <script id="paginationTemplate" type="text/x-handlebars-template">
+            <div class="row search-result {{rclass}}">
+                <div class="span8 offset1">
+                    <div class="pagination {{rclass}}" style="display:none">
+                        <ul>
+                            <li><a href="#">Prev</a></li>
+                            {{#each pages}}
+                                <li><a href="#">{{this}}</a></li>
+                            {{/each}}
+                            <li><a href="#">Next</a></li>
+                        </ul>
+                    </div>    
+                </div>
+                <div class="span2"></div>
             </div>
         </script>
     </body>
