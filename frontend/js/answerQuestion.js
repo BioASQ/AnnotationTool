@@ -28,7 +28,7 @@
     }
 ];*/
 
-require(["app"], function(app) {
+require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // cache pointers to DOM
     var $saveButton = $("#saveButton"),
         $questionAnswer = $("#questionAnswer"),
@@ -51,6 +51,9 @@ require(["app"], function(app) {
         currentDocument = null;
 
     var selectedDocuments = app.data.entities;
+
+    // init edit question title widget
+    var eqtW = new EditQuestionWidget(app);
 
     // set question text
     $questionTitle.text(app.data.question.body);

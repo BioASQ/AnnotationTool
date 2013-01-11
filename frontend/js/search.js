@@ -1,4 +1,4 @@
-require(["app"], function(app) {
+require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // compile templates
     var searchResultTemplate,
         searchResultConceptTemplate,
@@ -29,6 +29,9 @@ require(["app"], function(app) {
 
     // other vars
     var results;
+
+    // init edit question title widget
+    var eqtW = new EditQuestionWidget(app);
 
     // set title
     questionTitle.text(app.data.question.body);
