@@ -194,6 +194,8 @@ require(["app"], function(app) {
         question.answer = answer;
         $.post(app.data.LogicServer+"questions", question, function(){
             $("#saveSuccess").show();
+        }).error(function(){
+            $("#saveError").show();
         });
     });
 
