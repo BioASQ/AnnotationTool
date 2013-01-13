@@ -31,6 +31,13 @@ require(["app"], function(app) {
         if(pass != passAgain){
             alert("Passwords doesn't match");
             return;
+        } else {
+
+            var regExpObj = new RegExp(window.shared.shared.login.passwordRegEx, "g");
+            if (regExpObj.test(pass) == false) {
+                alert("Password at least 8 characters long, 1 digit and 1 symbol.");
+                return
+            }
         }
 
         $.post(app.data.LogicServer + 'register',
@@ -39,9 +46,8 @@ require(["app"], function(app) {
                 $("#regModal").modal("hide");
             }
         )
-        .error(function(resp){
-            var data = $.parseJSON(resp.responseText);
-            alert(data.error);
+        .error(function (resp) {
+            alert(resp.responseText);
         });
     });
 });

@@ -3,7 +3,8 @@
     crypto = require('crypto'),
     schemajs = require('schemajs'),
     mymail = require('./mail'),
-    config = require(require('path').join(__dirname, '..', 'config')).defaults;
+    config = require(require('path').join(__dirname, '..', 'config')).defaults,
+    shared = require(require('path').join(__dirname, '..','..','frontend', 'js' , 'shared')).shared;
 
 var Login = exports.Login = function (database) {
     this.md5Blob = config.login.salt,
@@ -13,7 +14,7 @@ var Login = exports.Login = function (database) {
         email: { type: 'email',  error: 'wrong email', required: true },
         password: {
             type: 'string+',
-            properties: { regex: config.login.passwordRegEx },
+            properties: { regex: new RegExp(shared.login.passwordRegEx,"g") },
             error: { regex: 'password wrong' },
             required: true
         },
@@ -42,7 +43,7 @@ Login.prototype.addUser = function (email, password, userEmail, callback) {
             });
         });
     } else {
-        callback('account not found');
+        callback('admin account not found, check config file');
     }
 };
 
