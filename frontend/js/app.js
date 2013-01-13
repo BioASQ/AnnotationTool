@@ -21,6 +21,7 @@ define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], functio
         this.data = {
             LogicServer: logicServer,
             user: "",
+            username : "",
             question: {},
             entities: []
         };

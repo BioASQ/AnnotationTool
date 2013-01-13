@@ -10,6 +10,7 @@ require(["app"], function(app) {
             'success': function (data) {
                 // set user
                 app.data.user = data.usermail;
+                app.data.username = data.username;
                 window.location = 'createQuestion.html';
             },
             'error': function (xhr, status, httpStatus) {

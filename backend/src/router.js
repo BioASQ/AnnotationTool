@@ -164,7 +164,7 @@ exports.createRouter = function (model, authentication) {
                       req.session.data.user = user.email;
 
                       // response
-                      res.send(200, {}, {SID: req.session.id, usermail: req.session.data.user });
+                      res.send(200, {}, {SID: req.session.id, usermail: req.session.data.user, username : user.name });
                   }
                   else {
                       res.send(401, {}, 'account not found');

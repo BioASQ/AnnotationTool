@@ -62,7 +62,7 @@ Login.prototype.createUser = function (user, url, callback) {
                 callback('Email address already registered.');
             } else {
                 // update to DB
-                coll.update({ email: user.email }, { $set: { active: activationCode, password: md5Password } }, function (err, res) {
+                coll.update({ email: user.email }, { $set: { name : user.name, active: activationCode, password: md5Password } }, function (err, res) {
                     if (err) {
                         callback(err);
                     } else {
