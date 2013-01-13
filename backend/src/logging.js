@@ -1,22 +1,48 @@
-﻿var winston = require('winston');
+﻿/* Using:
+
+var logger = require('./logging.js').logger;
+logger('info', 'test message', { anything: 'This is metadata logged as a native JSON object' });
+
+*/
+var winston = require('winston');
 var mongoDB = require('winston-mongodb').MongoDB;
 var path = require('path');
 var config = require(path.join(__dirname, '..', 'config')).defaults;
 
-var singleton = function singleton() {
+var logging = function logging() {
+    var self = this;
 
-    this.logger = new (winston.Logger)({
+    // wrapper function
+    this.logger = function (level, message, meta) {
+
+        // gives the caller function name
+        // console.log(arguments.callee.caller);
+
+        var time = new Date().toTimeString();
+
+        if (level && message)
+            if (meta) {
+                meta.time = time;
+                self._logger.log(level, message, meta);
+            }
+            else {
+                self._logger.log(level, message, { time: time });
+            }
+    };
+
+    // the winston logger
+    this._logger = new (winston.Logger)({
+
         transports: [
           new (winston.transports.Console)({
               level: config.logging.level,
           }),
-
           new winston.transports.MongoDB({
               host: config.database.host,
               port: config.database.port,
               db: config.database.name,
               level: config.logging.level,
-              silent: false // Where is it?
+              //silent: false // Where is it?
           })
         ],
 
@@ -26,22 +52,6 @@ var singleton = function singleton() {
             })
         ]
     });
-
-    if (singleton.caller != singleton.getInstance) {
-        throw new Error("This object cannot be instanciated");
-    }
 }
 
-singleton.instance = null;
-
-singleton.getInstance = function () {
-    if (this.instance === null)
-        this.instance = new singleton();
-    return this.instance;
-}
-
-module.exports = singleton.getInstance();
-
-//
-// var logger = new require('./logging.js').logger;
-// logger.info(logger === logger2);
+module.exports = new logging();
