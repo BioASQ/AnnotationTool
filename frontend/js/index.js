@@ -21,6 +21,8 @@ require(["app"], function(app) {
                 }
             }
         });
+        // prevent default action (form submit)
+        return false;
     });
 
     $("#doRegister").click(function(){

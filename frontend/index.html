@@ -28,10 +28,12 @@
                 <p>Annotation tool for benchmark creation</p>
                 
                 <div>
-                    <input type="text" placeholder="Email" id="loginEmail" />
-                    <input type="password" placeholder="Password" id="loginPassword" />
-                    <a href="#" id="loginButton"><button class="btn btn-primary">Login</button></a>
+                    <form method="post" action="#">
+                    <input type="text" name="email" placeholder="Email" id="loginEmail" />
+                    <input type="password" name="password" placeholder="Password" id="loginPassword" />
+                    <input type="submit" name="submit" id="loginButton" class="btn btn-primary" value="Login" />
                     <a href="#regModal" data-toggle="modal" id="regButton"><button class="btn">Register</button></a>
+                  </form>
                 </div>
             </div>
             
