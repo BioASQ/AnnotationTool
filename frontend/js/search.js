@@ -77,9 +77,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         $('.documentResult').remove();
         $('.statementResult').remove();
 
-
-        // do request
-        $.post(app.data.LogicServer+"search", {query:query}, function(data){
+        // do concept request
+        $.post(app.data.LogicServer+"concepts", {query:query}, function(data){
             var i, res, html, internalID = 0;
 
             results = [];
@@ -105,6 +104,13 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 // append to dom
                 $(html).insertAfter(conceptsResult);
             }
+        });
+
+        // do document request
+        $.post(app.data.LogicServer+"documents", {query:query}, function(data){
+            var i, res, html, internalID = 0;
+
+            results = [];
 
             // show concepts
             if(data.results.documents.length > 0){
@@ -133,6 +139,13 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 // append to dom
                 $(html).insertAfter(docsResult);
             }
+        });
+
+        // do statement request
+        $.post(app.data.LogicServer+"statements", {query:query}, function(data){
+            var i, res, html, internalID = 0;
+
+            results = [];
 
             // show concepts
             if(data.results.statements.length > 0){
