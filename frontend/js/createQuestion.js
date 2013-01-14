@@ -72,6 +72,7 @@ require(["app"], function(app) {
 
         $.getJSON(app.data.LogicServer+'questions/'+questionID, function(data){
             app.data.question = data;
+            app.data.entities = [];
             app.save();
 
             window.location = 'search.html';
