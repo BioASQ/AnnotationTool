@@ -45,16 +45,24 @@ require(["app"], function(app) {
         newQuestionType.val("list");
         newQuestionLabel.val("");
 
-        $.post(app.data.LogicServer+"questions", question, function(data){
-            question['_id'] = data.id;
+        // post
+        $.ajax({
+            url: app.data.LogicServer+"questions/",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(question),
+            type: "POST",
+            success: function(data){
+                question['_id'] = data.id;
             
-            var html = questionTemplate(question);
+                var html = questionTemplate(question);
+                questionList.append($(html));
 
-            questionList.append($(html));
-
-            newQuestionModal.modal('hide');
-        }).error(function(){
-            alert("Something went wrong");
+                newQuestionModal.modal('hide');
+            },
+            error: function(){
+                alert("Something went wrong");
+            }
         });
     });
 

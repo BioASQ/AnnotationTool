@@ -188,10 +188,19 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     $saveButton.on('click', function(){
         var question = app.data.question;
         question.answer = answer;
-        $.post(app.data.LogicServer+"questions", question, function(){
-            $("#saveSuccess").show();
-        }).error(function(){
-            $("#saveError").show();
+        // post
+        $.ajax({
+            url: app.data.LogicServer+"questions/"+question._id,
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(question),
+            type: "POST",
+            success: function(data){
+                $("#saveSuccess").show();
+            },
+            error: function(){
+                $("#saveError").show();
+            }
         });
     });
 

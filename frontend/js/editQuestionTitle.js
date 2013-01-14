@@ -1,4 +1,4 @@
-define(function(){    
+define(function(){
     var EditQuestionWidget = function(app){
         var that = this;
         var saveBtn, editBtn, inputField, questionText;
@@ -15,15 +15,24 @@ define(function(){
         var onSave = function(){
             app.data.question.body = inputField.val();
             app.save();
-
-            $.post(app.data.LogicServer+"questions/"+app.data.question._id, app.data.question, function(){
-                saveBtn.hide();
-                inputField.hide();
-                questionText.show();
-                editBtn.show();
-                questionText.html(app.data.question.body);
-            }).error(function(){
-                alert("Something went wrong!");
+            
+            // post
+            $.ajax({
+                url: app.data.LogicServer+"questions/"+app.data.question._id,
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(app.data.question),
+                type: "POST",
+                success: function(data){
+                    saveBtn.hide();
+                    inputField.hide();
+                    questionText.show();
+                    editBtn.show();
+                    questionText.html(app.data.question.body);
+                },
+                error: function(){
+                    alert("Something went wrong");
+                }
             });
         };
 
