@@ -32,7 +32,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         statementsResult = $("#statementsResult");
 
     // other vars
-    var results;
+    var results, currentQuery;
+
+    var currentDocumentsPage = 1,
+        totalDocumentPages;
 
     // init edit question title widget
     var eqtW = new EditQuestionWidget(app);
@@ -58,6 +61,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     $("#searchButton").click(function(){
         var query = searchQuery.val();
         searchQuery.val("");
+        currentQuery = query;
 
         // reset toggles
         var tc = $("#toggleConcepts");
@@ -78,7 +82,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         $('.statementResult').remove();
 
         // do concept request
-        $.post(app.data.LogicServer+"concepts", {query:query}, function(data){
+        $.post(app.data.LogicServer+"concepts", {query:query}, function(data) {
             var i, res, html, internalID = 0;
 
             results = [];
@@ -107,38 +111,15 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         });
 
         // do document request
-        $.post(app.data.LogicServer+"documents", {query:query}, function(data){
-            var i, res, html, internalID = 0;
+        documentSearch(query, currentDocumentsPage, function (result) {
+            // TODO: fixme
+            // Pagination example
+            var pages = {pages: getPages(), rclass:'documentResult', current: currentDocumentsPage};
+            var paginationHTML = paginationTemplate(pages);
+            $(paginationHTML).insertAfter(docsResult);
 
-            results = [];
-
-            // show concepts
-            if(data.results.documents.length > 0){
-                docsResult.show();
-
-                html = "";
-                for(i = 0; i < data.results.documents.length; i++){
-                    res = data.results.documents[i];
-                    if( typeof res == 'undefined' ) continue;
-                    res.domClass = "documentResult";
-                    res["_internalID"] = internalID;
-                    res["renderTitle"] = res["title"];
-                    internalID++;
-                    results.push(res);
-
-                    // render to string
-                    html += searchResultTemplate(res);
-                }
-
-                // TODO: fixme
-                // Pagination example
-                var pages = {pages: ["1","2","3","4","5"], rclass:'documentResult'};
-                var paginationHTML = paginationTemplate(pages);
-                $(paginationHTML).insertAfter(docsResult);
-
-                // append to dom
-                $(html).insertAfter(docsResult);
-            }
+            // append to dom
+            $(result).insertAfter(docsResult);
         });
 
         // do statement request
@@ -148,13 +129,13 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             results = [];
 
             // show concepts
-            if(data.results.statements.length > 0){
+            if (data.results.statements.length > 0) {
                 statementsResult.show();
 
                 html = "";
                 for(i = 0; i < data.results.statements.length; i++){
                     res = data.results.statements[i];
-                    if( typeof res == 'undefined' ) continue;
+                    if (typeof res == 'undefined') continue;
                     res.domClass = "statementResult";
                     res["_internalID"] = internalID;
                     res["renderTitle"] = res["s"];
@@ -168,6 +149,33 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 // append to dom
                 $(html).insertAfter(statementsResult);
             }
+        });
+    });
+
+    $('.pagination.documentResult a').live('click', function () {
+        var newPage;
+        if ($(this).hasClass('prev')) {
+            newPage = Math.max(1, currentDocumentsPage - 1);
+        } else if ($(this).hasClass('next')) {
+            newPage = Math.min(totalDocumentPages, currentDocumentsPage + 1);
+        } else {
+            newPage = parseInt($(this).html());
+        }
+
+        if ($(this).html() == '...' || newPage == currentDocumentsPage) { return false; }
+
+        $('.documentResult').remove();
+
+        documentSearch(currentQuery, newPage, function (result) {
+            // TODO: fixme
+            // Pagination example
+            var pages = {pages: getPages(), rclass:'documentResult', current: currentDocumentsPage};
+            var paginationHTML = paginationTemplate(pages);
+            $(paginationHTML).insertAfter(docsResult);
+
+            // append to dom
+            $(result).insertAfter(docsResult);
+            $("#toggleDocs").click().click();
         });
     });
 
@@ -227,4 +235,49 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         window.location = "answerQuestion.html";
     });
+
+    var documentSearch = function (query, page, cb) {
+        $.post(app.data.LogicServer + 'documents', { query: query, page: page - 1 }, function (data) {
+            var i, res, html, internalID = 0;
+
+            totalDocumentPages = data.numPages;
+            currentDocumentsPage = data.page + 1;
+
+            results = [];
+            html = '';
+
+            // show concepts
+            if (data.results.documents.length) {
+                docsResult.show();
+
+                for (i = 0; i < data.results.documents.length; i++) {
+                    res = data.results.documents[i];
+                    if (typeof res == 'undefined') continue;
+                    res.domClass = 'documentResult';
+                    res['_internalID'] = internalID;
+                    res['renderTitle'] = res['title'];
+                    internalID++;
+                    results.push(res);
+
+                    // render to string
+                    html += searchResultTemplate(res);
+                }
+            }
+
+            cb(html);
+        });
+    }
+
+    var getPages = function () {
+        var pages = [];
+        for (var i = 1; i < totalDocumentPages && i < 5; ++i) {
+            pages.push(String(i));
+        }
+        if (totalDocumentPages > 5) {
+            pages.push('...');
+        }
+        pages.push(String(totalDocumentPages));
+        return pages;
+    }
 });
+
