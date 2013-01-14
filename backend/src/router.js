@@ -123,13 +123,13 @@ exports.createRouter = function (model, authentication) {
    */
   router.path(/\/documents\/?/, function () {
     var documentSearch = new TIDocuments(config.search.documents);
-    this.post().bind(function (req, res, keywords, page) {
-      page = page || 0;
-      documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult) {
+    this.post().bind(function (req, res, keywords) {
+      var page = parseInt(keywords.page) || 0;
+      documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, pages) {
         if (err) {
           res.send(502);
         } else {
-          res.send(200, {}, { 'results': { 'documents': documentResult } });
+          res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
         }
       });
     });

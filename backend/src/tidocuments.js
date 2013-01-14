@@ -35,8 +35,8 @@ TIDocuments.prototype.find = function (/* String */ keywords, page, itemsPerPage
           cb(err);
         } else {
           try {
-            var result = JSON.parse(response).result.documents;
-            cb(null, result);
+            var result = JSON.parse(response).result;
+            cb(null, result.documents, Math.ceil(result.size / itemsPerPage));
           } catch (e) {
             console.log('Could not parse response: ' + response);
             cb(e);
