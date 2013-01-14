@@ -239,7 +239,19 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     });
 
     $("body").on("click", ".removeFromResults", function(){
-        $(this).parent().parent().remove();
+        var that = $(this),
+            num = that.data('num');
+
+        // remove from storage
+        for(var i = 0; i < app.data.entities.length; i++){
+            if(app.data.entities[i]._internalID == num){
+                app.data.entities.splice(i, 1);
+                app.save();
+                break;
+            }
+        }
+
+        that.parent().parent().remove();
     });
 
     // render docs
