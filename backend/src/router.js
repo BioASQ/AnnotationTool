@@ -103,34 +103,51 @@ exports.createRouter = function (model, authentication) {
   });
 
   /*
-   * POST to /search
+   * POST to /concepts searches for concepts
    */
-  router.path(/\/search\/?/, function () {
-    var
-      conceptSearch = new Search(),
-      documentSearch = new TIDocuments(config.search.documents);
+  router.path(/\/concepts\/?/, function () {
+    var conceptSearch = new Search();
+    this.post().bind(function (req, res, keywords) {
+      conceptSearch.find(keywords.query, function (err, conceptResult) {
+        if (err) {
+          res.send(502);
+        } else {
+          res.send(200, {}, { 'results': { 'concepts': conceptResult } });
+        }
+      });
+    });
+  });
 
+  /*
+   * POST to /documents searches for documents
+   */
+  router.path(/\/concepts\/?/, function () {
+    var conceptSearch = new TIDocuments(config.search.documents);
     this.post().bind(function (req, res, keywords, page) {
       page = page || 0;
-      step(
-        function () {
-          conceptSearch.find(keywords.query, this.parallel()),
-          documentSearch.find(keywords.query, 0, itemsPerPage, this.parallel())
-        },
-        function (err, conceptResult, documentResult) {
-          if (err) {
-            res.send(502);
-          } else {
-            res.send(200, {}, {
-              'results': {
-                'concepts': conceptResult,
-                'documents': documentResult,
-                'statements': [] /* TODO: */
-              }
-            });
-          }
+      documentSearch.find(keywords.query, page, itemsPerPage function (err, documentResult) {
+        if (err) {
+          res.send(502);
+        } else {
+          res.send(200, {}, { 'results': { 'documents': documentResult } });
         }
-      );
+      });
+    });
+  });
+
+  /*
+   * POST to /statements searches for statements
+   */
+  router.path(/\/concepts\/?/, function () {
+    this.post().bind(function (req, res, keywords) {
+      // TODO
+      // documentSearch.find(keywords.query, page, itemsPerPage function (err, documentResult) {
+        if (err) {
+          res.send(502);
+        } else {
+          res.send(200, {}, { 'results': { 'statements': [] } });
+        }
+      // });
     });
   });
 
