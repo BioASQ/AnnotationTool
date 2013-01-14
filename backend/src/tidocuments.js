@@ -14,7 +14,6 @@ var TIDocuments = exports.TIDocuments = function (URL) {
 TIDocuments.prototype = Object.create(TIService.prototype);
 
 TIDocuments.prototype._transform = function (results) {
-  var results = [];
   return results.map(function(result) {
     return {
       'uri': pubMedBaseURI + result.pmid,
@@ -36,7 +35,7 @@ TIDocuments.prototype.find = function (/* String */ keywords, page, itemsPerPage
         } else {
           try {
             var result = JSON.parse(response).result;
-            cb(null, result.documents, Math.ceil(result.size / itemsPerPage));
+            cb(null, self._transform(result.documents), Math.ceil(result.size / itemsPerPage));
           } catch (e) {
             console.log('Could not parse response: ' + response);
             cb(e);

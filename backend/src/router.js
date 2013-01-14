@@ -50,7 +50,6 @@ exports.createRouter = function (model, authentication) {
            * POST to /questions creates new question
            */
           this.post().bind(function (req, res, question) {
-              console.log(question);
               model.create(question, function (err, id) {
                   if (err) {
                       res.send(500);
@@ -77,7 +76,6 @@ exports.createRouter = function (model, authentication) {
            * POST or PUT to /questions/:id updates existing question
            */
           this.route(['POST', 'PUT'], idRegEx).bind(function (req, res, id, question) {
-              console.log(question);
               model.update(id, question, function (err) {
                   if (err) {
                       res.send(500);
