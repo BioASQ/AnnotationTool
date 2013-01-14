@@ -40,8 +40,9 @@ exports.createRouter = function (model, authentication) {
               model.list(function (err, list) {
                   if (err) {
                       res.send(404);
+                  } else {
+                      res.send(200, {}, { 'questions': list });
                   }
-                  res.send(200, {}, { 'questions': list });
               });
           });
 
@@ -49,11 +50,13 @@ exports.createRouter = function (model, authentication) {
            * POST to /questions creates new question
            */
           this.post().bind(function (req, res, question) {
+              console.log(question);
               model.create(question, function (err, id) {
                   if (err) {
                       res.send(500);
+                  } else {
+                      res.send(200, {}, { 'id': id });
                   }
-                  res.send(200, {}, { 'id': id });
               });
           });
 
@@ -64,8 +67,9 @@ exports.createRouter = function (model, authentication) {
               model.load(id, function (err, question) {
                   if (err) {
                       res.send(404);
+                  } else {
+                      res.send(200, {}, question);
                   }
-                  res.send(200, {}, question);
               });
           });
 
@@ -73,11 +77,13 @@ exports.createRouter = function (model, authentication) {
            * POST or PUT to /questions/:id updates existing question
            */
           this.route(['POST', 'PUT'], idRegEx).bind(function (req, res, id, question) {
+              console.log(question);
               model.update(id, question, function (err) {
                   if (err) {
                       res.send(500);
+                  } else {
+                      res.send(200);
                   }
-                  res.send(200);
               });
           });
 
@@ -88,8 +94,9 @@ exports.createRouter = function (model, authentication) {
               model.delete(id, function (err) {
                   if (err) {
                       res.send(500);
+                  } else {
+                      res.send(200);
                   }
-                  res.send(200);
               });
           });
       });
@@ -344,7 +351,7 @@ exports.createRouter = function (model, authentication) {
       });
   });
 
-  });
+  }); /* backend */
 
   return router;
 }
