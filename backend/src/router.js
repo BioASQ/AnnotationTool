@@ -121,11 +121,11 @@ exports.createRouter = function (model, authentication) {
   /*
    * POST to /documents searches for documents
    */
-  router.path(/\/concepts\/?/, function () {
-    var conceptSearch = new TIDocuments(config.search.documents);
+  router.path(/\/documents\/?/, function () {
+    var documentSearch = new TIDocuments(config.search.documents);
     this.post().bind(function (req, res, keywords, page) {
       page = page || 0;
-      documentSearch.find(keywords.query, page, itemsPerPage function (err, documentResult) {
+      documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult) {
         if (err) {
           res.send(502);
         } else {
@@ -138,7 +138,7 @@ exports.createRouter = function (model, authentication) {
   /*
    * POST to /statements searches for statements
    */
-  router.path(/\/concepts\/?/, function () {
+  router.path(/\/statements\/?/, function () {
     this.post().bind(function (req, res, keywords) {
       // TODO
       // documentSearch.find(keywords.query, page, itemsPerPage function (err, documentResult) {
