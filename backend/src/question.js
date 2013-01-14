@@ -52,6 +52,7 @@ Question.prototype.load = function (id, callback) {
 };
 
 Question.prototype.update = function (id, question, callback) {
+  delete question._id; // remove _id field
   this._collection(callback, function (err, coll) {
     coll.update({ '_id': ObjectID(id) }, { $set: question }, { 'save': true }, function (err) {
       if (err) {
