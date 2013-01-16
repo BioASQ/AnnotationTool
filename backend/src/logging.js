@@ -3,6 +3,10 @@
 var logger = require('./logging.js').logger;
 logger('info', 'test message', { anything: 'This is metadata logged as a native JSON object' });
 
+Parameters:
+1st : log level (string)
+2nd : message (string)
+3rd : [optional] (object with at least attribute "time", that is reserved and will be overridden)
 */
 var winston = require('winston');
 var mongoDB = require('winston-mongodb').MongoDB;
@@ -20,14 +24,23 @@ var logging = function logging() {
 
         var time = new Date().toTimeString();
 
-        if (level && message)
-            if (meta) {
+        if (level && message) {
+            if (meta && typeof meta === 'object') {
+
+                if (meta.time)
+                    console.error('loggings 3rd parameter has an attribute "time", that is reserved and will be overridden');
+
                 meta.time = time;
                 self._logger.log(level, message, meta);
+
+            } else if (meta) {
+                console.error('loggings 3rd parameter needs to be an object or will be ignored');
+                self._logger.log(level, message, { time: time });
             }
             else {
                 self._logger.log(level, message, { time: time });
             }
+        }
     };
 
     // the winston logger
