@@ -56,10 +56,11 @@ Login.prototype.createUser = function (user, url, callback) {
         coll.find({ email: user.email }).toArray(function (err, docs) {
 
             if (docs.length == 0) {
-                callback('Registration for this email addres not allowed. Ask for an account!');
+                callback('Registration for this email address not allowed. Ask for an account!');
 
             } else if (docs[0].active != false) {
                 callback('Email address already registered.');
+
             } else {
                 // update to DB
                 coll.update({ email: user.email }, { $set: { name : user.name, active: activationCode, password: md5Password } }, function (err, res) {
@@ -69,13 +70,13 @@ Login.prototype.createUser = function (user, url, callback) {
                         // send mail
                         user.active = activationCode;
                         mail.createUser(user, url, function (error, responseStatus) {
-                            // TODO: handle errors
-                            if (error) {
-                                util.puts(error);
-                            } else util.puts(responseStatus.message);
-                        });
 
-                        callback(null, res);
+                            if (error)
+                               callback(error);
+                            else
+                               callback(null, responseStatus.message);
+
+                        });
                     }
                 });
             }
