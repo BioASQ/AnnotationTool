@@ -159,8 +159,9 @@ exports.createRouter = function (model, authentication) {
               authentication.addUser(body.email, body.password, body.userEmail, function (err, result) {
                   if (err) {
                       res.send(400, {}, err);
+                  } else {
+                      res.send(200, {}, { });
                   }
-                  res.send(200, {}, { });
               });
           } else {
               res.send(400, {}, 'missing parameters');
@@ -322,8 +323,8 @@ exports.createRouter = function (model, authentication) {
                       }
                   });
               } else {
-                  // schemajs.create(authentication.userSchema).validate(body).errors;
-                  res.send(400, {}, 'invalid user schema');
+                  var errors = schemajs.create(authentication.userSchema).validate(body).errors;
+                  res.send(400, {}, JSON.stringify(errors));
               }
           } else {
               res.send(400, {}, 'missing parameters');
