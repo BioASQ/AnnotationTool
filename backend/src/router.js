@@ -310,6 +310,9 @@ exports.createRouter = function (model, authentication) {
       this.post().bind(function (req, res, body) {
           if (body.email && body.password && body.name) {
               if (schemajs.create(authentication.userSchema).validate(body).valid) {
+                  // todo: fix inconsistent schemajs response to the frontend
+                  schemajs.create(authentication.userSchema).validate(body).valid
+
                   var url = 'http://' + req.headers.host + '/backend/activate';
                   authentication.createUser(body, url, function (err, results) {
                       if (err) {
