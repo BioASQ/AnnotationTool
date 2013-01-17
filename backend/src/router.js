@@ -222,6 +222,8 @@ exports.createRouter = function (model, authentication) {
   router.path(/\/resetPassword\/?/, function () {
       /*
        * GET to /resetPassword with parameters: email and/or code
+       *
+       * resets and activates a password
        */
       this.get().bind(function (req, res, body) {
           if (body.email && body.code) {
@@ -236,7 +238,7 @@ exports.createRouter = function (model, authentication) {
                   }
               });
           }else if (body.email) {
-              var url = 'http://' + req.headers.host + '/resetPassword'
+              var url = 'http://' + req.headers.host + '/backend/resetPassword'
               authentication.resetPassword(url, body.email, function (err, result) {
                   if (err) {
                       res.send(500, {}, err);
@@ -269,7 +271,7 @@ exports.createRouter = function (model, authentication) {
                       if (err) {
                           res.send(500, {}, err);
                       } else if (result) {
-                          logger('info', 'User ' + email + ' changed password.', { user: email });
+                          logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user });
                           res.send(200, {}, {});
                       } else {
                           res.send(401, {}, 'account not found');
