@@ -75,7 +75,6 @@ Login.prototype.createUser = function (user, url, callback) {
                                callback(error);
                             else
                                callback(null, responseStatus.message);
-
                         });
                     }
                 });
@@ -93,7 +92,7 @@ Login.prototype.activateUser = function (email, active, callback) {
             }
             else if (res.length >= 1) {
                 coll.update({ email: email, active: active }, { $set: { active: true } });
-               callback(null, res);
+                callback(null, res);
             } else {
                 callback(null, null);
             }
@@ -122,7 +121,6 @@ Login.prototype.changePassword = function (oldPassword, newPassword, email, call
 
     oldPassword = this._createPasswordHash(oldPassword);
     newPassword = this._createPasswordHash(newPassword);
-
     // find active user by email and password
     this._collection(callback, function (err, coll) {
         coll.find({ email: email, password: oldPassword, active: true }).toArray(function (err, res) {
@@ -131,7 +129,6 @@ Login.prototype.changePassword = function (oldPassword, newPassword, email, call
             } else if (res.length >= 1) {
                 // changePassword
                 coll.update({ email: email, password: oldPassword, active: true }, { $set: { password: newPassword, code: '' } });
-
                 callback(null, res);
             } else {
                 callback(null, null);
@@ -154,14 +151,13 @@ Login.prototype.resetPassword = function (url, email, callback) {
                 //TODO:
                 //set timestamp?
                 coll.update({ email: email, active: true }, { $set: { code: md5tmpPassword } });
-
                 mail.resetPassword(email, tmpPassword, url, function (error, responseStatus) {
-                    // TODO: handle errors
+
                     if (error) {
-                        util.puts(error);
-                    } else util.puts(responseStatus.message);
+                        callback(error);
+                    } else
+                        callback(null, responseStatus.message);
                 });
-                callback(null, res);
             } else {
                 callback(null, null);
             }
@@ -178,7 +174,6 @@ Login.prototype.activatePassword = function (email, code, callback) {
                 callback(err);
             } else if (res.length >= 1) {
                 coll.update({ email: email, active: true, code: md5tmpPassword }, { $set: { code: '', password: md5tmpPassword } });
-
                 callback(null, res);
             } else {
                 callback(null, null);
