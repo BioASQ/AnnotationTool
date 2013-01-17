@@ -10,7 +10,8 @@ var
   step = require('step'),
   Search = require('./search').Search,
   TIDocuments = require('./tidocuments').TIDocuments,
-  config = require(require('path').join(__dirname, '..', 'config')).defaults;
+  config = require(require('path').join(__dirname, '..', 'config')).defaults,
+  logger = require('./logging.js').logger;
 
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
@@ -160,6 +161,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(400, {}, err);
                   } else {
+                      logger('info', 'User ' + body.userEmail  + ' added to the whitelist.', { user: body.userEmail, file : 'router', method: 'addUser'});
                       res.send(200, {}, { });
                   }
               });
@@ -185,7 +187,7 @@ exports.createRouter = function (model, authentication) {
                       var user = result[0]; // DB data
                       // login
                       req.session.data.user = user.email;
-
+                      logger('info', 'User ' + user.email  + ' logged in. SID: ' + req.session.id , { sid : req.session.id, user: user.email, file : 'router', method: 'login'});
                       // response
                       res.send(200, {}, {SID: req.session.id, usermail: req.session.data.user, username : user.name });
                   }
@@ -210,6 +212,7 @@ exports.createRouter = function (model, authentication) {
            */
           this.get().bind(function (req, res) {
               // logout
+              logger('info', 'User ' + req.session.user  + ' logged out. SID: ' + req.session.id , { sid : req.session.id, user: req.session.user, file : 'router', method: 'logout'});
               req.session.data.user = 'Guest';
               res.send(200, {}, {});
           });
@@ -226,6 +229,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(500, {}, err);
                   } else if (result) {
+                      logger('info', 'User ' + body.email  + ' reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
                       res.send(200, {}, {});
                   } else {
                       res.send(401, {}, 'account not found');
@@ -237,6 +241,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(500, {}, err);
                   } else if (result) {
+                      logger('info', 'User ' + body.email  + 'asks to reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
                       res.send(200, {}, {});
                   } else {
                       res.send(401, {}, 'account not found');
@@ -264,6 +269,7 @@ exports.createRouter = function (model, authentication) {
                       if (err) {
                           res.send(500, {}, err);
                       } else if (result) {
+                          logger('info', 'User ' + email + ' changed password.', { user: email });
                           res.send(200, {}, {});
                       } else {
                           res.send(401, {}, 'account not found');
@@ -287,6 +293,7 @@ exports.createRouter = function (model, authentication) {
                         res.send(500, {}, err);
                     } else if (result) {
                         var url = 'http://' + req.headers.host;
+                        logger('info', 'User ' + body.email  + ' activated.', { user: body.email, file : 'router', method: 'activate'});
                         res.send(302, {'Location': url }, {});
                     } else {
                         res.send(401, {}, 'account not found');
@@ -319,6 +326,7 @@ exports.createRouter = function (model, authentication) {
                       if (err) {
                           res.send(403, {}, err);
                       } else {
+                          logger('info', 'User ' + body.email  + ' registered.', { user: body.email, file : 'router', method: 'register'});
                           res.send(200, {}, {});
                       }
                   });
