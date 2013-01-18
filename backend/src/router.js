@@ -355,10 +355,17 @@ exports.createRouter = function (model, authentication) {
                   host : para.host,
                   port : 80,
                   path : para.path,
-                  method : 'GET'
+                  method : 'GET',
+                  headers: {
+                      'user-agent': req.headers['user-agent']
+                  }
               };
 
               var req = http.request(options, function(response) {
+
+                  var headers = response.headers;
+                  headers['Access-Control-Allow-Origin'] = '*';
+                  headers['Access-Control-Allow-Headers'] = 'X-Requested-With';
 
                   var content = '';
                   response.on('data', function(chunk) {
@@ -366,7 +373,7 @@ exports.createRouter = function (model, authentication) {
                   });
 
                   response.on('end', function() {
-                      res.send(200, {} , content)
+                      res.send(200, headers , content)
                   });
               });
 
