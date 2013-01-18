@@ -37,9 +37,8 @@ require(["app"], function(app) {
     $("#newQuestionOK").click(function(){
         var label = newQuestionLabel.val(),
             type = newQuestionType.val(),
-            user = app.data.user,
 
-            question = {body:label, type:type, creator:user};
+            question = {body:label, type:type};
 
         // clean
         newQuestionType.val("list");

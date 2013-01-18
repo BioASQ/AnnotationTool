@@ -51,6 +51,7 @@ exports.createRouter = function (model, authentication) {
            * POST to /questions creates new question
            */
           this.post().bind(function (req, res, question) {
+              question.creator = req.session.data.user;
               model.create(question, function (err, id) {
                   if (err) {
                       res.send(500);
