@@ -59,11 +59,13 @@ var logging = function logging() {
           })
         ],
 
-        exceptionHandlers: [
-            new winston.transports.File({
-                filename: path.join(__dirname, '..', '..', config.logging.exceptionsFile)
-            })
-        ]
+        /*
+         * exceptionHandlers: [
+         *     new winston.transports.File({
+         *         filename: path.join(__dirname, '..', '..', config.logging.exceptionsFile)
+         *     })
+         * ]
+         */
     });
 }
 
