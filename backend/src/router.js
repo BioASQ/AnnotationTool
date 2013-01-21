@@ -10,6 +10,8 @@ var
   step = require('step'),
   Search = require('./search').Search,
   TIDocuments = require('./tidocuments').TIDocuments,
+  TITriples = require('./titriples').TITriples,
+  Verbalizer = require('./verbalizer').Verbalizer,
   config = require(require('path').join(__dirname, '..', 'config')).defaults,
   logger = require('./logging.js').logger;
 
@@ -139,15 +141,44 @@ exports.createRouter = function (model, authentication) {
    * POST to /statements searches for statements
    */
   router.path(/\/statements\/?/, function () {
+    var tripleSearch = new TITriples(config.search.triples);
+    var verbalizer = new Verbalizer(config.search.verbalizer);
     this.post().bind(function (req, res, keywords) {
-      // TODO
-      // documentSearch.find(keywords.query, page, itemsPerPage function (err, documentResult) {
+      tripleSearch.find(keywords.query, function (err, triplesResult) {
         if (err) {
           res.send(502);
         } else {
-          res.send(200, {}, { 'results': { 'statements': [] } });
+          var result = [];
+          if (triplesResult.triples.length) {
+            step(
+                function () {
+                for (var i = 0, max = Math.min(10, triplesResult.triples.length); i < max; i++) {
+                    var curr = triplesResult.triples[i];
+                    verbalizer.verbalize(curr.subj, curr.pred, curr.obj, this.parallel());
+                }
+                },
+                function (err /* variadic arguments */) {
+                if (err) {
+                    res.send(502);
+                } else {
+                    for (var i = 1; i < arguments.length; i++) {
+                    var verbalization = String(arguments[i]).replace(/\{|\}|\"/g, '');
+                    result.push({
+                        s: triplesResult.triples[i - 1].subj,
+                        p: triplesResult.triples[i - 1].pred,
+                        o: triplesResult.triples[i - 1].obj,
+                        title: verbalization
+                    });
+                    }
+                    res.send(200, {}, { 'results': { 'statements': result } });
+                }
+                }
+            );
+          } else {
+            res.send(200, {}, { 'results': { 'statements': result } });
+          }
         }
-      // });
+      });
     });
   });
 

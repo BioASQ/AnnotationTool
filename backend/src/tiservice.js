@@ -33,8 +33,8 @@ TIService.prototype._tokenURL = function (cb) {
  */
 TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
   /*
-   * If cb is undefined we have been given only three parameters, the last of which is
-   * the callback.
+   * If cb is undefined we have been given only three parameters,
+   * the last of which is the callback.
    */
   cb = cb || data;
 
