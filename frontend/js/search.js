@@ -1,39 +1,24 @@
-require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
-    // compile templates
-    var searchResultTemplate,
-        searchResultConceptTemplate,
-        statementSearchResultTemplate,
-        answerTemplate,
-        paginationTemplate,
-        source;
-    // search res templaet
-    source = $("#searchResultTemplate").html();
-    searchResultTemplate = Handlebars.compile(source);
-    // concept result template
-    source = $("#searchResultConceptTemplate").html();
-    searchResultConceptTemplate = Handlebars.compile(source);
-    // statement search res
-    source = $("#statementSearchResultTemplate").html();
-    statementSearchResultTemplate = Handlebars.compile(source);
-    // answer stuff
-    source = $("#answerTemplate").html();
-    answerTemplate = Handlebars.compile(source);
-    // pagination stuff
-    source = $("#paginationTemplate").html();
-    paginationTemplate = Handlebars.compile(source);
+require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
+    // compiled templates
+    var searchResultTemplate          = Handlebars.compile($("#searchResultTemplate").html()),
+        searchResultConceptTemplate   = Handlebars.compile($("#searchResultConceptTemplate").html()),
+        statementSearchResultTemplate = Handlebars.compile($("#statementSearchResultTemplate").html()),
+        answerTemplate                = Handlebars.compile($("#answerTemplate").html()),
+        paginationTemplate            = Handlebars.compile($("#paginationTemplate").html());
 
-    // cache dom pointers
-    var questionTitle = $("#questionTitle"),
-        searchResults = $("#searchResults"),
-        answerList = $("#results"),
-        searchQuery = $("#searchQuery"),
-        conceptsResult = $("#conceptsResult"),
-        docsResult = $("#docsResult"),
+    // cached dom pointers
+    var questionTitle    = $("#questionTitle"),
+        searchResults    = $("#searchResults"),
+        answerList       = $("#results"),
+        searchQuery      = $("#searchQuery"),
+        conceptsResult   = $("#conceptsResult"),
+        docsResult       = $("#docsResult"),
         statementsResult = $("#statementsResult");
 
     // other vars
-    var results, currentQuery, conceptResults = [];
+    var source, results, currentQuery, conceptResults = [];
 
+    // pagination constants
     var itemsPerPage = 10;
 
     var currentDocumentsPage = 1,
@@ -48,24 +33,14 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // set title
     questionTitle.text(app.data.question.body);
 
-    // render already found results
-    var renderResults = function(){
-        var i, res, html = "";
-        for(i = 0; i < app.data.entities.length; i++){
-            res = app.data.entities[i];
-
-            // render to string
-            html += answerTemplate(res);
-        }
-
-        answerList.html(html);
-    };
-    renderResults();
+    ////////////////////////////////////////////////////////////////////////////
+    // Event handlers
+    ////////////////////////////////////////////////////////////////////////////
 
     // bind search
-    $("#searchButton").click(function(){
+    $("#searchButton").click(function () {
         var query = searchQuery.val();
-        searchQuery.val("");
+        // searchQuery.val("");
         currentQuery = query;
 
         // reset toggles
@@ -117,7 +92,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         });
 
         // do statement request
-        $.post(app.data.LogicServer+"statements", {query:query}, function(data){
+        $.post(app.data.LogicServer+"statements", {query:query}, function (data) {
             var i, res, html, internalID = 0;
 
             results = [];
@@ -127,7 +102,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 statementsResult.show();
 
                 html = "";
-                for(i = 0; i < data.results.statements.length; i++){
+                for (i = 0; i < data.results.statements.length; i++) {
                     res = data.results.statements[i];
                     if (typeof res == 'undefined') continue;
                     res.domClass = "statementResult";
@@ -191,45 +166,17 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         });
     });
 
-    // bind toggle button
-    var toggleClass = function(cls, elm){
-        var show, state, c;
-        
-        state = elm.data('state');
-        if(state == 'hidden'){
-            elm.text('Collapse');
-            elm.data('state', 'visible');
-            show = true;
-        }else{
-            elm.text('Expand');
-            elm.data('state', 'hidden');
-            show = false;
-        }
-
-        c = $('.'+cls);
-        if(show){
-            c.show();
-        }else{
-            c.hide();
-        }
-    };
-    $("#toggleConcepts").click(function(){
-        toggleClass("conceptResult", $(this));
-    });
-    $("#toggleDocs").click(function(){
-        toggleClass("documentResult", $(this));
-    });
-    $("#toggleStatments").click(function(){
-        toggleClass("statementResult", $(this));
-    });
+    $('#toggleConcepts').click(function ()  { toggleClass('conceptResult', $(this)); });
+    $('#toggleDocs').click(function ()      { toggleClass('documentResult', $(this)); });
+    $('#toggleStatments').click(function () { toggleClass('statementResult', $(this)); });
 
     // bind add-remove stuff
-    $("body").on('click', '.addremove', function(){
+    $('body').on('click', '.addremove', function () {
         var id = $(this).data('id');
 
         var i, res;
-        for(i = 0; i < results.length; i++){
-            if(results[i]["_internalID"] == id){
+        for (i = 0; i < results.length; i++) {
+            if (results[i]['_internalID'] == id) {
                 res = results[i];
                 break;
             }
@@ -242,11 +189,50 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     });
 
     // on done
-    $("#doneButton").click(function(){
+    $('#doneButton').click(function () {
         app.save();
-
-        window.location = "answerQuestion.html";
+        window.location = 'answerQuestion.html';
     });
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Function definitions
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Renders previously selected results into dropdown box
+    var renderResults = function () {
+        var i, res, html = '';
+        for (i = 0; i < app.data.entities.length; i++) {
+            res = app.data.entities[i];
+
+            // render to string
+            html += answerTemplate(res);
+        }
+
+        answerList.html(html);
+    };
+
+    // bind toggle button
+    var toggleClass = function (cls, elm) {
+        var show, state, c;
+        
+        state = elm.data('state');
+        if (state == 'hidden') {
+            elm.text('Collapse');
+            elm.data('state', 'visible');
+            show = true;
+        } else {
+            elm.text('Expand');
+            elm.data('state', 'hidden');
+            show = false;
+        }
+
+        c = $('.' + cls);
+        if (show) {
+            c.show();
+        } else {
+            c.hide();
+        }
+    };
 
     var conceptSearch = function (query, page, cb) {
         if (page == 1 && !conceptResults.length) {
@@ -325,6 +311,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         });
     }
 
+    // Calculates the new page (incl. edge cases) based on clicked element
     var getNewPage = function (element, currentPage, totalPages) {
         var newPage;
         if ($(element).html() == '...') {
@@ -339,6 +326,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         return newPage;
     }
 
+    // Return array with page names
     var getPages = function (total) {
         var pages = [];
         for (var i = 1; i < total && i < 5; ++i) {
@@ -350,5 +338,11 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         pages.push(String(total));
         return pages;
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Initial function calls
+    ////////////////////////////////////////////////////////////////////////////
+
+    renderResults();
 });
 
