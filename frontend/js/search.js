@@ -12,11 +12,17 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         answerList       = $("#results"),
         searchQuery      = $("#searchQuery"),
         conceptsResult   = $("#conceptsResult"),
-        docsResult       = $("#docsResult"),
+        docsResult       = $("#documentsResult"),
         statementsResult = $("#statementsResult");
 
     // other vars
-    var source, results, currentQuery, conceptResults = [];
+    var source, currentQuery, conceptResults = [];
+
+    var results = {
+        'concepts': [],
+        'documents': [],
+        'statements': []
+    };
 
     // pagination constants
     var itemsPerPage = 10;
@@ -93,14 +99,15 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
 
         // do statement request
         $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
-            results = [];
+            results.statements = [];
 
             // show concepts
             if (data.results.statements.length > 0) {
                 statementsResult.show();
                 var html = renderResults(data.results.statements,
                                          statementSearchResultTemplate,
-                                         'statementResult');
+                                         'statementResult',
+                                         'statements');
                 // append to dom
                 $(html).insertAfter(statementsResult);
             }
@@ -151,12 +158,17 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
 
     // bind add-remove stuff
     $('body').on('click', '.addremove', function () {
-        var id = $(this).data('id');
+        var id = $(this).data('id'),
+            sectionName = $(this).parents('.search-result')
+                                 .prevAll('.search-source')
+                                 .first()
+                                 .attr('id')
+                                 .replace('Result', '');
 
         var i, res;
-        for (i = 0; i < results.length; i++) {
-            if (results[i]['_internalID'] == id) {
-                res = results[i];
+        for (i = 0; i < results[sectionName].length; i++) {
+            if (results[sectionName][i]['_internalID'] == id) {
+                res = results[sectionName][i];
                 break;
             }
         }
@@ -239,11 +251,12 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
 
     var showConcepts = function (page, cb) {
         conceptsResult.show();
-        results = [];
+        results.concepts = [];
         var begin = (page - 1) * itemsPerPage,
             html = renderResults(conceptResults.slice(begin, begin + itemsPerPage),
                                  searchResultConceptTemplate,
-                                 'conceptResult');
+                                 'conceptResult',
+                                 'concepts');
 
         cb(html);
     }
@@ -253,7 +266,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             totalDocumentPages = data.numPages;
             currentDocumentsPage = data.page + 1;
 
-            results = [];
+            results.documents = [];
             var html = '';
 
             // show documents
@@ -261,14 +274,15 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
                 docsResult.show();
                 html = renderResults(data.results.documents,
                                      searchResultTemplate,
-                                     'documentResult');
+                                     'documentResult',
+                                     'documents');
             }
 
             cb(html);
         });
     }
 
-    var renderResults = function (renderData, template, className) {
+    var renderResults = function (renderData, template, className, resultSection) {
         var html = '',
             internalID = 0;
         for (var i = 0; i < renderData.length; i++) {
@@ -277,7 +291,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             current.domClass = className;
             current['_internalID'] = internalID++;
             current['renderTitle'] = current['title'];
-            results.push(current);
+            results[resultSection].push(current);
 
             // render to string
             html += template(current);
