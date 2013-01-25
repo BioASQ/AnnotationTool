@@ -1,6 +1,5 @@
 const
   pubMedBaseURI = 'http://www.ncbi.nlm.nih.gov/pubmed/';
-
 var
   TIService = require('./tiservice').TIService;
 
@@ -16,8 +15,9 @@ TIDocuments.prototype = Object.create(TIService.prototype);
 TIDocuments.prototype._transform = function (results) {
   return results.map(function(result) {
     return {
-      'uri': pubMedBaseURI + result.pmid,
-      'title': result.title ? result.title : result.documentAbstract
+      uri: pubMedBaseURI + result.pmid,
+      title: result.title ? result.title : result.documentAbstract.substr(0, 20) + '...',
+      sections: result.sections
     };
   });
 };
@@ -28,7 +28,7 @@ TIDocuments.prototype._transform = function (results) {
 TIDocuments.prototype.find = function (/* String */ keywords, page, itemsPerPage, cb) {
   var self = this;
   this._tokenURL(function (URL) {
-    self._request(URL, { 'method': 'POST' }, { 'findPubMedCitations': [ keywords, page, itemsPerPage ]},
+    self._request(URL, { 'method': 'POST' }, { 'findEntities': [ keywords, page, itemsPerPage ]},
       function (err, response) {
         if (err) {
           cb(err);
