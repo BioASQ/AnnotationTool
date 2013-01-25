@@ -53,4 +53,22 @@ require(["app"], function(app) {
             alert(resp.responseText);
         });
     });
+
+    $("#forgotPassword").click(function () {
+        var email = $.trim($("#loginEmail").val());
+
+        if (email.length > 0) {
+            $.get(app.data.LogicServer + 'resetPassword',
+            { email: email},
+            function (data) {
+                alert("A new password has been created, please check your e-mail for your confirmation code.");
+            })
+            .error(function (resp) {
+                alert(resp.responseText);
+            });
+
+        } else {
+            alert("Fill in your email address.")
+        }
+    });
 });
