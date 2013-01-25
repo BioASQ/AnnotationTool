@@ -244,9 +244,10 @@ exports.createRouter = function (model, authentication) {
            */
           this.get().bind(function (req, res) {
               // logout
-              logger('info', 'User ' + req.session.user  + ' logged out. SID: ' + req.session.id , { sid : req.session.id, user: req.session.user, file : 'router', method: 'logout'});
+              logger('info', 'User ' + req.session.data.user  + ' logged out. SID: ' + req.session.id , { sid : req.session.id, user: req.session.data.user, file : 'router', method: 'logout'});
               req.session.data.user = 'Guest';
-              res.send(200, {}, {});
+              var url = 'http://' + req.headers.host;
+              res.send(302, {'Location': url }, {});
           });
       });
   });
@@ -264,7 +265,8 @@ exports.createRouter = function (model, authentication) {
                       res.send(500, {}, err);
                   } else if (result) {
                       logger('info', 'User ' + body.email  + ' reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
-                      res.send(200, {}, {});
+                      var url = 'http://' + req.headers.host;
+                      res.send(302, {'Location': url }, {});
                   } else {
                       res.send(401, {}, 'account not found');
                   }
@@ -275,7 +277,7 @@ exports.createRouter = function (model, authentication) {
                   if (err) {
                       res.send(500, {}, err);
                   } else if (result) {
-                      logger('info', 'User ' + body.email  + 'asks to reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
+                      logger('info', 'User ' + body.email  + ' asks to reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
                       res.send(200, {}, {});
                   } else {
                       res.send(401, {}, 'account not found');
@@ -303,7 +305,7 @@ exports.createRouter = function (model, authentication) {
                       if (err) {
                           res.send(500, {}, err);
                       } else if (result) {
-                          logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user });
+                          logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user,  file : 'router', method: 'changePassword'});
                           res.send(200, {}, {});
                       } else {
                           res.send(401, {}, 'account not found');
