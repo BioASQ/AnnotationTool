@@ -98,7 +98,7 @@
 
         <!-- search source results row -->
         <script id="searchResultTemplate" type="text/x-handlebars-template">
-            <div class="row search-result {{domClass}}">
+            <div class="row search-result {{domClass}}" data-id="{{_internalID}}">
                 <div class="span8 offset1">
                     {{title}}
                     <a class="more-info" href="#">More info</a>
@@ -113,7 +113,7 @@
 
         <!-- search source results row -->
         <script id="searchResultConceptTemplate" type="text/x-handlebars-template">
-            <div class="row search-result {{domClass}}">
+            <div class="row search-result {{domClass}}" data-id="{{_internalID}}">
                 <div class="span8 offset1">
                     {{title}}
                 </div>
@@ -127,7 +127,7 @@
 
         <!-- search source results row for statements -->
         <script id="statementSearchResultTemplate" type="text/x-handlebars-template">
-            <div class="row search-result {{domClass}}">
+            <div class="row search-result {{domClass}}" data-id="{{_internalID}}">
                 <div class="span8 offset1">
                     {{title}}
                     <a class="more-info" href="#">More info</a>
@@ -137,6 +137,35 @@
                 </div>
             </div>
             <div class="row search-result separator {{domClass}}"></div>
+        </script>
+
+        <!-- document more info -->
+        <script id="extendedDocumentResultTemplate" type="text/x-handlebars-template">
+            <div class="row search-result-info">
+                <div class="span7 offset3">
+                    <h4>{{title}}</h4>
+                </div>
+                <div class="span7 offset3">
+                    {{#each sections}}
+                        <p>{{this}}</p>
+                    {{/each}}
+                </div>
+            </div>
+        </script>
+
+        <!-- statement more info -->
+        <script id="extendedStatementResultTemplate" type="text/x-handlebars-template">
+            <div class="row search-result-info">
+              <div class="span7 offset3">
+                &lt;{{s}}&gt;
+              </div>
+              <div class="span7 offset3">
+                &lt;{{p}}&gt;
+              </div>
+              <div class="span7 offset3">
+                &quot;{{o}}&quot; .
+              </div>
+            </div>
         </script>
 
         <!-- search subrow info -->

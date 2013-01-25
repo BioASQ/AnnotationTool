@@ -4,7 +4,9 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         searchResultConceptTemplate   = Handlebars.compile($("#searchResultConceptTemplate").html()),
         statementSearchResultTemplate = Handlebars.compile($("#statementSearchResultTemplate").html()),
         answerTemplate                = Handlebars.compile($("#answerTemplate").html()),
-        paginationTemplate            = Handlebars.compile($("#paginationTemplate").html());
+        paginationTemplate            = Handlebars.compile($("#paginationTemplate").html()),
+        documentExtensionTemplate     = Handlebars.compile($("#extendedDocumentResultTemplate").html());
+        statementExtensionTemplate    = Handlebars.compile($("#extendedStatementResultTemplate").html());
 
     // cached dom pointers
     var questionTitle    = $("#questionTitle"),
@@ -159,11 +161,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     // bind add-remove stuff
     $('body').on('click', '.addremove', function () {
         var id = $(this).data('id'),
-            sectionName = $(this).parents('.search-result')
-                                 .prevAll('.search-source')
-                                 .first()
-                                 .attr('id')
-                                 .replace('Result', '');
+            sectionName = id.replace(/-\d+/, '');
 
         var i, res;
         for (i = 0; i < results[sectionName].length; i++) {
@@ -183,6 +181,32 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     $('#doneButton').click(function () {
         app.save();
         window.location = 'answerQuestion.html';
+    });
+
+    $('.more-info').live('click', function () {
+        if (!$(this).parent().siblings('.search-result-info').length) {
+            var id = $(this).parents('.search-result').data('id'),
+                index = id.replace(/\D+/,''),
+                sectionName = id.replace(/-\d+/, '');
+
+            var doc = results[sectionName][index];
+            var html;
+            if (sectionName == 'documents') {
+                html = documentExtensionTemplate(doc);
+            } else {
+                html = statementExtensionTemplate(doc);
+            }
+            $(html).insertAfter();
+            $(this).parents('.search-result').append($(html));
+            return;
+        }
+
+        var info = $(this).parent().siblings('.search-result-info');
+        if (info.is(':visible')) {
+            info.hide();
+        } else {
+            info.show();
+        }
     });
 
     ////////////////////////////////////////////////////////////////////////////
@@ -289,7 +313,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             var current = renderData[i];
             if (typeof current == 'undefined') continue;
             current.domClass = className;
-            current['_internalID'] = internalID++;
+            current['_internalID'] = resultSection + '-' + internalID++;
             current['renderTitle'] = current['title'];
             results[resultSection].push(current);
 
