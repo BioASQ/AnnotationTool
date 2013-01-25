@@ -6,9 +6,12 @@ body {
 .logo-top {
     max-height: 20px;
 }
+/* user button */
+.userButton {
+    margin-right: 20px;
+}
 
 /* annotation stuff */
-
 .annotation-buttons {
     padding-bottom: 10px;
 }
