@@ -29,8 +29,6 @@ exports.defaults.server = {
  */
 exports.defaults.login = {
   salt: '§$%&/()(/&%$',
-  // at least 8 characters long, 1 digit and 1 symbol
-  passwordRegEx: /^.*(?=.{8,})(?=.*[\d])(?=.*[\W]).*$/
 };
 
 /*
