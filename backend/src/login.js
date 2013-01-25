@@ -198,9 +198,7 @@ Login.prototype._createPasswordHash = function (string) {
 
 Login.prototype._createRandomPassword = function () {
     var code = "";
-    var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 20; i++)
-        code += alpha.charAt(Math.floor(Math.random() * alpha.length));
-
+    for(var l = 0; l <10; l++)
+        code += String.fromCharCode(Math.floor((Math.random() * 126) + 33));
     return code;
 };
