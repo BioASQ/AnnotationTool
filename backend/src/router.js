@@ -137,50 +137,52 @@ exports.createRouter = function (model, authentication) {
     });
   });
 
-  /*
-   * POST to /statements searches for statements
-   */
-  router.path(/\/statements\/?/, function () {
-    var tripleSearch = new TITriples(config.search.triples);
-    var verbalizer = new Verbalizer(config.search.verbalizer);
-    this.post().bind(function (req, res, keywords) {
-      tripleSearch.find(keywords.query, function (err, triplesResult) {
-        if (err) {
-          res.send(502);
-        } else {
-          var result = [];
-          if (triplesResult.triples.length) {
-            step(
-                function () {
-                for (var i = 0, max = Math.min(10, triplesResult.triples.length); i < max; i++) {
-                    var curr = triplesResult.triples[i];
-                    verbalizer.verbalize(curr.subj, curr.pred, curr.obj, this.parallel());
-                }
-                },
-                function (err /* variadic arguments */) {
+    /*
+    * POST to /statements searches for statements
+    */
+    router.path(/\/statements\/?/, function () {
+        var tripleSearch = new TITriples(config.search.triples);
+        var verbalizer = new Verbalizer(config.search.verbalizer);
+        this.post().bind(function (req, res, keywords) {
+            tripleSearch.find(keywords.query, function (err, triplesResult) {
                 if (err) {
+                    console.log('Error in statement search: ' + err);
                     res.send(502);
                 } else {
-                    for (var i = 1; i < arguments.length; i++) {
-                    var verbalization = String(arguments[i]).replace(/\{|\}|\"/g, '');
-                    result.push({
-                        s: triplesResult.triples[i - 1].subj,
-                        p: triplesResult.triples[i - 1].pred,
-                        o: triplesResult.triples[i - 1].obj,
-                        title: verbalization
-                    });
+                    var result = [];
+                    if (triplesResult.length) {
+                        step(
+                            function () {
+                            for (var i = 0, max = Math.min(10, triplesResult.length); i < max; i++) {
+                                var curr = triplesResult[i];
+                                verbalizer.verbalize(curr.s_l, curr.p_l, curr.o, this.parallel());
+                            }
+                        },
+                        function (err /* variadic arguments */) {
+                            if (err) {
+                                console.log('Error in statement search: ' + err);
+                                res.send(502);
+                            } else {
+                                for (var i = 1; i < arguments.length; i++) {
+                                    var verbalization = String(arguments[i]).replace(/\{|\}|\"/g, '');
+                                    result.push({
+                                        s: triplesResult[i - 1].s,
+                                        p: triplesResult[i - 1].p,
+                                        o: triplesResult[i - 1].o,
+                                        title: verbalization
+                                    });
+                                }
+                                res.send(200, {}, { 'results': { 'statements': result } });
+                            }
+                        }
+                        );
+                    } else {
+                        res.send(200, {}, { 'results': { 'statements': result } });
                     }
-                    res.send(200, {}, { 'results': { 'statements': result } });
                 }
-                }
-            );
-          } else {
-            res.send(200, {}, { 'results': { 'statements': result } });
-          }
-        }
-      });
+            });
+        });
     });
-  });
 
   router.path(/\/addUser\/?/, function () {
       /*

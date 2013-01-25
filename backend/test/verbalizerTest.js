@@ -1,12 +1,17 @@
 var
-  Search = require('../src/search').Search,
+  Verbalizer = require('../src/verbalizer').Verbalizer,
   assert = require('assert'),
   util = require('util');
 
-var s = new Search();
+var v = new Verbalizer('http://139.18.2.164:9998/batchverbalizer');
 
-s.find('diabetes', function (err, res) {
+var statements = [
+    {s: 'foo', p: 'bar', o: 'baz'}
+];
+
+v.verbalize(statements, function (err, res) {
   console.log(res);
   assert.ifError(err);
   process.exit(0);
 });
+
