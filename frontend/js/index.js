@@ -1,4 +1,10 @@
-require(["app"], function(app) {
+require(["app"], function (app) {
+
+    // alert hide function
+    $('.alert .close').live("click", function (e) {
+        $(this).parent().hide();
+    });
+
     $("#loginButton").click(function() {
         var email = $("#loginEmail").val(),
             pass = $("#loginPassword").val();
@@ -50,7 +56,7 @@ require(["app"], function(app) {
             }
         )
         .error(function (resp) {
-            $("#noMiscTxt").text(resp.responseText);
+            $("#noMiscTxt").text(' ' + resp.responseText);
             $("#noMisc").show();
         });
     });
