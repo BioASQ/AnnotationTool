@@ -1,5 +1,10 @@
 require(["app"], function (app) {
 
+    // alert hide function
+    $('.alert .close').live("click", function (e) {
+        $(this).parent().hide();
+    });
+
     $("#changePassword").click(function () {
 
 
@@ -12,15 +17,15 @@ require(["app"], function (app) {
                 if (newPassword2.length > 0) {
 
                     if (newPassword1 != newPassword2) {
-                        alert("Passwords doesn't match");
+                        $("#noMatch").show();
                         return;
                     } else if (newPassword1 == oldPassword) {
-                        alert("Nothing to change. New and old password are equal.");
+                        $("#noEqual").show();
                         return;
                     } else {
                         var regExpObj = new RegExp(window.shared.shared.login.passwordRegEx, "g");
                         if (regExpObj.test(newPassword1) == false) {
-                            alert("Password at least 8 characters long, 1 digit and 1 symbol.");
+                            $("#noRegexp").show();
                             return;
                         }
                     }
@@ -34,7 +39,8 @@ require(["app"], function (app) {
                         $("#oldPassword").attr('placeholder', 'Your new BioASQ-AT password has been set.');
 
                     }).error(function (resp) {
-                        alert(resp.responseText);
+                        $("#noMiscTxt").text(' ' + resp.responseText);
+                        $("#noMisc").show();
                     });
                 }
     });

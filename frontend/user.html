@@ -58,8 +58,24 @@
                 <input class="span5 pull-right" type="password" id="oldPassword" placeholder="old password" title="old password">
             </div>
             <button class="btn btn-large btn-warning pull-right" id="changePassword"><i class="icon-refresh"></i> change your password.</button>
-
             <hr/>
+            <!-- error messages -->
+            <div class="alert alert-warning fad in" style="display:none" id="noMatch">
+                <button type="button" class="close">&times;</button>
+                <strong>Warning!</strong> New passwords doesn't match.
+            </div>
+            <div class="alert alert-warning fad in" style="display:none" id="noEqual">
+                <button type="button" class="close">&times;</button>
+                <strong>Warning!</strong> Nothing to change. New and old password are equal.
+            </div>
+            <div class="alert alert-warning fad in" style="display:none" id="noRegexp">
+                <button type="button" class="close">&times;</button>
+                <strong>Warning!</strong> Password at least 8 characters long, 1 digit and 1 symbol.
+             </div>
+            <div class="alert alert-error" style="display:none" id="noMisc">
+                <button type="button" class="close">&times;</button>
+                <strong>Error!</strong><span id="noMiscTxt"> </span>
+            </div>
         </div> <!-- /container -->
     </body>
 </html>
