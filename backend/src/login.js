@@ -197,8 +197,12 @@ Login.prototype._createPasswordHash = function (string) {
 };
 
 Login.prototype._createRandomPassword = function () {
-    var code = "";
-    for(var l = 0; l <10; l++)
-        code += String.fromCharCode(Math.floor((Math.random() * 126) + 33));
-    return code;
+    var code = Math.random().toString(36).substr(2);
+    var alpha = "!@#$%^&*()_+-={}|[]:;<>?,./";
+    alpha = alpha.charAt(Math.floor(Math.random() * alpha.length));
+    return code.replaceAt(Math.floor(Math.random() * code.length), alpha);
 };
+
+String.prototype.replaceAt = function (index, character) {
+    return this.substr(0, index) + character + this.substr(index + character.length);
+}
