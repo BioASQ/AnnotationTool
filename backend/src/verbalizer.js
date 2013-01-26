@@ -15,7 +15,7 @@ Verbalizer.prototype._request = function (URL, options, /* Object */ data, cb) {
      * If cb is undefined we have been given only three parameters,
      * the last of which is the callback.
      */
-    cb = cb || data;
+    // cb = cb || data;
 
     var urlObj = url.parse(URL);
     var httpOptions = {
@@ -40,11 +40,11 @@ Verbalizer.prototype._request = function (URL, options, /* Object */ data, cb) {
 };
 
 /*
- * Clears the current timeout (if any) and creates a new one.
+ * Verbalizes hte given statement(s), returning an array of sentences.
  */
 Verbalizer.prototype.verbalize = function (param1, param2, param3, param4) {
     var method, data, callback;
-    if (util.isArray(param1) && param3 == 'undefined' && param4 == 'undefined') {
+    if (util.isArray(param1) && !param3 && !param4) {
         // we are given an array of statements and a callback
         method   = 'POST';
         data     = param1;
