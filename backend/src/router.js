@@ -307,6 +307,8 @@ exports.createRouter = function (model, authentication) {
                   body.email ="xx@xx.xx";
                   body.password = body.newPassword;
                   if (schemajs.create(authentication.userSchema).validate(body).valid) {
+                      // todo: fix inconsistent schemajs response to the frontend
+                      schemajs.create(authentication.userSchema).validate(body).valid
 
                       authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
                           if (err) {
