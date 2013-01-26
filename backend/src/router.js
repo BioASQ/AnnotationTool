@@ -303,16 +303,25 @@ exports.createRouter = function (model, authentication) {
            */
           this.post().bind(function (req, res, body) {
               if (body.oldPassword && body.newPassword) {
-                  authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
-                      if (err) {
-                          res.send(500, {}, err);
-                      } else if (result) {
-                          logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user,  file : 'router', method: 'changePassword'});
-                          res.send(200, {}, {});
-                      } else {
-                          res.send(401, {}, 'account not found');
-                      }
-                  });
+                  body.name = "xx";
+                  body.email ="xx@xx.xx";
+                  body.password = body.newPassword;
+                  if (schemajs.create(authentication.userSchema).validate(body).valid) {
+
+                      authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
+                          if (err) {
+                              res.send(500, {}, err);
+                          } else if (result) {
+                              logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user,  file : 'router', method: 'changePassword'});
+                              res.send(200, {}, {});
+                          } else {
+                              res.send(401, {}, 'account not found');
+                          }
+                      });
+                  }else{
+                      var errors = schemajs.create(authentication.userSchema).validate(body).errors;
+                      res.send(400, {}, JSON.stringify(errors));
+                  }
               } else {
                   res.send(400, {}, 'missing parameters');
               }
