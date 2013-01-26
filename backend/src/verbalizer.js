@@ -1,5 +1,6 @@
 var http = require('http'),
     url = require('url'),
+    util = require('util'),
     qstr = require('querystring');
 
 var Verbalizer = exports.Verbalizer = function (URL) {
@@ -41,23 +42,19 @@ Verbalizer.prototype._request = function (URL, options, /* Object */ data, cb) {
 /*
  * Clears the current timeout (if any) and creates a new one.
  */
-Verbalizer.prototype.verbalize = function (subject, predicate, object, cb) {
-    if (subject.length && object == 'undefined' && cb == 'undefined') {
+Verbalizer.prototype.verbalize = function (param1, param2, param3, param4) {
+    var method, data, callback;
+    if (util.isArray(param1) && param3 == 'undefined' && param4 == 'undefined') {
         // we are given an array of statements and a callback
-        this._request(
-            this.serviceURL,
-            { method: 'POST' },
-            subject,
-            function (err, result) { predicate (err, result); }
-        );
+        method   = 'POST';
+        data     = param1;
+        callback = param2;
     } else {
-        // parameters as named
-        this._request(
-            this.serviceURL,
-            { method: 'GET' },
-            { subject: subject, predicate: predicate, object: object },
-            function (err, result) { cb (err, result); }
-        );
+        // we are given s, p, o, and a callback
+        method   = 'GET';
+        data     = { subject: param1, predicate: param2, object: param3 };
+        callback = param4;
     }
+    this._request(this.serviceURL, { method: method }, data, callback);
 };
 
