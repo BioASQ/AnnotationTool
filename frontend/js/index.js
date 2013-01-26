@@ -15,9 +15,9 @@ require(["app"], function(app) {
             },
             'error': function (xhr, status, httpStatus) {
                 if (xhr.status == 401){
-                    alert('User not found.');
-                }else{
-                    alert('Could not login.');
+                    $("#noUser").show();
+                } else {
+                    $("#noLogin").show();
                 }
             }
         });
@@ -31,14 +31,14 @@ require(["app"], function(app) {
             passAgain = $("#userPassRepeat").val(),
             name = $("#userName").val();
 
-        if(pass != passAgain){
-            alert("Passwords doesn't match");
+        if (pass != passAgain) {
+            $("#noMatch").show();
             return;
         } else {
 
             var regExpObj = new RegExp(window.shared.shared.login.passwordRegEx, "g");
             if (regExpObj.test(pass) == false) {
-                alert("Password at least 8 characters long, 1 digit and 1 symbol.");
+                $("#noRegexp").show();
                 return
             }
         }
@@ -50,7 +50,8 @@ require(["app"], function(app) {
             }
         )
         .error(function (resp) {
-            alert(resp.responseText);
+            $("#noMiscTxt").text(resp.responseText);
+            $("#noMisc").show();
         });
     });
 
@@ -58,17 +59,19 @@ require(["app"], function(app) {
         var email = $.trim($("#loginEmail").val());
 
         if (email.length > 0) {
+            $("#forgotWait").show();
             $.get(app.data.LogicServer + 'resetPassword',
             { email: email},
             function (data) {
-                alert("A new password has been created, please check your e-mail for your confirmation code.");
+                $("#forgotWait").hide();
+                $("#forgotSuccess").show();
             })
             .error(function (resp) {
-                alert(resp.responseText);
+                $("#forgotError").show();
             });
 
         } else {
-            alert("Fill in your email address.")
+            $("#forgotWarning").show();
         }
     });
 });

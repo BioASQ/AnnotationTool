@@ -37,7 +37,7 @@
                 </div>
                 <button class="btn btn-mini" id="forgotPassword"><i class="icon-refresh"></i> Forgot your password?</button>
             </div>
-            
+
             <!-- register modal -->
             <div class="modal hide fade" id="regModal">
                 <div class="modal-header">
@@ -60,7 +60,49 @@
                     <a href="#" class="btn" data-dismiss="modal">Cancel</a>
                     <a href="#" id="doRegister" class="btn btn-primary">Register!</a>
                 </div>
+                <!-- error messages -->
+                <!-- register -->
+                <div class="alert alert-error" style="display:none" id="noMatch">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Error!</strong> new passwords doesn't match.
+                </div>
+                <div class="alert alert-error" style="display:none" id="noRegexp">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Error!</strong> Password at least 8 characters long, 1 digit and 1 symbol.
+                </div>
+                 <div class="alert alert-error" style="display:none" id="noMisc">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Error!</strong><span id="noMiscTxt"></span>
+                </div>
             </div>
+            <!-- error messages -->
+            <!-- forgot password-->
+            <div class="alert alert-warning" style="display:none" id="forgotWait">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please wait!</strong> Creating new password and sending to your email ...
+            </div>
+            <div class="alert alert-success" style="display:none" id="forgotSuccess">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Success!</strong> A new password has been created, please check your email for your confirmation code!
+            </div>
+            <div class="alert alert-error" style="display:none" id="forgotError">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Error!</strong> Email not found!
+            </div>
+            <div class="alert alert-warning" style="display:none" id="forgotWarning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Warning!</strong> Fill in your email address.
+            </div>
+            <!-- login -->
+            <div class="alert alert-warning" style="display:none" id="noUser">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Warning!</strong> User not found.
+            </div>
+            <div class="alert alert-warning" style="display:none" id="noLogin">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Warning!</strong> Could not login.
+            </div>
+            <!-- error messages end -->
         </div> <!-- /container -->
     </body>
 </html>
