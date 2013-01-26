@@ -153,28 +153,28 @@ exports.createRouter = function (model, authentication) {
                     if (triplesResult.length) {
                         step(
                             function () {
-                            for (var i = 0, max = Math.min(10, triplesResult.length); i < max; i++) {
-                                var curr = triplesResult[i];
-                                verbalizer.verbalize(curr.s_l, curr.p_l, curr.o, this.parallel());
-                            }
-                        },
-                        function (err /* variadic arguments */) {
-                            if (err) {
-                                console.log('Error in statement search: ' + err);
-                                res.send(502);
-                            } else {
-                                for (var i = 1; i < arguments.length; i++) {
-                                    var verbalization = String(arguments[i]).replace(/\{|\}|\"/g, '');
-                                    result.push({
-                                        s: triplesResult[i - 1].s,
-                                        p: triplesResult[i - 1].p,
-                                        o: triplesResult[i - 1].o,
-                                        title: verbalization
-                                    });
+                                for (var i = 0, max = Math.min(10, triplesResult.length); i < max; i++) {
+                                    var curr = triplesResult[i];
+                                    verbalizer.verbalize(curr.s_l, curr.p_l, curr.o, this.parallel());
                                 }
-                                res.send(200, {}, { 'results': { 'statements': result } });
+                            },
+                            function (err /* variadic arguments */) {
+                                if (err) {
+                                    console.log('Error in statement search: ' + err);
+                                    res.send(502);
+                                } else {
+                                    for (var i = 1; i < arguments.length; i++) {
+                                        var verbalization = String(arguments[i]).replace(/\{|\}|\"/g, '');
+                                        result.push({
+                                            s: triplesResult[i - 1].s,
+                                            p: triplesResult[i - 1].p,
+                                            o: triplesResult[i - 1].o,
+                                            title: verbalization
+                                        });
+                                    }
+                                    res.send(200, {}, { 'results': { 'statements': result } });
+                                }
                             }
-                        }
                         );
                     } else {
                         res.send(200, {}, { 'results': { 'statements': result } });
