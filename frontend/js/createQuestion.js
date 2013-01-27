@@ -1,8 +1,4 @@
-require(["app"], function(app) {
-    // redirect guests
-    if (!app.data.user)
-        window.location = 'index.html';
-
+require(["app"], function (app) {
     // compile templates
     var questionTemplate,
         source;

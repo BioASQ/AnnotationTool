@@ -1,8 +1,4 @@
 require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
-    // redirect guests
-    if (!app.data.user)
-        window.location = 'index.html';
-
     // compiled templates
     var searchResultTemplate          = Handlebars.compile($("#searchResultTemplate").html()),
         searchResultConceptTemplate   = Handlebars.compile($("#searchResultConceptTemplate").html()),

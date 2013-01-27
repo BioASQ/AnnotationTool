@@ -29,10 +29,6 @@
 ];*/
 
 require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
-    // redirect guests
-    if (!app.data.user)
-        window.location = 'index.html';
-
     // cache pointers to DOM
     var $saveButton = $("#saveButton"),
         $questionAnswer = $("#questionAnswer"),
