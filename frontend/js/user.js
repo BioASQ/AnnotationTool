@@ -1,4 +1,7 @@
 require(["app"], function (app) {
+    // redirect guests
+    if (!app.data.user)
+        window.location = 'index.html';
 
     // alert hide function
     $('.alert .close').live("click", function (e) {

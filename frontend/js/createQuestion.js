@@ -1,4 +1,8 @@
 require(["app"], function(app) {
+    // redirect guests
+    if (!app.data.user)
+        window.location = 'index.html';
+
     // compile templates
     var questionTemplate,
         source;
@@ -29,7 +33,6 @@ require(["app"], function(app) {
         // append to dom
         questionList.html(html);
     });
-
     // bind create question stuff
     $("#newQuestionCancel").click(function(){
         newQuestionLabel.val("");
