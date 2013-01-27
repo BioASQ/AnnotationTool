@@ -104,38 +104,39 @@ exports.createRouter = function (model, authentication) {
       });
   });
 
-  /*
-   * POST to /concepts searches for concepts
-   */
-  router.path(/\/concepts\/?/, function () {
-    var conceptSearch = new Search();
-    this.post().bind(function (req, res, keywords) {
-      conceptSearch.find(keywords.query, function (err, conceptResult) {
-        if (err) {
-          res.send(502);
-        } else {
-          res.send(200, {}, { 'results': { 'concepts': conceptResult } });
-        }
-      });
+  router.filter(function () {
+    /*
+     * POST to /concepts searches for concepts
+     */
+    router.path(/\/concepts\/?/, function () {
+        var conceptSearch = new Search();
+        this.post().bind(function (req, res, keywords) {
+            conceptSearch.find(keywords.query, function (err, conceptResult) {
+                if (err) {
+                    res.send(502);
+                } else {
+                    res.send(200, {}, { 'results': { 'concepts': conceptResult } });
+                }
+            });
+        });
     });
-  });
 
-  /*
-   * POST to /documents searches for documents
-   */
-  router.path(/\/documents\/?/, function () {
-    var documentSearch = new TIDocuments(config.search.documents);
-    this.post().bind(function (req, res, keywords) {
-      var page = parseInt(keywords.page) || 0;
-      documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, pages) {
-        if (err) {
-          res.send(502);
-        } else {
-          res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
-        }
-      });
+    /*
+     * POST to /documents searches for documents
+     */
+    router.path(/\/documents\/?/, function () {
+        var documentSearch = new TIDocuments(config.search.documents);
+        this.post().bind(function (req, res, keywords) {
+            var page = parseInt(keywords.page) || 0;
+            documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, pages) {
+                if (err) {
+                res.send(502);
+                } else {
+                res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
+                }
+            });
+        });
     });
-  });
 
     /*
     * POST to /statements searches for statements
@@ -183,6 +184,7 @@ exports.createRouter = function (model, authentication) {
             });
         });
     });
+  });
 
   router.path(/\/addUser\/?/, function () {
       /*
