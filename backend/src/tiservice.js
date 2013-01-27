@@ -13,17 +13,20 @@ var TIService = exports.TIService = function (URL) {
  * Retrieves the token URL from the server
  */
 TIService.prototype._tokenURL = function (cb) {
-    var self = this;
-    if (this.tokenURL) {
-        return cb(this.tokenURL);
-    }
+    if (this.tokenURL) { return cb(this.tokenURL); }
+
     // token invalid
+    var self = this;
     this._request(this.serviceURL, { 'method': 'GET' },
-            function (err, data) {
-                self.tokenURL = data;
-                cb(self.tokenURL);
+        function (err, data) {
+            // FIXME: graceful error handling
+            if (err) {
+                throw new Error('Server not reachable.');
             }
-        );
+            self.tokenURL = data;
+            cb(self.tokenURL);
+        }
+    );
 };
 
 /*
@@ -68,7 +71,7 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
          });
     });
     req.on('error', function (e) {
-        cb(e.message);
+        cb(e);
     });
     req.write(dataStr);
     req.end();
