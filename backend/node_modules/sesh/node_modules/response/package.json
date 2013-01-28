@@ -1,0 +1,21 @@
+{
+  "name": "response",
+  "description": "beefs up and extends node's http.ServerResponse object",
+  "version": "0.1.0",
+  "author": {
+    "name": "Marak Squires",
+    "email": "marak.squires@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/marak/response.git"
+  },
+  "main": "./lib/response",
+  "engines": {
+    "node": ">= 0.2.0"
+  },
+  "readme": "# response - beefs up and extends node's http.ServerResponse object\n\n\n## Installation \n\n  npm install response\n  \n  \n## Usage\n\n    require('response');\n\n\nNow http.ServerResponse is monkey patched with additional methods.\n    \n\n### ServerResponse.setHeader Example\n\n    var http     = require('http');\n    \n    require('response');\n\n    http.createServer(function (req, res) {\n      var content = 'hello, i know nodejitsu.';\n\n      res.setHeader('Content-Length', content.length);\n      res.setHeader('Foo-Bar', 'A');\n      res.setHeader('Foo-Tar', 'B');\n\n      res.writeHead(200, {\n        'Content-Type': 'text/plain',\n        'Foo-Tar': 'C'\n      });\n  \n      res.write(content);\n      res.end();\n    }).listen(8080);\n\n\n#### Response Headers\n\n    Content-Type\ttext/plain\n    Foo-Tar\tC\n    Content-Length\t21\n    Foo-Bar\tA\n    Connection\tkeep-alive\n    \n    \n## Authors\n\nAlexis Sellier (cloudhead), Marak Squires",
+  "readmeFilename": "ReadMe.md",
+  "_id": "response@0.1.0",
+  "_from": "response@>= 0.1.0"
+}
