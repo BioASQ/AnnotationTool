@@ -5,7 +5,16 @@ var defaults = exports.defaults = {};
  */
 exports.defaults.mail = {
   address: 'BioAsqAT@gmail.com',
-  password: '...'
+  password: '...',
+
+  register: 'Welcome %USERNAME% to BioASQ Annotation Tool. <br /><br />' +
+            'user: %USER%<br />' +
+            'password: %PASSWORD%<br />' +
+            '<a href="%URL%?email=%USEREMAIL%&code=%ACTIVATIONCODE%">' +
+            'Click the link to activate your account.</a>',
+
+  resetPassword: 'Click the link to reset your password to: %NEWPASSWORD%<br /><br />' +
+                 '<a href="%URL%?email=%EMAIL%&code=%NEWPASSWORD%">Reset password now.</a>'
 };
 
 /*
