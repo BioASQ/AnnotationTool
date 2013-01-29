@@ -106,7 +106,11 @@
                 </div>
                 <div class="span2">
                     <a href="{{uri}}" target="_blank"><i class="icon-file"></i></a>
-                    <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                    {{#if selected}}
+                      <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-minus"></i></a>
+                    {{else}}
+                      <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                    {{/if}}
                 </div>
             </div>
             <div class="row search-result separator {{domClass}}"></div>
@@ -120,7 +124,11 @@
                 </div>
                 <div class="span2">
                     <a href="{{uri}}" target="_blank"><i class="icon-file"></i></a>
-                    <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                    {{#if selected}}
+                      <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-minus"></i></a>
+                    {{else}}
+                      <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                    {{/if}}
                 </div>
             </div>
             <div class="row search-result separator {{domClass}}"></div>
@@ -134,7 +142,11 @@
                     <a class="more-info" href="#">More info</a>
                 </div>
                 <div class="span2">
-                    <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                    {{#if selected}}
+                      <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-minus"></i></a>
+                    {{else}}
+                      <a href="#" data-id="{{_internalID}}" class="addremove"><i class="icon-plus"></i></a>
+                    {{/if}}
                 </div>
             </div>
             <div class="row search-result separator {{domClass}}"></div>

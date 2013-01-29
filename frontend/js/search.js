@@ -164,20 +164,35 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     $('#toggleStatments').click(function () { toggleClass('statementResult', $(this)); });
 
     // bind add-remove stuff
-    $('body').on('click', '.addremove', function () {
+    $('.addremove').live('click', function () {
         var id = $(this).data('id'),
             sectionName = id.replace(/-\d+/, '');
 
-        var i, res;
-        for (i = 0; i < results[sectionName].length; i++) {
+        var res;
+        for (var i = 0; i < results[sectionName].length; i++) {
             if (results[sectionName][i]['_internalID'] == id) {
                 res = results[sectionName][i];
                 break;
             }
         }
 
-        // append to entities
-        app.data.entities.push(res);
+        if (res) {
+            if (isSelected(res)) {
+                // remove from entities
+                for (var i = 0; i < app.data.entities.length; i++) {
+                    var current = app.data.entities[i];
+                    if (equal(current, res)) {
+                        app.data.entites = app.data.entities.splice(i, 1);
+                    }
+                }
+                $(this).children('.icon-minus').removeClass('icon-minus').addClass('icon-plus');
+            } else {
+                // append to entities
+                app.data.entities.push(res);
+                $(this).children('.icon-plus').removeClass('icon-plus').addClass('icon-minus');
+            }
+        }
+
         // re-render
         renderSelection();
     });
@@ -278,6 +293,27 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         });
     };
 
+    var isSelected = function (item) {
+        for (var i = 0; i < app.data.entities.length; i++) {
+            var current = app.data.entities[i];
+            if (equal(current, item)) { return true; }
+        }
+        return false;
+    };
+
+    var equal = function (lhs, rhs) {
+        // can be concept, document, statement
+        if (lhs.uri && rhs.uri) {
+            // concepts and documents both have URIs, so used them
+            return (lhs.uri == rhs.uri);
+        }
+        else if (lhs.s && lhs.p && lhs.o && rhs.s && rhs.s && rhs.p && rhs.o) {
+            // statements should have s, p, o
+            return (lhs.s == rhs.s && lhs.p && rhs.p && lhs.o && rhs.o);
+        }
+        return false;
+    };
+
     var showConcepts = function (page, cb) {
         conceptsResult.show();
         results.concepts = [];
@@ -320,6 +356,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             current.domClass = className;
             current['_internalID'] = resultSection + '-' + internalID++;
             current['renderTitle'] = current['title'];
+            current['selected']    = isSelected(current);
             results[resultSection].push(current);
 
             // render to string
