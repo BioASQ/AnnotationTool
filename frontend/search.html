@@ -112,11 +112,11 @@
             <div class="row search-result separator {{domClass}}"></div>
         </script>
 
-        <!-- search source results row -->
+        <!-- search source results row for concepts -->
         <script id="searchResultConceptTemplate" type="text/x-handlebars-template">
             <div class="row search-result {{domClass}}" data-id="{{_internalID}}">
                 <div class="span8 offset1">
-                    {{title}}
+                    {{title}}&nbsp;&nbsp;({{source}})
                 </div>
                 <div class="span2">
                     <a href="{{uri}}" target="_blank"><i class="icon-file"></i></a>

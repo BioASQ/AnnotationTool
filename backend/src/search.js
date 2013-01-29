@@ -4,12 +4,20 @@ var
   TIConcepts = require('./ticoncepts').TIConcepts;
 
 var Search = exports.Search = function () {
-  this.doid = new TIConcepts(config.search.concepts.doid);
-  this.go = new TIConcepts(config.search.concepts.go);
-  this.jochem = new TIConcepts(config.search.concepts.jochem);
-  this.mesh = new TIConcepts(config.search.concepts.mesh);
+  this.doid    = new TIConcepts(config.search.concepts.doid);
+  this.go      = new TIConcepts(config.search.concepts.go);
+  this.jochem  = new TIConcepts(config.search.concepts.jochem);
+  this.mesh    = new TIConcepts(config.search.concepts.mesh);
   this.uniprot = new TIConcepts(config.search.concepts.uniprot);
 };
+
+var sources = [
+    'Disease Ontology',
+    'Gene Ontology',
+    'Jochem',
+    'MeSH',
+    'UniProt'
+];
 
 Search.prototype._merge = function (sectionName/* variadic arguments */) {
   var mergedResult = [];
@@ -17,7 +25,12 @@ Search.prototype._merge = function (sectionName/* variadic arguments */) {
     for (var j = 0; j < arguments[i][sectionName].length; ++j) {
       var current = arguments[i][sectionName][j];
       if ('concept' in current) {
-        mergedResult.push({ 'title': current.concept.label, 'uri': current.concept.uri });
+        mergedResult.push({
+            'title':  current.concept.label,
+            'uri':    current.concept.uri,
+            'source': sources[i - 1],
+            'score':  current.score
+        });
       }
     }
   }
