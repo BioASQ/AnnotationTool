@@ -1,33 +1,3 @@
-///
-/// for debugging, can be removed later
-///
-/*var selectedDocuments = [
-    {
-        "num": 1,
-        "title": "Assessing Linked Data Mappings Using Network Measures",
-        "web": "http://www.bibsonomy.org/bibtex/2e41de3cef8add9cb0d1da416ef894311/aksw",
-        "pdf": "linked_mapping_qa.pdf"
-    },
-    {
-        "num": 2,
-        "title": "Hello world",
-        "web": "http://www.bibsonomy.org/bibtex/2e41de3cef8add9cb0d1da416ef894311/aksw",
-        "pdf": "helloworld.pdf"
-    },
-    {
-        "num": 3,
-        "title": "Test document number 3",
-        "web": "http://www.bibsonomy.org/bibtex/2e41de3cef8add9cb0d1da416ef894311/aksw",
-        "pdf": "linked_mapping_qa.pdf"
-    },
-    {
-        "num": 4,
-        "title": "Test document 4",
-        "web": "http://www.bibsonomy.org/bibtex/2e41de3cef8add9cb0d1da416ef894311/aksw",
-        "pdf": "linked_mapping_qa.pdf"
-    }
-];*/
-
 require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // cache pointers to DOM
     var $saveButton = $("#saveButton"),
@@ -83,7 +53,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     };
 
     // event for freezing answer
-    $("#freezeButton").on("click", function(){
+    /*$("#freezeButton").on("click", function(){
         // swap buttons
         $(this).hide();
         $saveButton.show();
@@ -100,7 +70,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         updateQuestionText();
 
         return false;
-    });
+    });*/
 
     // starting annotation
     $startAnn.on("click", function(){
