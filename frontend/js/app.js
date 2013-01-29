@@ -22,8 +22,7 @@ define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], functio
             LogicServer: logicServer,
             user: "",
             username : "",
-            question: {},
-            entities: []
+            question: {}
         };
 
         this.save = function(){

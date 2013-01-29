@@ -166,10 +166,11 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     // bind add-remove stuff
     $('.addremove').live('click', function () {
         var id = $(this).data('id'),
-            sectionName = id.replace(/-\d+/, '');
+            sectionName = id.replace(/-\d+/, ''),
+            i;
 
         var res;
-        for (var i = 0; i < results[sectionName].length; i++) {
+        for (i = 0; i < results[sectionName].length; i++) {
             if (results[sectionName][i]['_internalID'] == id) {
                 res = results[sectionName][i];
                 break;
@@ -179,16 +180,16 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         if (res) {
             if (isSelected(res)) {
                 // remove from entities
-                for (var i = 0; i < app.data.entities.length; i++) {
-                    var current = app.data.entities[i];
+                for (i = 0; i < app.data.question.entities.length; i++) {
+                    var current = app.data.question.entities[i];
                     if (equal(current, res)) {
-                        app.data.entites = app.data.entities.splice(i, 1);
+                        app.data.entites = app.data.question.entities.splice(i, 1);
                     }
                 }
                 $(this).children('.icon-minus').removeClass('icon-minus').addClass('icon-plus');
             } else {
                 // append to entities
-                app.data.entities.push(res);
+                app.data.question.entities.push(res);
                 $(this).children('.icon-plus').removeClass('icon-plus').addClass('icon-minus');
             }
         }
@@ -200,7 +201,21 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     // on done
     $('#doneButton').click(function () {
         app.save();
-        window.location = 'answerQuestion.html';
+        // post
+        $.ajax({
+            url: app.data.LogicServer+"questions/"+app.data.question._id,
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(app.data.question),
+            type: "POST",
+            success: function(data){
+                window.location = 'answerQuestion.html';
+            },
+            error: function(){
+                alert("Something went wrong");
+            }
+        });
+    
     });
 
     $('.more-info').live('click', function () {
@@ -235,9 +250,13 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
 
     // Renders previously selected results into dropdown box
     var renderSelection = function () {
+        if( app.data.question.entities === null || typeof app.data.question.entities == 'undefined' ){
+            app.data.question.entities = [];
+        }
+
         var i, res, html = '';
-        for (i = 0; i < app.data.entities.length; i++) {
-            res = app.data.entities[i];
+        for (i = 0; i < app.data.question.entities.length; i++) {
+            res = app.data.question.entities[i];
 
             // render to string
             html += answerTemplate(res);
@@ -294,8 +313,8 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     };
 
     var isSelected = function (item) {
-        for (var i = 0; i < app.data.entities.length; i++) {
-            var current = app.data.entities[i];
+        for (var i = 0; i < app.data.question.entities.length; i++) {
+            var current = app.data.question.entities[i];
             if (equal(current, item)) { return true; }
         }
         return false;
@@ -324,7 +343,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
                                  'concepts');
 
         cb(html);
-    }
+    };
 
     var documentSearch = function (query, page, cb) {
         $.post(app.data.LogicServer + 'documents', { query: query, page: page - 1 }, function (data) {
@@ -345,7 +364,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
 
             cb(html);
         });
-    }
+    };
 
     var renderResults = function (renderData, template, className, resultSection) {
         var html = '',
@@ -378,7 +397,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             newPage = parseInt($(element).html());
         }
         return newPage;
-    }
+    };
 
     // Return array with page names
     var getPages = function (total) {
@@ -391,7 +410,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         }
         pages.push(String(total));
         return pages;
-    }
+    };
 
     ////////////////////////////////////////////////////////////////////////////
     // Initial function calls

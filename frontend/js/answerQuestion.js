@@ -20,7 +20,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         currentAnnotation = null,
         currentDocument = null;
 
-    var selectedDocuments = app.data.entities;
+    var selectedDocuments = app.data.question.entities;
 
     // init edit question title widget
     var eqtW = new EditQuestionWidget(app);
@@ -213,9 +213,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             num = that.data('num');
 
         // remove from storage
-        for(var i = 0; i < app.data.entities.length; i++){
-            if(app.data.entities[i]._internalID == num){
-                app.data.entities.splice(i, 1);
+        for(var i = 0; i < app.data.question.entities.length; i++){
+            if(app.data.question.entities[i]._internalID == num){
+                app.data.question.entities.splice(i, 1);
                 app.save();
                 break;
             }
