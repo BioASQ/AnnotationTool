@@ -1,4 +1,5 @@
 require(["app"], function (app) {
+
     // check for login
     $.get(app.data.LogicServer + 'questions',
     function (data) {
