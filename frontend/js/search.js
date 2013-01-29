@@ -71,29 +71,34 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
 
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
-            // Pagination example
-            var pages = {
-                pages: getPages(totalConceptsPages),
-                rclass:'conceptResult',
-                current: currentConceptsPage
-            };
-            var paginationHTML = paginationTemplate(pages);
-            $(paginationHTML).insertAfter(conceptsResult);
-
-            // append to dom
-            $(result).insertAfter(conceptsResult);
+            if (result.length) {
+                if (totalConceptsPages > 1) {
+                    // Concept pagination
+                    var pages = {
+                        pages: getPages(totalConceptsPages),
+                        rclass:'conceptResult',
+                        current: currentConceptsPage
+                    };
+                    var paginationHTML = paginationTemplate(pages);
+                    $(paginationHTML).insertAfter(conceptsResult);
+                }
+                // append to dom
+                $(result).insertAfter(conceptsResult);
+            }
         });
 
         // do document request
         documentSearch(query, currentDocumentsPage, function (result) {
-            // Pagination example
-            var pages = {
-                pages: getPages(totalDocumentPages),
-                rclass:'documentResult',
-                current: currentDocumentsPage
-            };
-            var paginationHTML = paginationTemplate(pages);
-            $(paginationHTML).insertAfter(docsResult);
+            if (totalDocumentPages > 1) {
+                // Document pagination
+                var pages = {
+                    pages: getPages(totalDocumentPages),
+                    rclass:'documentResult',
+                    current: currentDocumentsPage
+                };
+                var paginationHTML = paginationTemplate(pages);
+                $(paginationHTML).insertAfter(docsResult);
+            }
 
             // append to dom
             $(result).insertAfter(docsResult);
@@ -103,7 +108,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
             results.statements = [];
 
-            // show concepts
+            // show statements
             if (data.results.statements.length > 0) {
                 statementsResult.show();
                 var html = renderResults(data.results.statements,
