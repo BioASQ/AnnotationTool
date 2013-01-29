@@ -34,7 +34,12 @@ Search.prototype._merge = function (sectionName/* variadic arguments */) {
       }
     }
   }
-  return mergedResult;
+
+  return mergedResult.sort(function (lhs, rhs) {
+      if (lhs.score > rhs.score) { return -1; }
+      if (lhs.score < rhs.score) { return 1; }
+      return 0;
+  });
 };
 
 Search.prototype.find = function (/* String */ keywords, cb) {
