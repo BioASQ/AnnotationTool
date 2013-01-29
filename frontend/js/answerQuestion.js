@@ -72,11 +72,35 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         return false;
     });*/
 
+    // update local question text when user stops typing in input
+    var typingTimeout = -1;
+    $questionAnswer.keydown(function(){
+        if(typingTimeout != -1) {
+            window.clearTimeout(typingTimeout);
+            typingTimeout = -1;
+        }
+    }).keyup(function(){
+        if(typingTimeout == -1) {
+            typingTimeout = window.setTimeout(function(){
+                // clear timeout id
+                typingTimeout = -1;
+
+                // save
+                answer.text = $questionAnswer.val();
+                app.data.question.answer = answer;
+                app.save();
+
+                console.log(app.data.question);
+            }, 1000);
+        }
+    });
+
     // starting annotation
     $startAnn.on("click", function(){
-        var text = getSelectionHtml();
+        answer.text = $questionAnswer.val();
+        var text = answer.text;//getSelectionHtml();
 
-        var begin = answer.text.indexOf(text);
+        var begin = 0;//answer.text.indexOf(text);
         if( begin != -1 ){
             answer.annotations.push({
                 "beginIndex": begin,
@@ -87,8 +111,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             currentAnnotation = answer.annotations[answer.annotations.length-1];
 
             // render
-            answer.html = answer.html.replace(text, currentAnnotation.html);
-            updateQuestionText();
+            //answer.html = answer.html.replace(text, currentAnnotation.html);
+            //updateQuestionText();
 
             // show buttons
             $startAnn.hide();
@@ -100,8 +124,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     $annCancel.on('click', function(){
         // revert
-        answer.html = answer.html.replace(currentAnnotation.html, currentAnnotation.text);
-        updateQuestionText();
+        //answer.html = answer.html.replace(currentAnnotation.html, currentAnnotation.text);
+        //updateQuestionText();
 
         // remove annotation
         answer.annotations.pop();
@@ -115,15 +139,19 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     $annDoc.on('click', function(){
         // update view
-        var oldHtml = currentAnnotation.html;
+        //var oldHtml = currentAnnotation.html;
         // TODO: randomly generate color
-        currentAnnotation.html = currentAnnotation.html.replace("#fff000", "#ff0000");
-        answer.html = answer.html.replace(oldHtml, currentAnnotation.html);
-        updateQuestionText();
+        //currentAnnotation.html = currentAnnotation.html.replace("#fff000", "#ff0000");
+        //answer.html = answer.html.replace(oldHtml, currentAnnotation.html);
+        //updateQuestionText();
 
         // add doc data to annotation
         currentAnnotation["annotationDocument"] = currentDocument.uri;
         currentAnnotation["annotationText"] = null;
+
+        // store current annotation
+        app.data.question.answer = answer;
+        app.save();
 
         // show buttons
         $startAnn.show();
@@ -133,19 +161,24 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     });
 
     $annTxt.on('click', function(){
-        var text = getSelectionHtml();
+        answer.text = $questionAnswer.val();
+        var text = answer.text;//getSelectionHtml();
 
         if( text.length > 0 ){
             // update view
-            var oldHtml = currentAnnotation.html;
+            //var oldHtml = currentAnnotation.html;
             // TODO: randomly generate color
-            currentAnnotation.html = currentAnnotation.html.replace("#fff000", "#ff0000");
-            answer.html = answer.html.replace(oldHtml, currentAnnotation.html);
-            updateQuestionText();
+            //currentAnnotation.html = currentAnnotation.html.replace("#fff000", "#ff0000");
+            //answer.html = answer.html.replace(oldHtml, currentAnnotation.html);
+            //updateQuestionText();
 
             // add doc data to annotation
             currentAnnotation["annotationDocument"] = currentDocument.uri;
             currentAnnotation["annotationText"] = text;
+
+            // store current annotation
+            app.data.question.answer = answer;
+            app.save();
 
             // show buttons
             $startAnn.show();
@@ -158,6 +191,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     $saveButton.on('click', function(){
         var question = app.data.question;
         question.answer = answer;
+        app.save();
         // post
         $.ajax({
             url: app.data.LogicServer+"questions/"+question._id,
