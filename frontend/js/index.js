@@ -1,4 +1,9 @@
 require(["app"], function (app) {
+    // check for login
+    $.get(app.data.LogicServer + 'questions',
+    function (data) {
+        window.location = 'createQuestion.html';
+    });
 
     // alert hide function
     $('.alert .close').live("click", function (e) {
