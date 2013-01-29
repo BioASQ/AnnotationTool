@@ -269,6 +269,12 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         html += template(selectedDocuments[i]);
     }
 
+    // restore answer
+    if( app.data.question.answer !== null && typeof app.data.question.answer != 'undefined' ){
+        if( app.data.question.answer.hasOwnProperty('text') )
+            $questionAnswer.val(app.data.question.answer.text);
+    }
+
     // append to dom
     $("#resultList").html(html);
 });
