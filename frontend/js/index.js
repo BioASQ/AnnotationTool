@@ -1,7 +1,7 @@
 require(["app"], function (app) {
 
     // check for login
-    $.get(app.data.LogicServer + 'questions',
+    $.get('createQuestion.html',
     function (data) {
         window.location = 'createQuestion.html';
     });
