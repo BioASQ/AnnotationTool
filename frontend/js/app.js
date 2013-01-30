@@ -6,12 +6,15 @@ requirejs.config({
     shim: {
         'bootstrap.min': {
             deps: ['jquery.min']
+        },
+        'jstorage.min': {
+            deps: ['jquery.min', 'json2.min']
         }
     }
 });
 
 // load common libraries
-define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], function(){
+define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min", 'libs/json2.min', 'libs/jstorage.min'], function(){
     // define vars
     var logicServer = '/backend/';
 
@@ -27,12 +30,12 @@ define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min"], functio
 
         this.save = function(){
             var s = JSON.stringify(that.data);
-            localStorage.setItem("app.data", s);
+            $.jStorage.set("app.data", s);
         };
 
         this.load = function(){
-            var d = localStorage.getItem("app.data");
-            if( typeof d != 'undefined' && d !== null )
+            var d = $.jStorage.get("app.data", null);
+            if( d !== null )
                 that.data = JSON.parse( d );
         };
 
