@@ -183,7 +183,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
                 for (i = 0; i < app.data.question.entities.length; i++) {
                     var current = app.data.question.entities[i];
                     if (equal(current, res)) {
-                        app.data.entites = app.data.question.entities.splice(i, 1);
+                        app.data.question.entities = app.data.question.entities.splice(i, 1);
                     }
                 }
                 $(this).children('.icon-minus').removeClass('icon-minus').addClass('icon-plus');
@@ -192,6 +192,8 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
                 app.data.question.entities.push(res);
                 $(this).children('.icon-plus').removeClass('icon-plus').addClass('icon-minus');
             }
+            // save result
+            app.save();
         }
 
         // re-render

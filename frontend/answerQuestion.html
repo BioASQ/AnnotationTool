@@ -85,19 +85,6 @@
             </div>
             
             <div class="row">
-                <!-- RESULT TEMPLATE -->
-                <script id="resultTemplate" type="text/x-handlebars-template">
-                    <tr>
-                        <td><a href="#" class="resultDocument" data-num="{{_internalID}}" data-url="#">{{renderTitle}}</a></td>
-                        <td width="20px">
-                            <a href="{{uri}}"><i class="icon-file"></i></a>
-                        </td>
-                        <td width="20px">
-                            <a href="#" class="removeFromResults" data-num="{{_internalID}}"><i class="icon-minus"></i></a>
-                        </td>
-                    </tr>
-                </script>
-            
                 <!-- LIST OF RESULTS -->
                 <div class="span3">
                     <table class="table table-striped table-bordered table-hover">
@@ -122,5 +109,25 @@
             </div>
             
         </div> <!-- /container -->
+
+        <!-- RESULT TEMPLATE -->
+        <script id="resultTemplate" type="text/x-handlebars-template">
+            <tr>
+                <td><a href="#" class="resultDocument" data-num="{{_internalID}}" data-url="#">{{renderTitle}}</a></td>
+                <td width="20px">
+                    <a href="{{uri}}"><i class="icon-file"></i></a>
+                </td>
+                <td width="20px">
+                    <a href="#" class="removeFromResults" data-num="{{_internalID}}"><i class="icon-minus"></i></a>
+                </td>
+            </tr>
+        </script>
+
+        <!-- DOCUMENT TEMPLATE -->
+        <script id="documentTemplate" type="text/x-handlebars-template">
+            {{#each sections}}
+            <p>{{this}}</p>
+            {{/each}}
+        </script>
     </body>
 </html>
