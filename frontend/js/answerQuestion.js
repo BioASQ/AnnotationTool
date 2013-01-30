@@ -17,14 +17,19 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             "html": "",
             "annotations": []
         },
+        lastAnnotationId = 0,
         currentAnnotation = null,
         currentDocument = null;
 
     var selectedDocuments = app.data.question.entities;
 
-    // template
+    // docs template
     var source = $("#documentTemplate").html(),
         docTemplate = Handlebars.compile(source);
+        
+    // annotation highlight tempalte
+    source = $("#annotationTemplate").html();
+    var annTemplate = Handlebars.compile(source);
 
     // init edit question title widget
     var eqtW = new EditQuestionWidget(app);
@@ -54,6 +59,44 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             }
         }
         return html;
+    };
+
+    var renderCurrentDocument = function(){
+        if(currentDocument.domClass == 'documentResult'){
+            // render to string
+            var html = docTemplate(currentDocument);
+            $viewer.html(html);
+        }else{
+            // if text is not yet loaded - load
+            if( typeof currentDocument.AJAXText == 'undefined' || currentDocument.AJAXText === null ){
+                // clean old stuff
+                $viewer.html("Loading..");
+
+                var url = currentDocument.uri;
+
+                if(typeof url == 'undefined' || url === null ){
+                    $viewer.html("This document has no body.");
+                }else{
+                    $.get(app.data.LogicServer + 'corsProxy?url=' +encodeURIComponent(url), function(data){
+                        //var data = "<p>Extended answer info here</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.</p>"
+                        if( data.length > 0 ){
+                            currentDocument.AJAXText = data;
+                            $viewer.html(data);
+                        }else{
+                            currentDocument.AJAXText = 0;
+                            $viewer.html("This document has no body.");
+                        }
+                    });
+                }
+            }else{
+                // if text is loaded - just render
+                if( currentDocument.AJAXText !== 0 ){
+                    $viewer.html(currentDocument.AJAXText);
+                }else{
+                    $viewer.html("This document has no body.");
+                }
+            }
+        }
     };
 
     // event for freezing answer
@@ -94,7 +137,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 app.data.question.answer = answer;
                 app.save();
 
-                console.log(app.data.question);
+                console.log(app.data);
             }, 1000);
         }
     });
@@ -106,13 +149,17 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         var begin = 0;//answer.text.indexOf(text);
         if( begin != -1 ){
+            var id = ++lastAnnotationId;
             answer.annotations.push({
                 "beginIndex": begin,
                 "length": text.length,
                 "text": text,
+                "id": id,
                 "html": "<span style='background-color: #fff000;'>"+text+"</span>"
             });
             currentAnnotation = answer.annotations[answer.annotations.length-1];
+
+            console.log(answer.annotations);
 
             // render
             //answer.html = answer.html.replace(text, currentAnnotation.html);
@@ -179,6 +226,28 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             // add doc data to annotation
             currentAnnotation["annotationDocument"] = currentDocument.uri;
             currentAnnotation["annotationText"] = text;
+            currentAnnotation["annotationHTML"] = annTemplate({text: text, id: currentAnnotation.id});
+
+            // render annotation in text
+            if(currentDocument.domClass == 'documentResult'){
+                for(var i = 0; i < currentDocument.sections.length; i++){
+                    if(currentDocument.sections[i].indexOf(text) != -1 ){
+                        currentDocument.sections[i] = currentDocument.sections[i].replace(
+                            text,
+                            currentAnnotation.annotationHTML
+                        );
+                        break;
+                    }
+                }
+            }else{
+                currentDocument.AJAXText = currentDocument.AJAXText.replace(
+                    text,
+                    currentAnnotation.annotationHTML
+                );
+            }
+
+            // re-render
+            renderCurrentDocument();
 
             // store current annotation
             app.data.question.answer = answer;
@@ -212,46 +281,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         });
     });
 
-    var renderCurrentDocument = function(){
-        if(currentDocument.domClass == 'documentResult'){
-            // reset text
-            currentDocumentAJAXText = null;
-            // render to string
-            var html = docTemplate(currentDocument);
-            $viewer.html(html);
-        }else{
-            // if text is not yet loaded - load
-            if( typeof currentDocument.AJAXText == 'undefined' || currentDocument.AJAXText === null ){
-                // clean old stuff
-                $viewer.html("Loading..");
-
-                var url = currentDocument.uri;
-
-                if(typeof url == 'undefined' || url === null ){
-                    $viewer.html("This document has no body.");
-                }else{
-                    $.get(app.data.LogicServer + 'corsProxy?url=' +encodeURIComponent(url), function(data){
-                        //var data = "<p>Extended answer info here</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.</p>"
-                        if( data.length > 0 ){
-                            currentDocument.AJAXText = data;
-                            $viewer.html(data);
-                        }else{
-                            currentDocument.AJAXText = 0;
-                            $viewer.html("This document has no body.");
-                        }
-                    });
-                }
-            }else{
-                // if text is loaded - just render
-                if( currentDocument.AJAXText !== 0 ){
-                    $viewer.html(currentDocument.AJAXText);
-                }else{
-                    $viewer.html("This document has no body.");
-                }
-            }
-        }
-    };
-
     // on result docs click
     $("body").on("click", ".resultDocument", function(){
         // get pdf url
@@ -273,9 +302,47 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         renderCurrentDocument();
 
         return false;
-    });
+    })
+    .on('click', ".annotationText", function(){
+        var id = $(this).data('id'),
+            i, ann;
 
-    $("body").on("click", ".removeFromResults", function(){
+        for(i = 0; i < answer.annotations.length; i++){
+            if(answer.annotations[i].id == id){
+                ann = answer.annotations[i];
+                break;
+            }
+        }
+
+        // remove annotation from text
+        var text = ann.annotationText;
+        if(currentDocument.domClass == 'documentResult'){
+            for(var j = 0; j < currentDocument.sections.length; j++){
+                if(currentDocument.sections[j].indexOf(text) != -1 ){
+                    currentDocument.sections[j] = currentDocument.sections[j].replace(
+                        ann.annotationHTML,
+                        text
+                    );
+                    break;
+                }
+            }
+        }else{
+            currentDocument.AJAXText = currentDocument.AJAXText.replace(
+                ann.annotationHTML,
+                text
+            );
+        }
+
+        // remove from array
+        answer.annotations.splice(i, 1);
+
+        // re-render
+        renderCurrentDocument();
+
+        console.log(answer);
+        console.log(app.data);
+    })
+    .on("click", ".removeFromResults", function(){
         var that = $(this),
             num = that.data('num');
 
@@ -296,7 +363,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     // render docs
     // compile template
-    var source = $("#resultTemplate").html();
+    source = $("#resultTemplate").html();
     var template = Handlebars.compile(source);
     // render to string
     var html = "",
@@ -307,8 +374,21 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     // restore answer
     if( app.data.question.answer !== null && typeof app.data.question.answer != 'undefined' ){
+        // render text
         if( app.data.question.answer.hasOwnProperty('text') )
             $questionAnswer.val(app.data.question.answer.text);
+
+        // get answer
+        answer = app.data.question.answer;
+
+        // get last id
+        var annid = null;
+        for(i = 0; i < app.data.question.answer.annotations.length; i++){
+            annid = parseInt(app.data.question.answer.annotations[i].id, 10);
+            if( lastAnnotationId < annid ){
+                lastAnnotationId = annid;
+            }
+        }
     }
 
     // append to dom

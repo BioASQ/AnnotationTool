@@ -126,8 +126,16 @@
         <!-- DOCUMENT TEMPLATE -->
         <script id="documentTemplate" type="text/x-handlebars-template">
             {{#each sections}}
-            <p>{{this}}</p>
+            <p>{{{this}}}</p>
             {{/each}}
+        </script>
+
+        <!-- DOCUMENT TEMPLATE -->
+        <script id="annotationTemplate" type="text/x-handlebars-template">
+            <span style='background-color:#fff000;'>
+                {{text}}
+            </span>
+            <a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a>
         </script>
     </body>
 </html>
