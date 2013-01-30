@@ -162,7 +162,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     $annTxt.on('click', function(){
         answer.text = $questionAnswer.val();
-        var text = answer.text;//getSelectionHtml();
+        var text = getSelectionHtml();
 
         if( text.length > 0 ){
             // update view
@@ -283,8 +283,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     for(i = 0; i < selectedDocuments.length; i++){
         html += template(selectedDocuments[i]);
     }
-
-    
 
     // restore answer
     if( app.data.question.answer !== null && typeof app.data.question.answer != 'undefined' ){
