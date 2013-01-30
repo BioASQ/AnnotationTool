@@ -22,6 +22,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     var selectedDocuments = app.data.question.entities;
 
+    // template
+    var source = $("#documentTemplate").html(),
+        docTemplate = Handlebars.compile(source);
+
     // init edit question title widget
     var eqtW = new EditQuestionWidget(app);
 
@@ -208,6 +212,46 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         });
     });
 
+    var renderCurrentDocument = function(){
+        if(currentDocument.domClass == 'documentResult'){
+            // reset text
+            currentDocumentAJAXText = null;
+            // render to string
+            var html = docTemplate(currentDocument);
+            $viewer.html(html);
+        }else{
+            // if text is not yet loaded - load
+            if( typeof currentDocument.AJAXText == 'undefined' || currentDocument.AJAXText === null ){
+                // clean old stuff
+                $viewer.html("Loading..");
+
+                var url = currentDocument.uri;
+
+                if(typeof url == 'undefined' || url === null ){
+                    $viewer.html("This document has no body.");
+                }else{
+                    $.get(app.data.LogicServer + 'corsProxy?url=' +encodeURIComponent(url), function(data){
+                        //var data = "<p>Extended answer info here</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.</p>"
+                        if( data.length > 0 ){
+                            currentDocument.AJAXText = data;
+                            $viewer.html(data);
+                        }else{
+                            currentDocument.AJAXText = 0;
+                            $viewer.html("This document has no body.");
+                        }
+                    });
+                }
+            }else{
+                // if text is loaded - just render
+                if( currentDocument.AJAXText !== 0 ){
+                    $viewer.html(currentDocument.AJAXText);
+                }else{
+                    $viewer.html("This document has no body.");
+                }
+            }
+        }
+    };
+
     // on result docs click
     $("body").on("click", ".resultDocument", function(){
         // get pdf url
@@ -222,37 +266,11 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             }
         }
 
-        var url = currentDocument.uri;
-
         // set title
         $("#docTitle").text( $(this).text() );
 
-        // prepare pdf viewer
-        $viewer = $("#viewer");
-        // clean old stuff
-        $viewer.html("Loading..");
-
-        if(currentDocument.domClass == 'documentResult'){
-            // make template
-            var source = $("#documentTemplate").html();
-            var template = Handlebars.compile(source);
-            // render to string
-            var html = template(currentDocument);
-            $viewer.html(html);
-        }else{
-            if(typeof url == 'undefined' || url === null ){
-                $viewer.html("This document has no body.");
-            }else{
-                $.get(app.data.LogicServer + 'corsProxy?url=' +encodeURIComponent(url), function(data){
-                    //var data = "<p>Extended answer info here</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.</p>"
-                    if( data.length > 0 ){
-                        $viewer.html(data);
-                    }else{
-                        $viewer.html("This document has no body.");
-                    }
-                });
-            }
-        }
+        // render content
+        renderCurrentDocument();
 
         return false;
     });
@@ -272,6 +290,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         that.parent().parent().remove();
     });
+
+    // get view contatiner
+    $viewer = $("#viewer");
 
     // render docs
     // compile template
