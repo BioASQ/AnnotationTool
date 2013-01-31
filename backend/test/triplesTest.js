@@ -7,10 +7,11 @@ var s = new TITriples('http://gopubmed.org/web/bioasq/linkedlifedata/triples');
 var queries = [
     'diabetes',
     'foxp2',
-    'Sitagliptin'
+    'Sitagliptin',
+    'Do erythrocytes have a nucleus?'
 ];
 
-s.find(queries[0], function (err, res) {
+s.find(queries[3], function (err, res) {
     if (err) {
         console.log(err);
     } else {

@@ -81,10 +81,23 @@ TIService.prototype._requestJSON = function (URL, options, /* Object */ data, cb
     this._request(URL, options, data, function (err, data) {
         if (err) { return cb(err); }
 
-        var response = JSON.parse(data);
+        var response;
+        try {
+            response = JSON.parse(data);
+        } catch (e) {
+            // remove invalid control characters and try again
+            try {
+                response = JSON.parse(String(data).replace(/[\u0000-\u001f]/g, ''));
+            } catch (e2) {
+                // still not working?
+                return cb(e);
+            }
+        }
+        
         if (response.exception) {
             return cb(Error(response.exception));
         }
+
         cb(null, response);
     });
 }
