@@ -14,7 +14,7 @@ requirejs.config({
 });
 
 // load common libraries
-define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min", 'libs/json2.min', 'libs/jstorage.min'], function(){
+define(['libs/jquery.min', 'libs/json2.min', 'libs/bootstrap.min', 'libs/handlebars.min', 'libs/jstorage.min'], function(){
     // define vars
     var logicServer = '/backend/';
 
@@ -23,18 +23,18 @@ define(["libs/jquery.min", "libs/bootstrap.min", "libs/handlebars.min", 'libs/js
 
         this.data = {
             LogicServer: logicServer,
-            user: "",
-            username : "",
+            user: '',
+            username : '',
             question: {}
         };
 
         this.save = function(){
             var s = JSON.stringify(that.data);
-            $.jStorage.set("app.data", s);
+            $.jStorage.set('app.data', s);
         };
 
         this.load = function(){
-            var d = $.jStorage.get("app.data", null);
+            var d = $.jStorage.get('app.data', null);
             if( d !== null )
                 that.data = JSON.parse( d );
         };
