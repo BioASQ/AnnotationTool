@@ -31,7 +31,6 @@ Mail.prototype.resetPassword = function (email, tmpPassword, url, callback) {
 
     var html = config.mail.resetPassword;
     html = html.replace("%NEWPASSWORD%", tmpPassword);
-    console.log(html);
     html = html.replace("%URL%", url);
     html = html.replace("%EMAIL%", encodeURIComponent(email));
     html = html.replace("%NEWPASSWORD%", encodeURIComponent(tmpPassword));
