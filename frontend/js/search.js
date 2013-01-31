@@ -198,7 +198,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
                 for (i = 0; i < app.data.question.entities.length; i++) {
                     var current = app.data.question.entities[i];
                     if (equal(current, res)) {
-                        app.data.question.entities = app.data.question.entities.splice(i, 1);
+                        app.data.question.entities.splice(i, 1);
                     }
                 }
                 $(this).children('.icon-minus').removeClass('icon-minus').addClass('icon-plus');
