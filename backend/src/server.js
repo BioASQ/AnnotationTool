@@ -38,8 +38,9 @@ exports.createServer = function (port, model, authentication) {
                     });
                 } else {
                     if (request.session.data.user === 'Guest' && !isIndexRequest(parsedURL.pathname) ) {
-                        response.writeHead(403, 'Not authorized');
-                        response.write('Not authorized');
+                        response.writeHead(302, {
+                            'Location': '/'
+                        });
                         response.end();
                     } else {
                         send(request, parsedURL.pathname)
