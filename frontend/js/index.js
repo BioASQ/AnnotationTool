@@ -1,10 +1,9 @@
 require(["app"], function (app) {
 
     // check for login
-    $.get('createQuestion.html',
-    function (data) {
+    if (app.user) {
         window.location = 'createQuestion.html';
-    });
+    }
 
     // alert hide function
     $('.alert .close').live("click", function (e) {
