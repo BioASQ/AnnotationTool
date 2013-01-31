@@ -56,7 +56,7 @@ exports.defaults.search = {
     mesh: 'http://www.gopubmed.org/web/bioasq/mesh/json',
     uniprot: 'http://www.gopubmed.org/web/bioasq/uniprot/json'
   },
-  documents: 'http://www.gopubmed.org/web/gopubmedbeta/bioasq/pubmed',
+  documents: 'http://www.gopubmed.com/web/bioasq/pmc/json',
   triples: 'http://gopubmed.org/web/bioasq/linkedlifedata/triples',
   verbalizer: 'http://139.18.2.164:9998/verbalizer'
 };
