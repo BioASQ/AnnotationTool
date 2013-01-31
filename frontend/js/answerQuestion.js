@@ -26,7 +26,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // docs template
     var source = $("#documentTemplate").html(),
         docTemplate = Handlebars.compile(source);
-        
+
     // annotation highlight tempalte
     source = $("#annotationTemplate").html();
     var annTemplate = Handlebars.compile(source);
@@ -66,6 +66,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             // render to string
             var html = docTemplate(currentDocument);
             $viewer.html(html);
+        }else if(currentDocument.domClass == 'statementResult'){
+            $viewer.text("<"+currentDocument.s+"> <"+currentDocument.p+"> \""+currentDocument.o+"\" .");
         }else{
             // if text is not yet loaded - load
             if( typeof currentDocument.AJAXText == 'undefined' || currentDocument.AJAXText === null ){
@@ -136,8 +138,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 answer.text = $questionAnswer.val();
                 app.data.question.answer = answer;
                 app.save();
-
-                console.log(app.data);
             }, 1000);
         }
     });
@@ -158,8 +158,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 "html": "<span style='background-color: #fff000;'>"+text+"</span>"
             });
             currentAnnotation = answer.annotations[answer.annotations.length-1];
-
-            console.log(answer.annotations);
 
             // render
             //answer.html = answer.html.replace(text, currentAnnotation.html);
@@ -189,6 +187,11 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     });
 
     $annDoc.on('click', function(){
+        if(typeof currentDocument == 'undefined' || currentDocument === null){
+            alert('No document selected!');
+            return;
+        }
+
         // update view
         //var oldHtml = currentAnnotation.html;
         // TODO: randomly generate color
@@ -258,6 +261,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             $annCancel.hide();
             $annDoc.hide();
             $annTxt.hide();
+        }else{
+            alert('No text selected!');
         }
     });
 
@@ -338,9 +343,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         // re-render
         renderCurrentDocument();
-
-        console.log(answer);
-        console.log(app.data);
     })
     .on("click", ".removeFromResults", function(){
         var that = $(this),
