@@ -42,6 +42,7 @@ exports.createRouter = function (model, authentication) {
           this.get().bind(function (req, res) {
               model.list(function (err, list) {
                   if (err) {
+                      logger('error', 'returns list of questions', { error: err + '', user: req.session.data.user, file : 'router', method: 'GET questions'});
                       res.send(404);
                   } else {
                       res.send(200, {}, { 'questions': list });
@@ -56,6 +57,7 @@ exports.createRouter = function (model, authentication) {
               question.creator = req.session.data.user;
               model.create(question, function (err, id) {
                   if (err) {
+                      logger('error', 'creates new question', { parameters:question, error: err + '', user: req.session.data.user, file : 'router', method: 'POST questions'});
                       res.send(500);
                   } else {
                       res.send(200, {}, { 'id': id });
@@ -69,6 +71,7 @@ exports.createRouter = function (model, authentication) {
           this.get(idRegEx).bind(function (req, res, id) {
               model.load(id, function (err, question) {
                   if (err) {
+                      logger('error', 'returns question with id', { parameters:id, error: err + '', user: req.session.data.user, file : 'router', method: 'GET questions with id'});
                       res.send(404);
                   } else {
                       res.send(200, {}, question);
@@ -82,6 +85,7 @@ exports.createRouter = function (model, authentication) {
           this.route(['POST', 'PUT'], idRegEx).bind(function (req, res, id, question) {
               model.update(id, question, function (err) {
                   if (err) {
+                      logger('error', 'updates existing question', { parameters:id, error: err + '', user: req.session.data.user, file : 'router', method: 'POST or PUT questions with id'});
                       res.send(500);
                   } else {
                       res.send(200);
@@ -95,6 +99,7 @@ exports.createRouter = function (model, authentication) {
           this.del(idRegEx).bind(function (req, res, id) {
               model.delete(id, function (err) {
                   if (err) {
+                      logger('error', 'deletes question with id', { parameters:id, error: err + '', user: req.session.data.user, file : 'router', method: 'DELETE questions with id'});
                       res.send(500);
                   } else {
                       res.send(200);
@@ -113,6 +118,7 @@ exports.createRouter = function (model, authentication) {
         this.post().bind(function (req, res, keywords) {
             conceptSearch.find(keywords.query, function (err, conceptResult) {
                 if (err) {
+                    logger('error', 'searches for concepts', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST concepts'});
                     res.send(502);
                 } else {
                     res.send(200, {}, { 'results': { 'concepts': conceptResult } });
@@ -130,9 +136,10 @@ exports.createRouter = function (model, authentication) {
             var page = parseInt(keywords.page) || 0;
             documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, pages) {
                 if (err) {
-                res.send(502);
+                    logger('error', 'searches for documents', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST documents'});
+                    res.send(502);
                 } else {
-                res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
+                    res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
                 }
             });
         });
@@ -147,7 +154,7 @@ exports.createRouter = function (model, authentication) {
         this.post().bind(function (req, res, keywords) {
             tripleSearch.find(keywords.query, function (err, triplesResult) {
                 if (err) {
-                    console.log('Error in statement search: ' + err);
+                    logger('error', 'in statement search', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST statements'});
                     res.send(502);
                 } else {
                     var result = [];
@@ -161,7 +168,7 @@ exports.createRouter = function (model, authentication) {
                             },
                             function (err /* variadic arguments */) {
                                 if (err) {
-                                    console.log('Error in statement search: ' + err);
+                                    logger('error', 'in statement search for triplesResult processing', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST statements'});
                                     res.send(502);
                                 } else {
                                     for (var i = 1; i < arguments.length; i++) {
@@ -195,13 +202,15 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.password && body.userEmail) {
               authentication.addUser(body.email, body.password, body.userEmail, function (err, result) {
                   if (err) {
+                      logger('error', 'in add user to whitelist', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST addUser'});
                       res.send(400, {}, err);
                   } else {
-                      logger('info', 'User ' + body.userEmail  + ' added to the whitelist.', { user: body.userEmail, file : 'router', method: 'addUser'});
+                      logger('info', 'User ' + body.userEmail  + ' added to the whitelist.', { user: body.userEmail, file : 'router', method: 'POST addUser'});
                       res.send(200, {}, { });
                   }
               });
           } else {
+              logger('warn', 'missing parameters, in add user to whitelist', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST addUser'});
               res.send(400, {}, 'missing parameters');
           }
       });
@@ -217,22 +226,25 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.password) {
               authentication.standardLogin(body.email, body.password, function (err, result) {
                   if (err) {
+                      logger('error', 'in login', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST login'});
                       res.send(500, {}, err);
                   }
                   else if (result) {
                       var user = result[0]; // DB data
                       // login
                       req.session.data.user = user.email;
-                      logger('info', 'User ' + user.email  + ' logged in. SID: ' + req.session.id , { sid : req.session.id, user: user.email, file : 'router', method: 'login'});
+                      logger('info', 'User ' + user.email  + ' logged in. SID: ' + req.session.id , { sid : req.session.id, user: user.email, file : 'router', method: 'POST login'});
                       // response
                       res.send(200, {}, {SID: req.session.id, usermail: req.session.data.user, username : user.name });
                   }
                   else {
+                      logger('warn', 'in login, account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST login'});
                       res.send(401, {}, 'account not found');
                   }
               });
           }
           else {
+              logger('warn', 'in login, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST login'});
               res.send(400, {}, 'missing parameters');
           }
       });
@@ -266,12 +278,14 @@ exports.createRouter = function (model, authentication) {
           if (body.email && body.code) {
               authentication.activatePassword(body.email,body.code, function (err, result) {
                   if (err) {
+                      logger('error', 'in resetPassword', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
                       res.send(500, {}, err);
                   } else if (result) {
-                      logger('info', 'User ' + body.email  + ' reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
+                      logger('info', 'User ' + body.email  + ' reset password.', { user: body.email, file : 'router', method: 'GET resetPassword'});
                       var url = 'http://' + req.headers.host;
                       res.send(302, {'Location': url }, {});
                   } else {
+                      logger('warn', 'in resetPassword,account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
                       res.send(401, {}, 'account not found');
                   }
               });
@@ -279,15 +293,18 @@ exports.createRouter = function (model, authentication) {
               var url = 'http://' + req.headers.host + '/backend/resetPassword'
               authentication.resetPassword(url, body.email, function (err, result) {
                   if (err) {
+                      logger('error', 'in resetPassword', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
                       res.send(500, {}, err);
                   } else if (result) {
-                      logger('info', 'User ' + body.email  + ' asks to reset password.', { user: body.email, file : 'router', method: 'resetPassword'});
+                      logger('info', 'User ' + body.email  + ' asks to reset password.', { user: body.email, file : 'router', method: 'GET resetPassword'});
                       res.send(200, {}, {});
                   } else {
+                      logger('warn', 'in resetPassword, account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
                       res.send(401, {}, 'account not found');
                   }
               });
           } else {
+              logger('warn', 'in resetPassword, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
               res.send(400, {}, 'missing parameters');
           };
       });
@@ -314,19 +331,23 @@ exports.createRouter = function (model, authentication) {
 
                       authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
                           if (err) {
+                              logger('error', 'in changePassword', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST changePassword'});
                               res.send(500, {}, err);
                           } else if (result) {
-                              logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user,  file : 'router', method: 'changePassword'});
+                              logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user,  file : 'router', method: 'POST changePassword'});
                               res.send(200, {}, {});
                           } else {
+                              logger('warn', 'in resetPassword, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST changePassword'});
                               res.send(401, {}, 'account not found');
                           }
                       });
                   }else{
                       var errors = schemajs.create(authentication.userSchema).validate(body).errors;
+                      logger('warn', 'in changePassword', { parameters:body, error: errors + '', user: req.session.data.user, file : 'router', method: 'POST changePassword'});
                       res.send(400, {}, JSON.stringify(errors));
                   }
               } else {
+                  logger('warn', 'in changePassword, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST changePassword'});
                   res.send(400, {}, 'missing parameters');
               }
           });
@@ -341,19 +362,23 @@ exports.createRouter = function (model, authentication) {
             if (body.email && body.code) {
                 authentication.activateUser(body.email, body.code, function (err, result) {
                     if (err) {
+                        logger('error', 'in activate account', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'GET activate'});
                         res.send(500, {}, err);
                     } else if (result) {
                         var url = 'http://' + req.headers.host;
-                        logger('info', 'User ' + body.email  + ' activated.', { user: body.email, file : 'router', method: 'activate'});
+                        logger('info', 'User ' + body.email  + ' activated.', { user: body.email, file : 'router', method: 'GET activate'});
                         res.send(302, {'Location': url }, {});
                     } else {
+                        logger('warn', 'in activate account, account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET activate'});
                         res.send(401, {}, 'account not found');
                     }
                 });
             } else if (body.email) {
                 //TODO send activation mail again?
+                logger('warn', 'in  activate account, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET activate'});
                 res.send(400, {}, 'missing parameters');
             } else {
+                logger('warn', 'in  activate account, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET activate'});
                 res.send(400, {}, 'missing parameters');
             }
         });
@@ -375,6 +400,7 @@ exports.createRouter = function (model, authentication) {
                   var url = 'http://' + req.headers.host + '/backend/activate';
                   authentication.createUser(body, url, function (err, results) {
                       if (err) {
+                          logger('error', 'in register account', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST register'});
                           res.send(403, {}, err);
                       } else {
                           logger('info', 'User ' + body.email  + ' registered.', { user: body.email, file : 'router', method: 'register'});
@@ -383,9 +409,11 @@ exports.createRouter = function (model, authentication) {
                   });
               } else {
                   var errors = schemajs.create(authentication.userSchema).validate(body).errors;
+                  logger('warn', 'in register account', { parameters:body, error: errors + '', user: req.session.data.user, file : 'router', method: 'POST register'});
                   res.send(400, {}, JSON.stringify(errors));
               }
           } else {
+              logger('warn', 'in register account', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST register'});
               res.send(400, {}, 'missing parameters');
           }
       });
@@ -426,11 +454,13 @@ exports.createRouter = function (model, authentication) {
               });
 
               req.on('error', function(e) {
+                  logger('error', 'in corsProxy, http.request error', { parameters:body, error: e, user: req.session.data.user, file : 'router', method: 'GET corsProxy'});
                   res.send(503, {}, 'error');
               });
               req.end();
 
           } else {
+              logger('warn', 'in corsProxy, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET corsProxy'});
               res.send(400, {}, 'missing parameters');
           }
       });
