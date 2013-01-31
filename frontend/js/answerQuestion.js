@@ -213,10 +213,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         app.save();
 
         // show buttons
-        $startAnn.show();
-        $annCancel.hide();
-        $annDoc.hide();
-        $annTxt.hide();
+        //$startAnn.show();
+        //$annCancel.hide();
+        //$annDoc.hide();
+        //$annTxt.hide();
     });
 
     $annTxt.on('click', function(){
@@ -270,10 +270,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             app.save();
 
             // show buttons
-            $startAnn.show();
-            $annCancel.hide();
-            $annDoc.hide();
-            $annTxt.hide();
+            //$startAnn.show();
+            //$annCancel.hide();
+            //$annDoc.hide();
+            //$annTxt.hide();
         }else{
             alert('No text selected!');
         }
