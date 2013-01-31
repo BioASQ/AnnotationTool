@@ -4,17 +4,13 @@ requirejs.config({
         'libs': '../js-libs'
     },
     shim: {
-        'bootstrap.min': {
-            deps: ['jquery.min']
-        },
-        'jstorage.min': {
-            deps: ['jquery.min', 'json2.min']
-        }
+        'bootstrap.min': ['jquery'],
+        'jstorage.min': ['jquery', 'json2.min']
     }
 });
 
 // load common libraries
-define(['libs/jquery.min', 'libs/json2.min', 'libs/bootstrap.min', 'libs/handlebars.min', 'libs/jstorage.min'], function(){
+define(['jquery', 'libs/json2.min', 'libs/bootstrap.min', 'libs/handlebars.min', 'libs/jstorage.min'], function($){
     // define vars
     var logicServer = '/backend/';
 
