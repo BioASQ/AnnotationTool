@@ -101,6 +101,34 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         }
     };
 
+    var prepareAnnotation = function(){
+        answer.text = $questionAnswer.val();
+        var text = answer.text;//getSelectionHtml();
+
+        var begin = 0;//answer.text.indexOf(text);
+        if( begin != -1 ){
+            var id = ++lastAnnotationId;
+            answer.annotations.push({
+                "beginIndex": begin,
+                "length": text.length,
+                "text": text,
+                "id": id,
+                "html": "<span style='background-color: #fff000;'>"+text+"</span>"
+            });
+            currentAnnotation = answer.annotations[answer.annotations.length-1];
+
+            // render
+            //answer.html = answer.html.replace(text, currentAnnotation.html);
+            //updateQuestionText();
+
+            // show buttons
+            //$startAnn.hide();
+            //$annCancel.show();
+            //$annDoc.show();
+            //$annTxt.show();
+        }
+    };
+
     // event for freezing answer
     /*$("#freezeButton").on("click", function(){
         // swap buttons
@@ -143,33 +171,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     });
 
     // starting annotation
-    $startAnn.on("click", function(){
-        answer.text = $questionAnswer.val();
-        var text = answer.text;//getSelectionHtml();
-
-        var begin = 0;//answer.text.indexOf(text);
-        if( begin != -1 ){
-            var id = ++lastAnnotationId;
-            answer.annotations.push({
-                "beginIndex": begin,
-                "length": text.length,
-                "text": text,
-                "id": id,
-                "html": "<span style='background-color: #fff000;'>"+text+"</span>"
-            });
-            currentAnnotation = answer.annotations[answer.annotations.length-1];
-
-            // render
-            //answer.html = answer.html.replace(text, currentAnnotation.html);
-            //updateQuestionText();
-
-            // show buttons
-            $startAnn.hide();
-            $annCancel.show();
-            $annDoc.show();
-            $annTxt.show();
-        }
-    });
+    $startAnn.on("click", prepareAnnotation);
 
     $annCancel.on('click', function(){
         // revert
@@ -191,6 +193,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             alert('No document selected!');
             return;
         }
+
+        // prepare new annotation
+        prepareAnnotation();
 
         // update view
         //var oldHtml = currentAnnotation.html;
@@ -219,6 +224,14 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         var text = getSelectionHtml();
 
         if( text.length > 0 ){
+            if(typeof currentDocument == 'undefined' || currentDocument === null){
+                alert('No document selected!');
+                return;
+            }
+
+            // prepare new annotation
+            prepareAnnotation();
+
             // update view
             //var oldHtml = currentAnnotation.html;
             // TODO: randomly generate color
