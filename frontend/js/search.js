@@ -1,4 +1,4 @@
-require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
+require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidget) {
     // compiled templates
     var searchResultTemplate          = Handlebars.compile($("#searchResultTemplate").html()),
         searchResultConceptTemplate   = Handlebars.compile($("#searchResultConceptTemplate").html()),
@@ -9,13 +9,16 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         statementExtensionTemplate    = Handlebars.compile($("#extendedStatementResultTemplate").html());
 
     // cached dom pointers
-    var questionTitle    = $("#questionTitle"),
-        searchResults    = $("#searchResults"),
-        answerList       = $("#results"),
-        searchQuery      = $("#searchQuery"),
-        conceptsResult   = $("#conceptsResult"),
-        docsResult       = $("#documentsResult"),
-        statementsResult = $("#statementsResult");
+    var questionTitle      = $("#questionTitle"),
+        searchResults      = $("#searchResults"),
+        answerList         = $("#results"),
+        searchQuery        = $("#searchQuery"),
+        conceptsResult     = $("#conceptsResult"),
+        conceptProgress    = $("#conceptProgress"),
+        docsResult         = $("#documentsResult"),
+        documentsProgress  = $("#documentsProgress"),
+        statementsProgress = $("#statementsProgress"),
+        statementsResult   = $("#statementsResult");
 
     // other vars
     var source, currentQuery, conceptResults = [];
@@ -55,7 +58,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         var tc = $("#toggleConcepts");
         if( tc.data('state') !== "hidden" )
             toggleClass("conceptResult", tc);
-    
+
         var td = $("#toggleDocs");
         if( td.data('state') !== "hidden" )
             toggleClass("documentResult", td);
@@ -69,8 +72,11 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
         $('.documentResult').remove();
         $('.statementResult').remove();
 
+        // show concept spinner
+        conceptProgress.parent().show();
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
+            conceptProgress.parent().hide();
             if (result.length) {
                 if (totalConceptsPages > 1) {
                     // Concept pagination
@@ -87,8 +93,11 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             }
         });
 
+        // show concept spinner
+        documentsProgress.parent().show();
         // do document request
         documentSearch(query, currentDocumentsPage, function (result) {
+            documentsProgress.parent().hide();
             if (totalDocumentPages > 1) {
                 // Document pagination
                 var pages = {
@@ -104,8 +113,12 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             $(result).insertAfter(docsResult);
         });
 
+        // show concept spinner
+        statementsProgress.parent().show();
         // do statement request
         $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
+            statementsProgress.parent().hide();
+
             results.statements = [];
 
             // show statements
@@ -118,6 +131,8 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
                 // append to dom
                 $(html).insertAfter(statementsResult);
             }
+        }).error(function(){
+            statementsProgress.parent().hide();
         });
     });
 
@@ -217,7 +232,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
                 alert("Something went wrong");
             }
         });
-    
+
     });
 
     $('.more-info').live('click', function () {
@@ -270,7 +285,7 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     // bind toggle button
     var toggleClass = function (cls, elm) {
         var show, state, c;
-        
+
         state = elm.data('state');
         if (state == 'hidden') {
             elm.text('Collapse');
@@ -311,6 +326,8 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             } else {
                 cb([]);
             }
+        }).error(function(){
+            conceptProgress.parent().hide();
         });
     };
 
@@ -365,6 +382,8 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
             }
 
             cb(html);
+        }).error(function(){
+            documentsProgress.parent().hide();
         });
     };
 
@@ -417,6 +436,10 @@ require(["app", "editQuestionTitle"], function (app, EditQuestionWidget) {
     ////////////////////////////////////////////////////////////////////////////
     // Initial function calls
     ////////////////////////////////////////////////////////////////////////////
+
+    documentsProgress.spin();
+    conceptProgress.spin();
+    statementsProgress.spin();
 
     renderSelection();
 });

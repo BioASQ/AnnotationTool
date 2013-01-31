@@ -10,7 +10,12 @@ requirejs.config({
 });
 
 // load common libraries
-define(['jquery', 'libs/json2.min', 'libs/bootstrap.min', 'libs/handlebars.min', 'libs/jstorage.min'], function($){
+define(['jquery',
+    'libs/json2.min',
+    'libs/bootstrap.min',
+    'libs/handlebars.min',
+    'libs/jstorage.min'],
+    function($, Spinner){
     // define vars
     var logicServer = '/backend/';
 

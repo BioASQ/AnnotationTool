@@ -9,13 +9,13 @@
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
-    
+
         <title>BioASQ - search</title>
         <!-- Bootstrap -->
         <link href="./css/bootstrap.min.css" rel="stylesheet">
         <link href="./css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="./css/main.css" rel="stylesheet">
-        
+
         <!-- javascript -->
         <script data-main="./js/search" src="./js-libs/require-jquery.js"></script>
     </head>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="container">
             <!-- Search box and results -->
             <div class="row">
@@ -60,9 +60,15 @@
                 </div>
             </div>
             <hr/>
-            
-            <!-- search results -->
-            <div class="row search-source" id="conceptsResult" style="display:none;">
+
+            <!-- concept search indicatior -->
+            <div class="row search-indicator" style="padding: 10px; display: none;">
+                <div class="span12" id="conceptProgress">
+                    <p style="padding-left: 20px; margin-top: -10px;">Loading concepts...<p>
+                </div>
+            </div>
+            <!-- concept search results -->
+            <div class="row search-source" id="conceptsResult" style="display: none;">
                 <div class="span9">
                     Concepts
                 </div>
@@ -70,7 +76,14 @@
                     <a href="#" id="toggleConcepts" data-state="hidden">Expand</a>
                 </div>
             </div>
-            
+
+            <!-- documents search indicatior -->
+            <div class="row search-indicator" style="padding: 10px; display: none;">
+                <div class="span12" id="documentsProgress">
+                    <p style="padding-left: 20px; margin-top: -10px;">Loading documents...<p>
+                </div>
+            </div>
+            <!-- documents search results -->
             <div class="row search-source" id="documentsResult" style="display:none;">
                 <div class="span9">
                     Documents
@@ -79,7 +92,14 @@
                     <a href="#" id="toggleDocs" data-state="hidden">Expand</a>
                 </div>
             </div>
-            
+
+            <!-- statements search indicatior -->
+            <div class="row search-indicator" style="padding: 10px; display: none;">
+                <div class="span12" id="statementsProgress">
+                    <p style="padding-left: 20px; margin-top: -10px;">Loading statements...<p>
+                </div>
+            </div>
+            <!-- statements search results -->
             <div class="row search-source" id="statementsResult" style="display:none;">
                 <div class="span9">
                     Statements
@@ -89,9 +109,9 @@
                 </div>
             </div>
         </div> <!-- /container -->
-        
+
         <!-- TEMPLATES -->
-        
+
         <!-- ANSWER ENTRY TEMPLATE -->
         <script id="answerTemplate" type="text/x-handlebars-template">
             <option value="{{_internalID}}">{{renderTitle}}</option>
@@ -207,7 +227,7 @@
                             {{/each}}
                             <li><a class="next" href="#">Next</a></li>
                         </ul>
-                    </div>    
+                    </div>
                 </div>
                 <div class="span2"></div>
             </div>
