@@ -9,13 +9,13 @@
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
-    
+
         <title>BioASQ - answer</title>
         <!-- Bootstrap -->
         <link href="./css/bootstrap.min.css" rel="stylesheet">
         <link href="./css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="./css/main.css" rel="stylesheet">
-        
+
         <!-- javascript -->
         <script data-main="./js/answerQuestion" src="./js-libs/require-jquery.js"></script>
     </head>
@@ -39,7 +39,7 @@
                             <li class="active"><a href="#">Answer</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
-                    
+
                     <a class="btn btn-small btn-warning pull-right" href="#" id="editQuestionTitle"><i class="icon-edit"></i></a>
                     <a class="btn btn-small btn-success pull-right" href="#" style="display:none" id="saveQuestionTitle"><i class="icon-ok"></i></a>
                     <input class="pull-right" style="margin-top: 6px; display:none;" id="questionTitleInput">
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="container">
             <div class="alert alert-success" style="display:none" id="saveSuccess">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -75,15 +75,15 @@
             <!-- ANNOTATION BUTTONS -->
             <div class="row annotation-buttons">
                 <div class="span3">
-                    <a href="#" id="startAnn" class="btn btn-primary">Annotate</a> <!-- selected text -->
+                    <!-- <a href="#" id="startAnn" class="btn btn-primary">Annotate selected text</a> --> 
                 </div>
                 <div class="span9 btn-group" style="text-align: right;">
-                    <a href="#" id="annDoc" class="btn btn-primary" style="display: none;">Annotate with selected document</a>
-                    <a href="#" id="annTxt" class="btn btn-info" style="display: none;">Annotate with selected text</a>
-                    <a href="#" id="annCancel" class="btn btn-danger" style="display: none;">Cancel</a>
+                    <a href="#" id="annDoc" class="btn btn-primary">Annotate with selected document</a>
+                    <a href="#" id="annTxt" class="btn btn-info">Annotate with selected text</a>
+                    <!-- <a href="#" id="annCancel" class="btn btn-danger" style="display: none;">Cancel</a> -->
                 </div>
             </div>
-            
+
             <div class="row">
                 <!-- LIST OF RESULTS -->
                 <div class="span3">
@@ -107,7 +107,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div> <!-- /container -->
 
         <!-- RESULT TEMPLATE -->
