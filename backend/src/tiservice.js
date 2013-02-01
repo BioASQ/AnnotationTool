@@ -89,11 +89,12 @@ TIService.prototype._requestJSON = function (URL, options, /* Object */ data, cb
             try {
                 response = JSON.parse(String(data).replace(/[\u0000-\u001f]/g, ''));
             } catch (e2) {
-                // still not working?
+                // still not working? give up
                 return cb(e);
             }
         }
         
+        // catch TI-specific exception
         if (response.exception) {
             return cb(Error(response.exception));
         }
