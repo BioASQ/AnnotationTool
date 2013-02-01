@@ -41,10 +41,17 @@ exports.createRouter = function (model, authentication) {
            */
           this.get().bind(function (req, res) {
               model.list(function (err, list) {
+                  var logData = {
+                      user: req.session.data.user,
+                      path: 'questions',
+                      method: 'GET'
+                  };
                   if (err) {
-                      logger('error', 'returns list of questions', { error: err + '', user: req.session.data.user, file : 'router', method: 'GET questions'});
+                      logData.error = err;
+                      logger('error', 'listing questions failed', logData);
                       res.send(404);
                   } else {
+                      logger('info', 'listing questions', logData);
                       res.send(200, {}, { 'questions': list });
                   }
               });
@@ -56,10 +63,18 @@ exports.createRouter = function (model, authentication) {
           this.post().bind(function (req, res, question) {
               question.creator = req.session.data.user;
               model.create(question, function (err, id) {
+                  var logData = {
+                      user: req.session.data.user,
+                      path: 'questions',
+                      method: 'POST',
+                      params: question
+                  };
                   if (err) {
-                      logger('error', 'creates new question', { parameters:question, error: err + '', user: req.session.data.user, file : 'router', method: 'POST questions'});
+                      logData.error = err;
+                      logger('error', 'creating new question failed', logData);
                       res.send(500);
                   } else {
+                      logger('info', 'creating new question', logData);
                       res.send(200, {}, { 'id': id });
                   }
               });
@@ -70,10 +85,18 @@ exports.createRouter = function (model, authentication) {
            */
           this.get(idRegEx).bind(function (req, res, id) {
               model.load(id, function (err, question) {
+                  var logData = {
+                      user: req.session.data.user,
+                      path: 'questions/:id',
+                      method: 'POST',
+                      params: id
+                  };
                   if (err) {
-                      logger('error', 'returns question with id', { parameters:id, error: err + '', user: req.session.data.user, file : 'router', method: 'GET questions with id'});
+                      logData.error = err;
+                      logger('error', 'retrieving question failed', logData);
                       res.send(404);
                   } else {
+                      logger('info', 'retrieving question', logData);
                       res.send(200, {}, question);
                   }
               });
@@ -84,10 +107,18 @@ exports.createRouter = function (model, authentication) {
            */
           this.route(['POST', 'PUT'], idRegEx).bind(function (req, res, id, question) {
               model.update(id, question, function (err) {
+                  var logData = {
+                      user: req.session.data.user,
+                      path: 'questions/:id',
+                      method: 'POST|PUT',
+                      params: id
+                  };
                   if (err) {
-                      logger('error', 'updates existing question', { parameters:id, error: err + '', user: req.session.data.user, file : 'router', method: 'POST or PUT questions with id'});
+                      logData.error = err;
+                      logger('error', 'updating question failed', logData);
                       res.send(500);
                   } else {
+                      logger('info', 'updating question', logData);
                       res.send(200);
                   }
               });
@@ -98,10 +129,18 @@ exports.createRouter = function (model, authentication) {
            */
           this.del(idRegEx).bind(function (req, res, id) {
               model.delete(id, function (err) {
+                  var logData = {
+                      user: req.session.data.user,
+                      path: 'questions/:id',
+                      method: 'DEL',
+                      params: id
+                  };
                   if (err) {
-                      logger('error', 'deletes question with id', { parameters:id, error: err + '', user: req.session.data.user, file : 'router', method: 'DELETE questions with id'});
+                      logData.error = err;
+                      logger('error', 'deleting question failed', logData);
                       res.send(500);
                   } else {
+                      logger('info', 'deleting question question', logData);
                       res.send(200);
                   }
               });
