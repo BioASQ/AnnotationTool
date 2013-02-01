@@ -6,11 +6,8 @@ var Question = exports.Question = function (database) {
 
 Question.prototype._collection = function (errCallback, callback) {
     this.db.collection('questions', function (err, coll) {
-        if (err) {
-            errCallback(err);
-        } else {
-            callback(null, coll);
-        }
+        if (err) { return errCallback(err); }
+        callback(null, coll);
     });
 };
 
