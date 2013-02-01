@@ -25,8 +25,6 @@ Mail.prototype.createUser = function (user,url,  callback) {
     html = html.replace("%USEREMAIL%", encodeURIComponent(user.email));
     html = html.replace("%ACTIVATIONCODE%", encodeURIComponent(user.active));
 
-    console.log(html);
-
    this.transport.sendMail(this._mailOptions(user.email, html), function (error, responseStatus) {
         callback(error, responseStatus);
     });
@@ -39,7 +37,7 @@ Mail.prototype.resetPassword = function (email, tmpPassword, url, callback) {
     html = html.replace("%NEWPASSWORD%", pass);
     html = html.replace("%URL%", url);
     html = html.replace("%EMAIL%", encodeURIComponent(email));
-    html = html.replace("%NEWPASSWORD%", encodeURIComponent(pass));
+    html = html.replace("%NEWPASSWORD%", encodeURIComponent(tmpPassword));
 
     this.transport.sendMail(
         this._mailOptions(email, html),
