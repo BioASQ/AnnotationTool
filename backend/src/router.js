@@ -21,9 +21,8 @@ exports.createRouter = function (model, authentication) {
         filter: function (req, body, callback) {
             if (req.session.data.user === 'Guest') {
                 return callback(new journey.NotAuthorized('Invalid user'));
-            } else {
-                callback(); // respond with no error
             }
+            callback(); // respond with no error
         }
     });
 
