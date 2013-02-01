@@ -16,7 +16,7 @@ Mail.prototype.createUser = function (user,url,  callback) {
 
     var html = config.mail.register;
 
-    var pass = user.password.replace(/\$/g, "$$$");
+    var pass = user.password.replace(/\$/g, "$$$$");
 
     html = html.replace("%USERNAME%", user.name);
     html = html.replace("%USER%", user.email);
@@ -35,7 +35,7 @@ Mail.prototype.createUser = function (user,url,  callback) {
 Mail.prototype.resetPassword = function (email, tmpPassword, url, callback) {
 
     var html = config.mail.resetPassword;
-    var pass = tmpPassword.replace(/\$/g, "$$$");
+    var pass = tmpPassword.replace(/\$/g, "$$$$");
     html = html.replace("%NEWPASSWORD%", pass);
     html = html.replace("%URL%", url);
     html = html.replace("%EMAIL%", encodeURIComponent(email));
