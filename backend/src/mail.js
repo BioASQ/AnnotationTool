@@ -15,12 +15,17 @@ var Mail = exports.Mail = function () {
 Mail.prototype.createUser = function (user,url,  callback) {
 
     var html = config.mail.register;
+
+    var pass = user.password.replace(/\$/g, "$$$");
+
     html = html.replace("%USERNAME%", user.name);
     html = html.replace("%USER%", user.email);
-    html = html.replace("%PASSWORD%", user.password);
+    html = html.replace("%PASSWORD%", pass);
     html = html.replace("%URL%", url);
     html = html.replace("%USEREMAIL%", encodeURIComponent(user.email));
     html = html.replace("%ACTIVATIONCODE%", encodeURIComponent(user.active));
+
+    console.log(html);
 
    this.transport.sendMail(this._mailOptions(user.email, html), function (error, responseStatus) {
         callback(error, responseStatus);
@@ -30,10 +35,11 @@ Mail.prototype.createUser = function (user,url,  callback) {
 Mail.prototype.resetPassword = function (email, tmpPassword, url, callback) {
 
     var html = config.mail.resetPassword;
-    html = html.replace("%NEWPASSWORD%", tmpPassword);
+    var pass = tmpPassword.replace(/\$/g, "$$$");
+    html = html.replace("%NEWPASSWORD%", pass);
     html = html.replace("%URL%", url);
     html = html.replace("%EMAIL%", encodeURIComponent(email));
-    html = html.replace("%NEWPASSWORD%", encodeURIComponent(tmpPassword));
+    html = html.replace("%NEWPASSWORD%", encodeURIComponent(pass));
 
     this.transport.sendMail(
         this._mailOptions(email, html),
