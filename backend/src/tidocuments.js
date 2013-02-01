@@ -17,7 +17,7 @@ TIDocuments.prototype._transform = function (results) {
     return {
       uri: pubMedBaseURI + result.pmid,
       title: result.title ? result.title : result.documentAbstract.substr(0, 20) + '...',
-      sections: result.sections
+      sections: result.sections ? result.sections : [ result.documentAbstract ]
     };
   });
 };
