@@ -1,5 +1,5 @@
 var
-  Verbalizer = require('../src/verbalizer').Verbalizer,
+  Verbalizer = require('../lib/verbalizer').Verbalizer,
   assert = require('assert'),
   util = require('util');
 

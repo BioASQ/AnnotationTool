@@ -1,5 +1,5 @@
 var
-  TIService = require('../src/tiservice').TIService,
+  TIService = require('../lib/tiservice').TIService,
   assert = require('assert'),
   util = require('util');
 

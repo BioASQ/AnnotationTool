@@ -1,4 +1,4 @@
-var TITriples = require('../src/titriples').TITriples,
+var TITriples = require('../lib/titriples').TITriples,
     assert = require('assert'),
     util = require('util');
 

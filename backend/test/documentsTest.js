@@ -1,5 +1,5 @@
 var
-  TIDocuments = require('../src/tidocuments').TIDocuments,
+  TIDocuments = require('../lib/tidocuments').TIDocuments,
   assert = require('assert'),
   util = require('util');
 

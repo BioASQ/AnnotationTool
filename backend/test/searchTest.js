@@ -1,5 +1,5 @@
 var
-  Search = require('../src/search').Search,
+  Search = require('../lib/search').Search,
   assert = require('assert'),
   util = require('util');
 
