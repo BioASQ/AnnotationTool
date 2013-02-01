@@ -13,7 +13,8 @@ var
   TITriples = require('./titriples').TITriples,
   Verbalizer = require('./verbalizer').Verbalizer,
   config = require(require('path').join(__dirname, '..', 'config')).defaults,
-  logger = require('./logging.js').logger;
+  logger = require('./logging.js').logger,
+  path = require('path');
 
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
@@ -40,7 +41,7 @@ exports.createRouter = function (model, authentication) {
            * GET to /questions returns list of questions
            */
           this.get().bind(function (req, res) {
-              model.list(function (err, list) {
+              model.list(req.session.data.user, function (err, list) {
                   var logData = {
                       user: req.session.data.user,
                       path: 'questions',
@@ -61,8 +62,7 @@ exports.createRouter = function (model, authentication) {
            * POST to /questions creates new question
            */
           this.post().bind(function (req, res, question) {
-              question.creator = req.session.data.user;
-              model.create(question, function (err, id) {
+              model.create(question, req.session.data.user, function (err, id) {
                   var logData = {
                       user: req.session.data.user,
                       path: 'questions',
@@ -84,7 +84,7 @@ exports.createRouter = function (model, authentication) {
            * GET to /questions/:id returns question with id
            */
           this.get(idRegEx).bind(function (req, res, id) {
-              model.load(id, function (err, question) {
+              model.load(id, req.session.data.user, function (err, question) {
                   var logData = {
                       user: req.session.data.user,
                       path: 'questions/:id',
@@ -106,7 +106,7 @@ exports.createRouter = function (model, authentication) {
            * POST or PUT to /questions/:id updates existing question
            */
           this.route(['POST', 'PUT'], idRegEx).bind(function (req, res, id, question) {
-              model.update(id, question, function (err) {
+              model.update(id, question, req.session.data.user, function (err) {
                   var logData = {
                       user: req.session.data.user,
                       path: 'questions/:id',
@@ -128,7 +128,7 @@ exports.createRouter = function (model, authentication) {
            * DELETE to /questions/:id deletes question with id
            */
           this.del(idRegEx).bind(function (req, res, id) {
-              model.delete(id, function (err) {
+              model.delete(id, req.session.data.user, function (err) {
                   var logData = {
                       user: req.session.data.user,
                       path: 'questions/:id',
