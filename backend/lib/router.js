@@ -559,6 +559,10 @@ exports.createRouter = function (model, authentication) {
 
         router.path(/\/corsProxy\/?/, function () {
             /*
+             * user only
+             */
+            router.filter(function () {
+            /*
              * GET to /corsProxy with parameter: url
              */
             this.get().bind(function (req, res, body) {
@@ -610,6 +614,7 @@ exports.createRouter = function (model, authentication) {
                     logger('error', 'corsProxy failed', logData);
                     res.send(400, {}, 'missing parameters');
                 }
+            });
             });
         });
 
