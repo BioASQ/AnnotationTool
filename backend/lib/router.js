@@ -154,10 +154,18 @@ exports.createRouter = function (model, authentication) {
                 var conceptSearch = new Search();
                 this.post().bind(function (req, res, keywords) {
                     conceptSearch.find(keywords.query, function (err, conceptResult) {
+                        var logData = {
+                            user: req.session.data.user,
+                            path: 'concepts',
+                            method: 'POST',
+                            params: keywords
+                        };
                         if (err) {
-                            logger('error', 'searches for concepts', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST concepts'});
+                            logData.error = err;
+                            logger('error', 'search for concepts failed', logData);
                             res.send(502);
                         } else {
+                            logger('info', 'search for concepts', logData);
                             res.send(200, {}, { 'results': { 'concepts': conceptResult } });
                         }
                     });
@@ -172,10 +180,18 @@ exports.createRouter = function (model, authentication) {
                 this.post().bind(function (req, res, keywords) {
                     var page = parseInt(keywords.page) || 0;
                     documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, pages) {
+                        var logData = {
+                            user: req.session.data.user,
+                            path: 'documents',
+                            method: 'POST',
+                            params: keywords
+                        };
                         if (err) {
-                            logger('error', 'searches for documents', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST documents'});
+                            logData.error = err;
+                            logger('error', 'search for documents failed', logData);
                             res.send(502);
                         } else {
+                            logger('info', 'search for documents', logData);
                             res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
                         }
                     });
@@ -190,8 +206,15 @@ exports.createRouter = function (model, authentication) {
                 var verbalizer = new Verbalizer(config.search.verbalizer);
                 this.post().bind(function (req, res, keywords) {
                     tripleSearch.find(keywords.query, function (err, triplesResult) {
+                        var logData = {
+                            user: req.session.data.user,
+                            path: 'statements',
+                            method: 'POST',
+                            params: keywords
+                        };
                         if (err) {
-                            logger('error', 'in statement search', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST statements'});
+                            logData.error = err;
+                            logger('error', 'search for statements failed', logData);
                             res.send(502);
                         } else {
                             var result = [];
@@ -205,7 +228,8 @@ exports.createRouter = function (model, authentication) {
                                 },
                                 function (err /* variadic arguments */) {
                                     if (err) {
-                                        logger('error', 'in statement search for triplesResult processing', { parameters:keywords, error: err + '', user: req.session.data.user, file : 'router', method: 'POST statements'});
+                                        logData.error = err;
+                                        logger('error', 'search for statements failed', logData);
                                         res.send(502);
                                     } else {
                                         for (var i = 1; i < arguments.length; i++) {
@@ -217,11 +241,13 @@ exports.createRouter = function (model, authentication) {
                                                 title: verbalization
                                             });
                                         }
+                                        logger('info', 'search for statements', logData);
                                         res.send(200, {}, { 'results': { 'statements': result } });
                                     }
                                 }
                                 );
                             } else {
+                                logger('info', 'search for statements', logData);
                                 res.send(200, {}, { 'results': { 'statements': result } });
                             }
                         }
@@ -236,18 +262,28 @@ exports.createRouter = function (model, authentication) {
              *
              */
             this.post().bind(function (req, res, body) {
+                var logBody = JSON.parse(JSON.stringify(body));
+                if(logBody.password)logBody.password = '***'; // don't log password
+                var logData = {
+                    user: req.session.data.user,
+                    path: 'addUser',
+                    method: 'POST',
+                    params: logBody
+                };
                 if (body.email && body.password && body.userEmail) {
                     authentication.addUser(body.email, body.password, body.userEmail, function (err, result) {
                         if (err) {
-                            logger('error', 'in add user to whitelist', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST addUser'});
+                            logData.error = err;
+                            logger('error', 'add user failed', logData);
                             res.send(400, {}, err);
                         } else {
-                            logger('info', 'User ' + body.userEmail  + ' added to the whitelist.', { user: body.userEmail, file : 'router', method: 'POST addUser'});
+                            logger('info', 'add user', logData);
                             res.send(200, {}, { });
                         }
                     });
                 } else {
-                    logger('warn', 'missing parameters, in add user to whitelist', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST addUser'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'add user failed', logData);
                     res.send(400, {}, 'missing parameters');
                 }
             });
@@ -260,28 +296,39 @@ exports.createRouter = function (model, authentication) {
              * This is the standard login function.
              */
             this.post().bind(function (req, res, body) {
+                var logBody = JSON.parse(JSON.stringify(body));
+                if(logBody.password)logBody.password = '***'; // don't log password
+                var logData = {
+                    user: req.session.data.user,
+                    path: 'login',
+                    method: 'POST',
+                    params: logBody
+                };
                 if (body.email && body.password) {
                     authentication.standardLogin(body.email, body.password, function (err, result) {
                         if (err) {
-                            logger('error', 'in login', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST login'});
+                            logData.error = err;
+                            logger('error', 'login failed', logData);
                             res.send(500, {}, err);
                         }
                         else if (result) {
                             var user = result[0]; // DB data
                             // login
                             req.session.data.user = user.email;
-                            logger('info', 'User ' + user.email  + ' logged in. SID: ' + req.session.id , { sid : req.session.id, user: user.email, file : 'router', method: 'POST login'});
+                            logger('info', 'login', logData);
                             // response
                             res.send(200, {}, {SID: req.session.id, usermail: req.session.data.user, username : user.name });
                         }
                         else {
-                            logger('warn', 'in login, account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST login'});
+                            logData.error = 'account not found';
+                            logger('error', 'login failed', logData);
                             res.send(401, {}, 'account not found');
                         }
                     });
                 }
                 else {
-                    logger('warn', 'in login, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST login'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'login failed', logData);
                     res.send(400, {}, 'missing parameters');
                 }
             });
@@ -296,8 +343,13 @@ exports.createRouter = function (model, authentication) {
                  * GET to /logout
                  */
                 this.get().bind(function (req, res) {
+                    var logData = {
+                        user: req.session.data.user,
+                        path: 'logout',
+                        method: 'GET',
+                    };
                     // logout
-                    logger('info', 'User ' + req.session.data.user  + ' logged out. SID: ' + req.session.id , { sid : req.session.id, user: req.session.data.user, file : 'router', method: 'logout'});
+                    logger('info', 'logout', logData);
                     req.session.data.user = 'Guest';
                     var url = 'http://' + req.headers.host;
                     res.send(302, {'Location': url }, {});
@@ -312,17 +364,27 @@ exports.createRouter = function (model, authentication) {
              * resets and activates a password
              */
             this.get().bind(function (req, res, body) {
+                var logBody = JSON.parse(JSON.stringify(body));
+                if(logBody.code)logBody.code = '***'; // don't log password
+                var logData = {
+                    user: req.session.data.user,
+                    path: 'resetPassword',
+                    method: 'GET',
+                    params: logBody
+                };
                 if (body.email && body.code) {
                     authentication.activatePassword(body.email,body.code, function (err, result) {
                         if (err) {
-                            logger('error', 'in resetPassword', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
+                            logData.error = err;
+                            logger('error', 'reset password failed', logData);
                             res.send(500, {}, err);
                         } else if (result) {
-                            logger('info', 'User ' + body.email  + ' reset password.', { user: body.email, file : 'router', method: 'GET resetPassword'});
+                            logger('info', 'reset password', logData);
                             var url = 'http://' + req.headers.host;
                             res.send(302, {'Location': url }, {});
                         } else {
-                            logger('warn', 'in resetPassword,account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
+                            logData.error = 'account not found';
+                            logger('error', 'reset password failed', logData);
                             res.send(401, {}, 'account not found');
                         }
                     });
@@ -330,18 +392,21 @@ exports.createRouter = function (model, authentication) {
                     var url = 'http://' + req.headers.host + '/backend/resetPassword'
                     authentication.resetPassword(url, body.email, function (err, result) {
                         if (err) {
-                            logger('error', 'in resetPassword', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
+                            logData.error = err;
+                            logger('error', 'reset password failed', logData);
                             res.send(500, {}, err);
                         } else if (result) {
-                            logger('info', 'User ' + body.email  + ' asks to reset password.', { user: body.email, file : 'router', method: 'GET resetPassword'});
+                            logger('info', 'reset password', logData);
                             res.send(200, {}, {});
                         } else {
-                            logger('warn', 'in resetPassword, account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
+                            logData.error = 'account not found';
+                            logger('error', 'reset password failed', logData);
                             res.send(401, {}, 'account not found');
                         }
                     });
                 } else {
-                    logger('warn', 'in resetPassword, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET resetPassword'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'reset password failed', logData);
                     res.send(400, {}, 'missing parameters');
                 };
             });
@@ -358,6 +423,15 @@ exports.createRouter = function (model, authentication) {
                  * Allows an user to change the password.
                  */
                 this.post().bind(function (req, res, body) {
+                    var logBody = JSON.parse(JSON.stringify(body));
+                    if(logBody.newPassword)logBody.newPassword = '***'; // don't log password
+                    if(logBody.oldPassword)logBody.oldPassword = '***'; // don't log password
+                    var logData = {
+                        user: req.session.data.user,
+                        path: 'changePassword',
+                        method: 'POST',
+                        params: logBody
+                    };
                     if (body.oldPassword && body.newPassword) {
                         body.name = "xx";
                         body.email ="xx@xx.xx";
@@ -368,23 +442,27 @@ exports.createRouter = function (model, authentication) {
 
                             authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
                                 if (err) {
-                                    logger('error', 'in changePassword', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST changePassword'});
+                                    logData.error = err;
+                                    logger('error', 'change password failed', logData);
                                     res.send(500, {}, err);
                                 } else if (result) {
-                                    logger('info', 'User ' + req.session.data.user + ' changed password.', { user: req.session.data.user,  file : 'router', method: 'POST changePassword'});
+                                    logger('info', 'change password', logData);
                                     res.send(200, {}, {});
                                 } else {
-                                    logger('warn', 'in resetPassword, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST changePassword'});
+                                    logData.error = 'account not found';
+                                    logger('error', 'change password failed', logData);
                                     res.send(401, {}, 'account not found');
                                 }
                             });
                         }else{
                             var errors = schemajs.create(authentication.userSchema).validate(body).errors;
-                            logger('warn', 'in changePassword', { parameters:body, error: errors + '', user: req.session.data.user, file : 'router', method: 'POST changePassword'});
+                            logData.error = errors;
+                            logger('error', 'change password failed', logData);
                             res.send(400, {}, JSON.stringify(errors));
                         }
                     } else {
-                        logger('warn', 'in changePassword, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST changePassword'});
+                        logData.error = 'missing parameters';
+                        logger('error', 'change password failed', logData);
                         res.send(400, {}, 'missing parameters');
                     }
                 });
@@ -396,26 +474,38 @@ exports.createRouter = function (model, authentication) {
              * GET to /activate with parameters: email and code
              */
             this.get().bind(function (req, res,body) {
+                var logBody = JSON.parse(JSON.stringify(body));
+                if(logBody.code)logBody.code = '***'; // don't log password
+                var logData = {
+                    user: req.session.data.user,
+                    path: 'activate',
+                    method: 'GET',
+                    params: logBody
+                };
                 if (body.email && body.code) {
                     authentication.activateUser(body.email, body.code, function (err, result) {
                         if (err) {
-                            logger('error', 'in activate account', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'GET activate'});
+                            logData.error = err;
+                            logger('error', 'activate account failed', logData);
                             res.send(500, {}, err);
                         } else if (result) {
                             var url = 'http://' + req.headers.host;
-                            logger('info', 'User ' + body.email  + ' activated.', { user: body.email, file : 'router', method: 'GET activate'});
+                            logger('info', 'activate account', logData);
                             res.send(302, {'Location': url }, {});
                         } else {
-                            logger('warn', 'in activate account, account not found', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET activate'});
+                            logData.error = 'account not found';
+                            logger('error', 'activate account failed', logData);
                             res.send(401, {}, 'account not found');
                         }
                     });
                 } else if (body.email) {
                     //TODO send activation mail again?
-                    logger('warn', 'in  activate account, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET activate'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'activate account failed', logData);
                     res.send(400, {}, 'missing parameters');
                 } else {
-                    logger('warn', 'in  activate account, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET activate'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'activate account failed', logData);
                     res.send(400, {}, 'missing parameters');
                 }
             });
@@ -429,6 +519,14 @@ exports.createRouter = function (model, authentication) {
              * Sends an email with user data and an activation link.
              */
             this.post().bind(function (req, res, body) {
+                var logBody = JSON.parse(JSON.stringify(body));
+                if(logBody.password)logBody.password = '***'; // don't log password
+                var logData = {
+                    user: req.session.data.user,
+                    path: 'register',
+                    method: 'POST',
+                    params: logBody
+                };
                 if (body.email && body.password && body.name) {
                     if (schemajs.create(authentication.userSchema).validate(body).valid) {
                         // todo: fix inconsistent schemajs response to the frontend
@@ -437,20 +535,23 @@ exports.createRouter = function (model, authentication) {
                         var url = 'http://' + req.headers.host + '/backend/activate';
                         authentication.createUser(body, url, function (err, results) {
                             if (err) {
-                                logger('error', 'in register account', { parameters:body, error: err + '', user: req.session.data.user, file : 'router', method: 'POST register'});
+                                logData.error = err;
+                                logger('error', 'register account failed', logData);
                                 res.send(403, {}, err);
                             } else {
-                                logger('info', 'User ' + body.email  + ' registered.', { user: body.email, file : 'router', method: 'register'});
+                                logger('info', 'register account', logData);
                                 res.send(200, {}, {});
                             }
                         });
                     } else {
                         var errors = schemajs.create(authentication.userSchema).validate(body).errors;
-                        logger('warn', 'in register account', { parameters:body, error: errors + '', user: req.session.data.user, file : 'router', method: 'POST register'});
+                        logData.error = errors;
+                        logger('error', 'register account failed', logData);
                         res.send(400, {}, JSON.stringify(errors));
                     }
                 } else {
-                    logger('warn', 'in register account', { parameters:body, user: req.session.data.user, file : 'router', method: 'POST register'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'register account failed', logData);
                     res.send(400, {}, 'missing parameters');
                 }
             });
@@ -461,6 +562,12 @@ exports.createRouter = function (model, authentication) {
              * GET to /corsProxy with parameter: url
              */
             this.get().bind(function (req, res, body) {
+                var logData = {
+                    user: req.session.data.user,
+                    path: 'corsProxy',
+                    method: 'GET',
+                    params: body
+                };
                 if (body.url) {
 
                     var para = url.parse(body.url);
@@ -486,18 +593,21 @@ exports.createRouter = function (model, authentication) {
                         });
 
                         response.on('end', function() {
+                            logger('info', 'corsProxy', logData);
                             res.send(200, headers , content)
                         });
                     });
 
                     req.on('error', function(e) {
-                        logger('error', 'in corsProxy, http.request error', { parameters:body, error: e, user: req.session.data.user, file : 'router', method: 'GET corsProxy'});
+                        logData.error = e;
+                        logger('error', 'corsProxy failed', logData);
                         res.send(503, {}, 'error');
                     });
                     req.end();
 
                 } else {
-                    logger('warn', 'in corsProxy, missing parameters', { parameters:body, user: req.session.data.user, file : 'router', method: 'GET corsProxy'});
+                    logData.error = 'missing parameters';
+                    logger('error', 'corsProxy failed', logData);
                     res.send(400, {}, 'missing parameters');
                 }
             });
