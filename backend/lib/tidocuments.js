@@ -27,13 +27,13 @@ TIDocuments.prototype._transform = function (results) {
 TIDocuments.prototype.find = function (/* String */ keywords, page, itemsPerPage, cb) {
     var self = this;
     this._tokenURL(function (URL) {
-        self._requestJSON(URL, { 'method': 'POST' }, { 'findEntities': [ keywords, page, itemsPerPage ] },
-                function (err, response) {
-                    if (err) { return cb(err); }
-                    cb(null,
-                       self._transform(response.result.documents),
-                       Math.ceil(response.size / itemsPerPage));
-                }
+        self._requestJSON(URL, { 'method': 'POST' }, { 'findPubMedCitations': [ keywords, page, itemsPerPage ] },
+            function (err, response) {
+                if (err) { return cb(err); }
+                cb(null,
+                   self._transform(response.result.documents),
+                   Math.ceil(response.result.size / itemsPerPage));
+            }
         );
     });
 };
