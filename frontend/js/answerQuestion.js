@@ -62,6 +62,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     };
 
     var renderCurrentDocument = function(){
+        // set title
+        $("#docTitle").html( currentDocument.renderTitle );
+
+        // render body
         if(currentDocument.domClass == 'documentResult'){
             // render to string
             var html = docTemplate(currentDocument);
@@ -245,7 +249,12 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             currentAnnotation["annotationHTML"] = annTemplate({text: text, id: currentAnnotation.id});
 
             // render annotation in text
-            if(currentDocument.domClass == 'documentResult'){
+            if(currentDocument.title.indexOf(text) != -1){
+                currentDocument.renderTitle = currentDocument.renderTitle.replace(
+                    text,
+                    currentAnnotation.annotationHTML
+                );
+            }else if(currentDocument.domClass == 'documentResult'){
                 for(var i = 0; i < currentDocument.sections.length; i++){
                     if(currentDocument.sections[i].indexOf(text) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
@@ -313,9 +322,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             }
         }
 
-        // set title
-        $("#docTitle").text( $(this).text() );
-
         // render content
         renderCurrentDocument();
 
@@ -334,7 +340,12 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         // remove annotation from text
         var text = ann.annotationText;
-        if(currentDocument.domClass == 'documentResult'){
+        if(currentDocument.renderTitle.indexOf(text) != -1){
+            currentDocument.renderTitle = currentDocument.renderTitle.replace(
+                ann.annotationHTML,
+                text
+            );
+        }else if(currentDocument.domClass == 'documentResult'){
             for(var j = 0; j < currentDocument.sections.length; j++){
                 if(currentDocument.sections[j].indexOf(text) != -1 ){
                     currentDocument.sections[j] = currentDocument.sections[j].replace(
