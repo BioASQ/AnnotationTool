@@ -9,13 +9,13 @@
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
-    
+
         <title>BioASQ - select question</title>
         <!-- Bootstrap -->
         <link href="./css/bootstrap.min.css" rel="stylesheet">
         <link href="./css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="./css/main.css" rel="stylesheet">
-        
+
         <!-- javascript -->
         <script data-main="./js/createQuestion" src="./js-libs/require-jquery.js"></script>
     </head>
@@ -38,13 +38,13 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="container">
         <div class="row">
             <div class="span3"></div>
             <div class="span6">
                 <h1>
-                    Pick a question 
+                    Pick a question
                     <sup style="font-size: 0.5em;">or create a new one</sup>
                 </h1>
                 <hr/>
@@ -57,8 +57,8 @@
                 </p>
             </div>
             <div class="span3"></div>
-        </div> 
-            
+        </div>
+
             <!-- Modal -->
             <div class="modal" id="newQuestionModal" tabindex="-1" role="dialog" aria-labelledby="New question" aria-hidden="true" style="display: none;">
                 <div class="modal-header">
@@ -72,10 +72,10 @@
                         <!-- input type="text" id="newQuestionLabel" placeholder="Type something…" -->
                         <label>Question type</label>
                         <select name="newQuestionType" id="newQuestionType">
-                            <option value="list">List</option>
-                            <option value="textual">Textual</option>
                             <option value="decisive">Yes/No</option>
-                            <option value="other">Other</option>
+                            <option value="factoid">Factoid</option>
+                            <option value="list">List</option>
+                            <option value="summary">Summary</option>
                         </select>
                     </form>
                 </div>
@@ -85,9 +85,9 @@
                 </div>
             </div>
         </div> <!-- /container -->
-        
+
         <!-- TEMPLATES -->
-        
+
         <!-- QUESTION TEMPLATE -->
         <script id="questionTemplate" type="text/x-handlebars-template">
             <option value="{{_id}}">{{body}}</option>
