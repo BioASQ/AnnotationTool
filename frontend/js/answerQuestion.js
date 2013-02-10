@@ -393,9 +393,11 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     var template = Handlebars.compile(source);
     // render to string
     var html = "",
+        type,
         i = 0;
     for(i = 0; i < selectedDocuments.length; i++){
-        html += template(selectedDocuments[i]);
+        type = selectedDocuments[i]._internalID[0].toUpperCase();
+        html += template($.extend({}, selectedDocuments[i], { type: type }));
     }
 
     // restore answer
