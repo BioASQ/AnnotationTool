@@ -43,6 +43,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
 
     // set title
     questionTitle.text(app.data.question.body);
+    questionTitle.attr('data-original-title', app.data.question.body);
+    questionTitle.tooltip();
 
     ////////////////////////////////////////////////////////////////////////////
     // Event handlers

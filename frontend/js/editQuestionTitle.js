@@ -8,14 +8,14 @@ define(function(){
             questionText.hide();
             saveBtn.show();
             inputField.show();
-            
+
             inputField.val(app.data.question.body);
         };
 
         var onSave = function(){
             app.data.question.body = inputField.val();
             app.save();
-            
+
             // post
             $.ajax({
                 url: app.data.LogicServer+"questions/"+app.data.question._id,
@@ -42,6 +42,18 @@ define(function(){
             editBtn = $("#editQuestionTitle");
             inputField = $("#questionTitleInput");
             questionText = $("#questionTitle");
+
+            // expand textarea on focus
+            inputField.on('focus', function(){
+                inputField.animate({
+                    height: "60px"
+                });
+            })
+            .on('blur', function(){
+                inputField.animate({
+                    height: "20px"
+                });
+            });
 
             // assign events
             editBtn.on('click', onEdit);

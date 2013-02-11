@@ -36,6 +36,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     // set question text
     $questionTitle.text(app.data.question.body);
+    $questionTitle.attr('data-original-title', app.data.question.body);
+    $questionTitle.tooltip();
 
     //
     var updateQuestionText = function(){

@@ -134,4 +134,17 @@ body {
 .documentResult { display: none; }
 .statementResult { display: none; }
 
+/* question title stuff */
+#questionTitle {
+    width: 40%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#saveQuestionTitle {
+    margin-left: 5px;
+}
+#questionTitleInput {
+    width: 40%;
+}
 
