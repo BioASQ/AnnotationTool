@@ -42,7 +42,7 @@
         <div class="container">
         <div class="row">
             <div class="span3"></div>
-            <div class="span6">
+            <div class="span7">
                 <h1>
                     Pick a question
                     <sup style="font-size: 0.5em;">or create a new one</sup>
@@ -52,8 +52,9 @@
                     <a class="btn" href="#newQuestionModal" data-toggle="modal" id="addQuestion">
                         <i class="icon-plus"></i>New
                     </a>
-                    <select name="question" id="question" style="margin-bottom: 0px; width: 70%;"></select>
-                    <a class="btn btn-primary" href="#" id="okButton">OK</a>
+                    <select name="question" id="question" style="margin-bottom: 0px; width: 60%;"></select>
+                    <a class="btn" href="#" id="editButton">Edit</a>
+                    <a class="btn btn-primary" href="#" id="okButton">Select</a>
                 </p>
             </div>
             <div class="span3"></div>
@@ -84,6 +85,11 @@
                     <button class="btn btn-primary" id="newQuestionOK">ОК</button>
                 </div>
             </div>
+
+          <div class="modal" id="editQuestionModal" tabindex="-1" role="dialog"
+              aria-labelledby="Edit question" aria-hidden="true" style="display: none;">
+          </div>
+
         </div> <!-- /container -->
 
         <!-- TEMPLATES -->
@@ -92,5 +98,34 @@
         <script id="questionTemplate" type="text/x-handlebars-template">
             <option value="{{_id}}">{{body}}</option>
         </script>
+
+        <script id="editQuestionTemplate" type="text/x-handlebars-template">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="regModalLabel">Edit question</h3>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <label>Question text</label>
+                    <textarea id="editQuestionLabel" placeholder="Question &hellip;"rows="5" style="width:98%;">{{body}}</textarea>
+                    <label>Question type</label>
+                    <select name="editQuestionType" id="editQuestionType">
+                      {{#each questionTypes}}
+                        {{#if active}}
+                          <option selected value="{{this.name}}">{{this.label}}</option>
+                        {{else}}
+                          <option value="{{this.name}}">{{this.label}}</option>
+                        {{/if}}
+                      {{/each}}
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn pull-left" aria-hidden="true" id="editQuestionDelete">Delete</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true" id="editQuestionCancel">Cancel</button>
+                <button class="btn btn-primary" id="editQuestionOK">ОК</button>
+            </div>
+        </script>
+
     </body>
 </html>
