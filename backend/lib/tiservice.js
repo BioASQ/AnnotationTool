@@ -4,7 +4,7 @@ var http = require('http'),
 
 var TIService = exports.TIService = function (URL) {
     this.serviceURL = URL;
-    this.timeout = 600000; // 10 min in ms
+    this.timeout = 589999; // 9 min 50 sec in ms
     this.currentTimeout = null;
     this.tokenURL = null;
 };
