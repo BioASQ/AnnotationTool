@@ -56,17 +56,17 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
     }
     var responseData = '';
     var req = http.request(httpOptions, function (res) {
-         res.on('data', function (chunk) {
-             responseData += chunk;
-         }).on('end', function () {
-             if (responseData.exception) {
-                 cb(responseData.exception);
-             } else {
-                 cb(null, responseData);
-             }
-         }).on('close', function () {
-             res.emit('end');
-         });
+        res.on('data', function (chunk) {
+            responseData += chunk;
+        }).on('end', function () {
+            if (responseData.exception) {
+                cb(responseData.exception);
+            } else {
+                cb(null, responseData);
+            }
+        }).on('close', function () {
+            res.emit('end');
+        });
     });
     req.on('error', function (e) {
         cb(e);
