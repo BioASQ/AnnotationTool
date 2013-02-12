@@ -46,13 +46,13 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
         'path': urlObj.path,
         'method': options.method ? options.method : 'POST',
         'headers': {
-            'content-type': 'application/x-www-form-urlencoded',
             'accept': 'application/json',
         }
     }
-    if (data) {
+    if (data !== cb) {
         dataStr = 'json=' + encodeURIComponent(JSON.stringify(data) + '\n');
         httpOptions.headers['content-length'] = dataStr.length;
+        httpOptions.headers['content-type']   = 'application/x-www-form-urlencoded';
     }
     var responseData = '';
     var req = http.request(httpOptions, function (res) {
