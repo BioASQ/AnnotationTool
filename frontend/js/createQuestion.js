@@ -112,7 +112,10 @@ require(["app"], function (app) {
             dataType: 'json',
             data: JSON.stringify(question),
             type: 'POST',
-            success: function (data) { $('#editQuestionModal').modal('hide'); },
+            success: function (data) {
+                fetchQuestions();
+                $('#editQuestionModal').modal('hide');
+            },
             error: function () { alert('Could not update question.'); }
         });
     });
