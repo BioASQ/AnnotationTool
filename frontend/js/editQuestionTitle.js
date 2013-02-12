@@ -29,6 +29,7 @@ define(function(){
                     questionText.show();
                     editBtn.show();
                     questionText.html(app.data.question.body);
+                    questionText.attr('data-original-title', app.data.question.body);
                 },
                 error: function(){
                     alert("Something went wrong");
