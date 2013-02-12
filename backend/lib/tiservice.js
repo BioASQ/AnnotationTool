@@ -13,18 +13,16 @@ var TIService = exports.TIService = function (URL) {
  * Retrieves the token URL from the server
  */
 TIService.prototype._tokenURL = function (cb) {
-    if (this.tokenURL) { return cb(this.tokenURL); }
+    if (this.tokenURL) { return cb(null, this.tokenURL); }
 
     // token invalid
     var self = this;
     this._request(this.serviceURL, { 'method': 'GET' },
         function (err, data) {
-            // FIXME: graceful error handling
-            if (err) {
-                throw new Error('Server not reachable.');
-            }
+            if (err) { console.log(err, data); return cb(err); }
+
             self.tokenURL = data;
-            cb(self.tokenURL);
+            cb(null, self.tokenURL);
         }
     );
 };

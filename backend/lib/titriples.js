@@ -22,15 +22,18 @@ TITriples.prototype._titleQuery = function (s) {
 
 TITriples.prototype._dereferenceTitle = function (URI, cb) {
     var self = this;
-    this._tokenURL(function (URL) {
-        self._requestJSON(URL, { 'method': 'POST' }, { 'findTriples': self._titleQuery(URI) },
+    this._tokenURL(function (err, URL) {
+        if (err) { return cb(err); }
+
+        self._requestJSON(
+            URL,
+            { 'method': 'POST' }, { 'findTriples': self._titleQuery(URI) },
             function (err, response) {
-                var title,
-                    result = response.result;
-                if (err || !result.triples.length) {
+                var title;
+                if (err || !response.result.triples.length) {
                     title = URI.replace(/^\S+[#/](\S+)$/, '$1');
                 } else {
-                    title = result.triples.shift().obj;
+                    title = response.result.triples.shift().obj;
                 }
                 cb(null, title);
             }
@@ -80,8 +83,12 @@ TITriples.prototype._transform = function (results, cb) {
  */
 TITriples.prototype.find = function (/* String */ keywords, cb) {
     var self = this;
-    this._tokenURL(function (URL) {
-        self._requestJSON(URL, { 'method': 'POST' }, { 'findTriples': [ keywords ] },
+    this._tokenURL(function (err, URL) {
+        if (err) { return cb(err); }
+
+        self._requestJSON(
+            URL,
+            { 'method': 'POST' }, { 'findTriples': [ keywords ] },
             function (err, response) {
                 if (err) { return cb(err); }
                 self._transform(response.result, function (err, statements) {

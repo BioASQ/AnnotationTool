@@ -26,8 +26,12 @@ TIDocuments.prototype._transform = function (results) {
  */
 TIDocuments.prototype.find = function (/* String */ keywords, page, itemsPerPage, cb) {
     var self = this;
-    this._tokenURL(function (URL) {
-        self._requestJSON(URL, { 'method': 'POST' }, { 'findPubMedCitations': [ keywords, page, itemsPerPage ] },
+    this._tokenURL(function (err, URL) {
+        if (err) { return cb(err); }
+
+        self._requestJSON(
+            URL,
+            { 'method': 'POST' }, { 'findPubMedCitations': [ keywords, page, itemsPerPage ] },
             function (err, response) {
                 if (err) { return cb(err); }
                 cb(null,
