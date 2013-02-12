@@ -76,6 +76,10 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
 
         // show concept spinner
         conceptProgress.parent().show();
+        // reset concept search
+        conceptResults = [];
+        currentConceptsPage = 1;
+        totalConceptsPages = 1;
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
             conceptProgress.parent().hide();
