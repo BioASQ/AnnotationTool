@@ -52,13 +52,14 @@ Search.prototype.find = function (/* String */ keywords, cb) {
       self.mesh.find(keywords, this.parallel()),
       self.uniprot.find(keywords, this.parallel())
     },
-    function (err, doidRes, goRes, jochemRes, meshRes, uniprotRes) {
-      if (err) {
-        cb(err);
-      } else {
-        // merge the 'findings' section of each result and return
-        cb(null, self._merge('findings', doidRes, goRes, jochemRes, meshRes, uniprotRes));
-      }
+    function (err/* variadic arguments */) {
+      if (err) { return cb(err); }
+
+      // remove `err` argument and turn into proper array
+      var args = Array.prototype.slice.call(arguments, 1);
+      args.unshift('findings');
+      // merge the 'findings' section of each result and return
+      cb(null, Search.prototype._merge.apply(self, args));
     }
   );
 };
