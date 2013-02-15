@@ -79,7 +79,6 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         // reset concept search
         conceptResults = [];
         currentConceptsPage = 1;
-        totalConceptsPages = 1;
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
             conceptProgress.parent().hide();
@@ -101,6 +100,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
 
         // show concept spinner
         documentsProgress.parent().show();
+        // reset documents pager
+        currentDocumentsPage = 1;
         // do document request
         documentSearch(query, currentDocumentsPage, function (result) {
             documentsProgress.parent().hide();
