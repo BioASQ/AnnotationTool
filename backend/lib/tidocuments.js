@@ -36,7 +36,7 @@ TIDocuments.prototype.find = function (/* String */ keywords, page, itemsPerPage
                 if (err) { return cb(err); }
                 cb(null,
                    self._transform(response.result.documents),
-                   Math.ceil(response.result.size / itemsPerPage));
+                   response.result.size);
             }
         );
     });

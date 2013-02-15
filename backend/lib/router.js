@@ -179,7 +179,7 @@ exports.createRouter = function (model, authentication) {
                 var documentSearch = new TIDocuments(config.search.documents);
                 this.post().bind(function (req, res, keywords) {
                     var page = parseInt(keywords.page) || 0;
-                    documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, pages) {
+                    documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, size) {
                         var logData = {
                             user: req.session.data.user,
                             path: 'documents',
@@ -192,7 +192,7 @@ exports.createRouter = function (model, authentication) {
                             res.send(502);
                         } else {
                             logger('info', 'search for documents', logData);
-                            res.send(200, {}, { 'results': { 'documents': documentResult }, numPages: pages, page: page });
+                            res.send(200, {}, { 'results': { 'documents': documentResult }, size: size, page: page });
                         }
                     });
                 });
