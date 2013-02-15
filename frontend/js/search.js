@@ -146,7 +146,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             }
         }).error(function(){
             statementsProgress.parent().hide();
-            statementsHeader.html(statementsHeader.data('name') + ' (0)');
+            statementsResult.show();
+            statementsHeader.html('Search for statements failed.');
         });
     });
 
@@ -342,6 +343,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             }
         }).error(function(){
             conceptProgress.parent().hide();
+            conceptsHeader.html('Search for concepts failed.');
         });
     };
 
@@ -399,6 +401,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             cb(html);
         }).error(function(){
             documentsProgress.parent().hide();
+            docsResult.show();
+            documentsHeader.html('Search for documents failed.');
         });
     };
 
