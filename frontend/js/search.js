@@ -32,6 +32,11 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         'statements': []
     };
 
+    // ongoing ajax requests
+    var conceptsRequest = null,
+        documentsRequest = null,
+        statementsRequest = null;
+
     // pagination constants
     var itemsPerPage = 10;
 
@@ -76,6 +81,14 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         $('.conceptResult').remove();
         $('.documentResult').remove();
         $('.statementResult').remove();
+
+        if (conceptsRequest !== null)   { conceptsRequest.abort(); }
+        if (documentsRequest !== null)  { documentsRequest.abort(); }
+        if (statementsRequest !== null) { statementsRequest.abort(); }
+
+        conceptsResult.hide();
+        docsResult.hide();
+        statementsResult.hide();
 
         // show concept spinner
         conceptProgress.parent().show();
@@ -127,7 +140,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         // show concept spinner
         statementsProgress.parent().show();
         // do statement request
-        $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
+        statementsRequest = $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
+            statementsRequest = null;
             statementsProgress.parent().hide();
             var size = data.results.statements.length || 0;
             statementsHeader.html(statementsHeader.data('name') + ' (' + size + ')');
@@ -144,7 +158,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
                 // append to dom
                 $(html).insertAfter(statementsResult);
             }
-        }).error(function(){
+        }).error(function () {
+            statementsRequest = null;
             statementsProgress.parent().hide();
             statementsResult.show();
             statementsHeader.html('Search for statements failed.');
@@ -335,13 +350,15 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     };
 
     var fetchConcepts = function (query, page, cb) {
-        $.post(app.data.LogicServer + 'concepts', { query: query }, function (data) {
+        conceptsRequest = $.post(app.data.LogicServer + 'concepts', { query: query }, function (data) {
+            conceptsRequest = null;
             if (data.results.concepts.length) {
                 cb(data.results.concepts);
             } else {
                 cb([]);
             }
-        }).error(function(){
+        }).error(function () {
+            conceptsRequest = null;
             conceptProgress.parent().hide();
             conceptsHeader.html('Search for concepts failed.');
         });
@@ -381,7 +398,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     };
 
     var documentSearch = function (query, page, cb) {
-        $.post(app.data.LogicServer + 'documents', { query: query, page: page - 1 }, function (data) {
+        documentsRequest = $.post(app.data.LogicServer + 'documents', { query: query, page: page - 1 }, function (data) {
+            documentsRequest = null;
             totalDocumentPages = Math.ceil(data.size / itemsPerPage);
             currentDocumentsPage = data.page + 1;
             documentsHeader.html(documentsHeader.data('name') + ' (' + data.size + ')');
@@ -399,7 +417,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             }
 
             cb(html);
-        }).error(function(){
+        }).error(function () {
+            documentsRequest = null;
             documentsProgress.parent().hide();
             docsResult.show();
             documentsHeader.html('Search for documents failed.');
