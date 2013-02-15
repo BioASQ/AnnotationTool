@@ -15,10 +15,13 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         searchQuery        = $("#searchQuery"),
         conceptsResult     = $("#conceptsResult"),
         conceptProgress    = $("#conceptProgress"),
+        conceptsHeader     = $("#conceptsResult .result-header"),
         docsResult         = $("#documentsResult"),
         documentsProgress  = $("#documentsProgress"),
+        documentsHeader    = $("#documentsResult .result-header"),
         statementsProgress = $("#statementsProgress"),
-        statementsResult   = $("#statementsResult");
+        statementsResult   = $("#statementsResult"),
+        statementsHeader   = $("#statementsResult .result-header");
 
     // other vars
     var source, currentQuery, conceptResults = [];
@@ -82,6 +85,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
             conceptProgress.parent().hide();
+            conceptsHeader.html(conceptsHeader.data('name') + ' (' + conceptResults.length + ')');
             if (result.length) {
                 if (totalConceptsPages > 1) {
                     // Concept pagination
@@ -125,12 +129,14 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         // do statement request
         $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
             statementsProgress.parent().hide();
+            var size = data.results.statements.length || 0;
+            statementsHeader.html(statementsHeader.data('name') + ' (' + size + ')');
 
             results.statements = [];
+            statementsResult.show();
 
             // show statements
-            if (data.results.statements.length > 0) {
-                statementsResult.show();
+            if (data.results.statements.length) {
                 var html = renderResults(data.results.statements,
                                          statementSearchResultTemplate,
                                          'statementResult',
@@ -140,6 +146,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             }
         }).error(function(){
             statementsProgress.parent().hide();
+            statementsHeader.html(statementsHeader.data('name') + ' (0)');
         });
     });
 
@@ -373,8 +380,9 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
 
     var documentSearch = function (query, page, cb) {
         $.post(app.data.LogicServer + 'documents', { query: query, page: page - 1 }, function (data) {
-            totalDocumentPages = data.numPages;
+            totalDocumentPages = Math.ceil(data.size / itemsPerPage);
             currentDocumentsPage = data.page + 1;
+            documentsHeader.html(documentsHeader.data('name') + ' (' + data.size + ')');
 
             results.documents = [];
             var html = '';
