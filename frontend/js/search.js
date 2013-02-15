@@ -103,7 +103,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
                 if (totalConceptsPages > 1) {
                     // Concept pagination
                     var pages = {
-                        pages: getPages(totalConceptsPages),
+                        pages: getPages(totalConceptsPages, currentConceptsPage),
                         rclass:'conceptResult',
                         current: currentConceptsPage
                     };
@@ -125,7 +125,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             if (totalDocumentPages > 1) {
                 // Document pagination
                 var pages = {
-                    pages: getPages(totalDocumentPages),
+                    pages: getPages(totalDocumentPages, currentDocumentsPage),
                     rclass:'documentResult',
                     current: currentDocumentsPage
                 };
@@ -167,13 +167,14 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     });
 
     $('.pagination.conceptResult a').live('click', function () {
+        if ($(this).parent('li').is('.disabled')) { return false; }
         var newPage = getNewPage(this, currentConceptsPage, totalConceptsPages);
         if (newPage == currentConceptsPage) { return false; }
         $('.conceptResult').remove();
 
         conceptSearch(currentQuery, newPage, function (result) {
             var pages = {
-                pages: getPages(totalConceptsPages),
+                pages: getPages(totalConceptsPages, currentConceptsPage),
                 rclass:'conceptResult',
                 current: currentConceptsPage
             };
@@ -186,13 +187,14 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     });
 
     $('.pagination.documentResult a').live('click', function () {
+        if ($(this).parent('li').is('.disabled')) { return false; }
         var newPage = getNewPage(this, currentDocumentsPage, totalDocumentPages);
         if (newPage == currentDocumentsPage) { return false; }
         $('.documentResult').remove();
 
         documentSearch(currentQuery, newPage, function (result) {
             var pages = {
-                pages: getPages(totalDocumentPages),
+                pages: getPages(totalDocumentPages, currentDocumentsPage),
                 rclass:'documentResult',
                 current: currentDocumentsPage
             };
@@ -459,15 +461,24 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     };
 
     // Return array with page names
-    var getPages = function (total) {
-        var pages = [];
-        for (var i = 1; i < total && i < 5; ++i) {
-            pages.push(String(i));
+    var getPages = function (total, current) {
+        var val, max = Math.min(5, total), pages = [];
+        var displace = Math.floor(max / 2);
+        if (current - displace > 1) {
+            pages.push({ name: '…', disabled: true });
         }
-        if (total > 5) {
-            pages.push('...');
+        for (var i = 0; i < max; i++) {
+            val = i
+                + Math.max(1, current - displace)
+                - Math.max(0, displace - (total - current));
+            pages.push({
+                name: String(val),
+                active: (val === current)
+            });
         }
-        pages.push(String(total));
+        if (current + displace < total) {
+            pages.push({ name: '…', disabled: true });
+        }
         return pages;
     };
 

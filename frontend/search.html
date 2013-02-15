@@ -215,17 +215,25 @@
             </div>
         </script>
 
-        <!-- search subrow info -->
+        <!-- pagination template -->
         <script id="paginationTemplate" type="text/x-handlebars-template">
             <div class="row search-result {{rclass}}">
-                <div class="span8 offset1">
+                <div class="span9 offset1">
                     <div class="pagination {{rclass}}" style="display:none">
                         <ul>
-                            <li><a class="prev" href="#">Prev</a></li>
+                            <li><a class="prev" style="width:2em;text-align:center" href="#">&larr;</a></li>
                             {{#each pages}}
-                                <li><a href="#">{{this}}</a></li>
+                                {{#if this.active}}
+                                    <li class="active"><a href="#">{{this.name}}</a></li>
+                                {{else}}
+                                  {{#if this.disabled}}
+                                    <li class="disabled"><a href="#">{{this.name}}</a></li>
+                                  {{else}}
+                                    <li><a href="#">{{this.name}}</a></li>
+                                  {{/if}}
+                                {{/if}}
                             {{/each}}
-                            <li><a class="next" href="#">Next</a></li>
+                            <li><a class="next" style="width:2em;text-align:center" href="#">&rarr;</a></li>
                         </ul>
                     </div>
                 </div>
