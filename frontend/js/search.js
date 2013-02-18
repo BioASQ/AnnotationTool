@@ -213,7 +213,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     // bind add-remove stuff
     $('.addremove').live('click', function () {
         var id = $(this).data('id'),
-            sectionName = id.replace(/-\d+/, ''),
+            sectionName = id.replace(/-[\d:]+/, ''),
             i;
 
         var res;
@@ -271,7 +271,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         if (!$(this).parent().siblings('.search-result-info').length) {
             var id = $(this).parents('.search-result').data('id'),
                 index = id.replace(/\D+/,''),
-                sectionName = id.replace(/-\d+/, '');
+                sectionName = id.replace(/-[\d:]+/, '');
 
             var doc = results[sectionName][index];
             var html;
@@ -434,7 +434,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             var current = renderData[i];
             if (typeof current == 'undefined') continue;
             current.domClass = className;
-            current['_internalID'] = resultSection + '-' + internalID++;
+            current['_internalID'] = resultSection + '-' + Date.now() + ':' + internalID++;
             current['renderTitle'] = current['title'];
             current['selected']    = isSelected(current);
             results[resultSection].push(current);
