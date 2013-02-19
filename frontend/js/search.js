@@ -2,6 +2,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     // compiled templates
     var searchResultTemplate          = Handlebars.compile($("#searchResultTemplate").html()),
         searchResultConceptTemplate   = Handlebars.compile($("#searchResultConceptTemplate").html()),
+        sourceSelectionTemplate       = Handlebars.compile($("#sourceSelectionTemplate").html()),
         statementSearchResultTemplate = Handlebars.compile($("#statementSearchResultTemplate").html()),
         answerTemplate                = Handlebars.compile($("#answerTemplate").html()),
         paginationTemplate            = Handlebars.compile($("#paginationTemplate").html()),
@@ -24,7 +25,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         statementsHeader   = $("#statementsResult .result-header");
 
     // other vars
-    var source, currentQuery, conceptResults = [];
+    var source, currentQuery, conceptResults = [], filteredConcepts = [];
 
     var results = {
         'concepts': [],
@@ -44,7 +45,14 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         totalDocumentPages;
 
     var currentConceptsPage = 1,
-        totalConceptsPages;
+        totalConceptsPages,
+        availableSources = [
+            { name: 'Disease Ontology', active: true },
+            { name: 'Gene Ontology',    active: true },
+            { name: 'Jochem',           active: true },
+            { name: 'MeSH',             active: true },
+            { name: 'UniProt',          active: true }
+        ];
 
     // init edit question title widget
     var eqtW = new EditQuestionWidget(app);
@@ -98,8 +106,17 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
             conceptProgress.parent().hide();
-            conceptsHeader.html(conceptsHeader.data('name') + ' (' + conceptResults.length + ')');
+            conceptsHeader.html(conceptsHeader.data('name') + ' (' + filteredConcepts .length + ')');
             if (result.length) {
+                var sourceSelectionHTML = sourceSelectionTemplate({
+                    sources: availableSources,
+                    rclass: 'conceptResult'
+                });
+                $('#concepts-results-container').append(sourceSelectionHTML);
+
+                // append to dom
+                $('#concepts-results-container').append(result);
+
                 if (totalConceptsPages > 1) {
                     // Concept pagination
                     var pages = {
@@ -108,10 +125,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
                         current: currentConceptsPage
                     };
                     var paginationHTML = paginationTemplate(pages);
-                    $(paginationHTML).insertAfter(conceptsResult);
+                    $('#concepts-results-container').append(paginationHTML);
                 }
-                // append to dom
-                $(result).insertAfter(conceptsResult);
             }
         });
 
@@ -173,15 +188,21 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         $('.conceptResult').remove();
 
         conceptSearch(currentQuery, newPage, function (result) {
+            var sourceSelectionHTML = sourceSelectionTemplate({
+                sources: availableSources,
+                rclass: 'conceptResult'
+            });
+            $('#concepts-results-container').append(sourceSelectionHTML);
+
+            $('#concepts-results-container').append(result);
             var pages = {
                 pages: getPages(totalConceptsPages, currentConceptsPage),
                 rclass:'conceptResult',
                 current: currentConceptsPage
             };
             var paginationHTML = paginationTemplate(pages);
-            $(paginationHTML).insertAfter(conceptsResult);
+            $('#concepts-results-container').append(paginationHTML);
 
-            $(result).insertAfter(conceptsResult);
             $("#toggleConcepts").click().click();
         });
     });
@@ -209,6 +230,45 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     $('#toggleConcepts').click(function ()  { toggleClass('conceptResult', $(this)); });
     $('#toggleDocs').click(function ()      { toggleClass('documentResult', $(this)); });
     $('#toggleStatments').click(function () { toggleClass('statementResult', $(this)); });
+
+    $('.source-toggle').live('click', function () {
+        var toggledSource = $(this).html();
+        for (var i = 0; i < availableSources.length; i++) {
+            if (availableSources[i].name == toggledSource) {
+                availableSources[i].active = !availableSources[i].active;
+                break;
+            }
+        }
+        var sources = availableSources
+                .filter(function (source) { return source.active; })
+                .map(function (source) { return source.name; });
+
+        filteredConcepts = filterConcepts(sources);
+        currentConceptsPage = 1;
+        totalConceptsPages  = Math.ceil(filteredConcepts.length / itemsPerPage);
+
+        conceptsHeader.html(conceptsHeader.data('name') + ' (' + filteredConcepts .length + ')');
+
+        $('.conceptResult').remove();
+        showConcepts(currentConceptsPage, function (html) {
+            var sourceSelectionHTML = sourceSelectionTemplate({
+                sources: availableSources,
+                rclass: 'conceptResult'
+            });
+            $('#concepts-results-container').append(sourceSelectionHTML);
+
+            $('#concepts-results-container').append(html);
+            var pages = {
+                pages: getPages(totalConceptsPages, currentConceptsPage),
+                rclass:'conceptResult',
+                current: currentConceptsPage
+            };
+            var paginationHTML = paginationTemplate(pages);
+            $('#concepts-results-container').append(paginationHTML);
+
+            $("#toggleConcepts").click().click();
+        });
+    });
 
     // bind add-remove stuff
     $('.addremove').live('click', function () {
@@ -280,7 +340,6 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             } else {
                 html = statementExtensionTemplate(doc);
             }
-            $(html).insertAfter();
             $(this).parents('.search-result').append($(html));
             return;
         }
@@ -341,8 +400,9 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         if (page == 1 && !conceptResults.length) {
             fetchConcepts(query, page, function (concepts) {
                 conceptResults = concepts;
+                filteredConcepts = conceptResults;
                 currentConceptsPage = 1;
-                totalConceptsPages = Math.ceil(concepts.length / itemsPerPage);
+                totalConceptsPages = Math.ceil(filteredConcepts.length / itemsPerPage);
                 showConcepts(1, cb);
             });
         } else {
@@ -391,12 +451,19 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         conceptsResult.show();
         results.concepts = [];
         var begin = (page - 1) * itemsPerPage,
-            html = renderResults(conceptResults.slice(begin, begin + itemsPerPage),
+            // html = renderResults(conceptResults.slice(begin, begin + itemsPerPage),
+            html = renderResults(filteredConcepts.slice(begin, begin + itemsPerPage),
                                  searchResultConceptTemplate,
                                  'conceptResult',
                                  'concepts');
 
         cb(html);
+    };
+
+    var filterConcepts = function (sources) {
+        return conceptResults.filter(function (result, index) {
+            return (sources.indexOf(result.source) > -1);
+        });
     };
 
     var documentSearch = function (query, page, cb) {
