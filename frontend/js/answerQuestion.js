@@ -88,9 +88,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             var html = docTemplate(currentDocument);
             $viewer.html(html);
         }else if(currentDocument.domClass == 'statementResult'){
-            if( typeof currentDocument.AJAXText == 'undefined' ){
-                safeTagsReplace("<"+currentDocument.s+"> <"+currentDocument.p+"> \""+currentDocument.o+"\" .");
-            }
+            if( typeof currentDocument.AJAXText == 'undefined' )
+                currentDocument.AJAXText = safeTagsReplace("<"+currentDocument.s+"> <"+currentDocument.p+"> \""+currentDocument.o+"\" .");
             $viewer.html(currentDocument.AJAXText);
         }else{
             // if text is not yet loaded - load
@@ -106,7 +105,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                     $.get(app.data.LogicServer + 'corsProxy?url=' +encodeURIComponent(url), function(data){
                         //var data = "<p>Extended answer info here</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.</p>"
                         if( data.length > 0 ){
-                            currentDocument.AJAXText = safeTagsReplace(data);
+                            currentDocument.AJAXText = data;
                             $viewer.html(data);
                         }else{
                             currentDocument.AJAXText = 0;
@@ -277,7 +276,13 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 );
             }else if(currentDocument.domClass == 'documentResult'){
                 for(var i = 0; i < currentDocument.sections.length; i++){
-                    if(currentDocument.sections[i].indexOf(stext) != -1 ){
+                    if(currentDocument.sections[i].indexOf(text) != -1 ){
+                        currentDocument.sections[i] = currentDocument.sections[i].replace(
+                            text,
+                            currentAnnotation.annotationHTML
+                        );
+                        break;
+                    }else if(currentDocument.sections[i].indexOf(stext) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
                             stext,
                             currentAnnotation.annotationHTML
