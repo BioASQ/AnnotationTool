@@ -277,9 +277,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 );
             }else if(currentDocument.domClass == 'documentResult'){
                 for(var i = 0; i < currentDocument.sections.length; i++){
-                    if(currentDocument.sections[i].indexOf(text) != -1 ){
+                    if(currentDocument.sections[i].indexOf(stext) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            text,
+                            stext,
                             currentAnnotation.annotationHTML
                         );
                         break;
