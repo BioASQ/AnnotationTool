@@ -121,7 +121,7 @@ require(["app"], function (app) {
     });
 
     $('#editQuestionDelete').live('click', function () {
-        if (confirm('Are you sure?')) {
+        if (confirm('The whole question including annotations will be deleted.\n\nAre you sure?')) {
             var questionID = questionList.val();
             // do delete request
             $.ajax({
