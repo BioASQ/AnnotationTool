@@ -143,6 +143,7 @@
             <div class="row search-result {{domClass}}" data-id="{{_internalID}}">
                 <div class="span8 offset1">
                     {{title}}&nbsp;&nbsp;({{source}})
+                    <a class="more-info" href="#"><i class="icon-info-sign"></i></a>
                 </div>
                 <div class="span2">
                     <a href="{{uri}}" target="_blank"><i class="icon-file"></i></a>
@@ -172,6 +173,14 @@
                 </div>
             </div>
             <div class="row search-result separator {{domClass}}"></div>
+        </script>
+
+        <!-- concept more info -->
+        <script id="extendedConceptResultTemplate" type="text/x-handlebars-template">
+            <div class="row search-result-info">
+                <div class="span7 offset3">Score: {{score}}</div>
+                <div class="span7 offset3">URI: <code>{{uri}}</code></div>
+            </div>
         </script>
 
         <!-- document more info -->

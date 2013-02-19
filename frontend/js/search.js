@@ -6,6 +6,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         statementSearchResultTemplate = Handlebars.compile($("#statementSearchResultTemplate").html()),
         answerTemplate                = Handlebars.compile($("#answerTemplate").html()),
         paginationTemplate            = Handlebars.compile($("#paginationTemplate").html()),
+        conceptExtensionTemplate      = Handlebars.compile($("#extendedConceptResultTemplate").html());
         documentExtensionTemplate     = Handlebars.compile($("#extendedDocumentResultTemplate").html());
         statementExtensionTemplate    = Handlebars.compile($("#extendedStatementResultTemplate").html());
 
@@ -346,10 +347,16 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             }
 
             var html;
-            if (sectionName == 'documents') {
+            switch (sectionName) {
+            case 'concepts':
+                html = conceptExtensionTemplate(doc);
+                break;
+            case 'documents':
                 html = documentExtensionTemplate(doc);
-            } else {
+                break;
+            case 'statements':
                 html = statementExtensionTemplate(doc);
+                break;
             }
             $(this).parents('.search-result').append($(html));
             return;
