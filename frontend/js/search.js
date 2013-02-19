@@ -103,6 +103,9 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         // reset concept search
         conceptResults = [];
         currentConceptsPage = 1;
+        availableSources.forEach(function (sourceDescription) {
+            sourceDescription.active = true;
+        });
         // do concept request
         conceptSearch(query, currentConceptsPage, function (result) {
             conceptProgress.parent().hide();
