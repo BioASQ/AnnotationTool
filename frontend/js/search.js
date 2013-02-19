@@ -156,32 +156,34 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         });
 
         // show concept spinner
-        statementsProgress.parent().show();
+        // statementsProgress.parent().show();
         // do statement request
-        statementsRequest = $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
-            statementsRequest = null;
-            statementsProgress.parent().hide();
-            var size = data.results.statements.length || 0;
-            statementsHeader.html(statementsHeader.data('name') + ' (' + size + ')');
-
-            results.statements = [];
-            statementsResult.show();
-
-            // show statements
-            if (data.results.statements.length) {
-                var html = renderResults(data.results.statements,
-                                         statementSearchResultTemplate,
-                                         'statementResult',
-                                         'statements');
-                // append to dom
-                $(html).insertAfter(statementsResult);
-            }
-        }).error(function () {
-            statementsRequest = null;
-            statementsProgress.parent().hide();
-            statementsResult.show();
-            statementsHeader.html('Search for statements failed.');
-        });
+/*
+ *         statementsRequest = $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
+ *             statementsRequest = null;
+ *             statementsProgress.parent().hide();
+ *             var size = data.results.statements.length || 0;
+ *             statementsHeader.html(statementsHeader.data('name') + ' (' + size + ')');
+ * 
+ *             results.statements = [];
+ *             statementsResult.show();
+ * 
+ *             // show statements
+ *             if (data.results.statements.length) {
+ *                 var html = renderResults(data.results.statements,
+ *                                          statementSearchResultTemplate,
+ *                                          'statementResult',
+ *                                          'statements');
+ *                 // append to dom
+ *                 $(html).insertAfter(statementsResult);
+ *             }
+ *         }).error(function () {
+ *             statementsRequest = null;
+ *             statementsProgress.parent().hide();
+ *             statementsResult.show();
+ *             statementsHeader.html('Search for statements failed.');
+ *         });
+ */
     });
 
     $('.pagination.conceptResult a').live('click', function () {
@@ -532,23 +534,28 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
 
     // Return array with page names
     var getPages = function (total, current) {
-        var val, max = Math.min(5, total), pages = [];
-        var displace = Math.floor(max / 2);
-        if (current - displace > 1) {
+        var max         = Math.min(5, total),
+            pages       = [];
+            displace    = Math.floor(max / 2),
+            leftAdjust  = Math.max(1, current - displace),
+            rightAdjust = Math.max(0, displace - (total - current));
+
+        if (current - displace - rightAdjust > 1) {
             pages.push({ name: '…', disabled: true });
         }
+
         for (var i = 0; i < max; i++) {
-            val = i
-                + Math.max(1, current - displace)
-                - Math.max(0, displace - (total - current));
+            var val = i + leftAdjust - rightAdjust;
             pages.push({
                 name: String(val),
                 active: (val === current)
             });
         }
-        if (current + displace < total) {
+
+        if (current + displace + leftAdjust + 1 < total) {
             pages.push({ name: '…', disabled: true });
         }
+
         return pages;
     };
 
