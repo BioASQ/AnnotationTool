@@ -44,6 +44,20 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         $answerSpace.html(answer.html);
     };
 
+    var tagsToEscape = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;'
+    };
+    var escapeTag = function(tag) {
+        return tagsToEscape[tag] || tag;
+    };
+    var safeTagsReplace = function(str) {
+        return str.replace(/[&<>]/g, escapeTag);
+    };
+    var safeTagsUnescape = function(str) {
+        return $('<div/>').html(str).text();
+    };
     var getSelectionHtml = function() {
         var html = "";
         if (typeof window.getSelection != "undefined") {
@@ -60,6 +74,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 html = document.selection.createRange().htmlText;
             }
         }
+
         return html;
     };
 
@@ -73,7 +88,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             var html = docTemplate(currentDocument);
             $viewer.html(html);
         }else if(currentDocument.domClass == 'statementResult'){
-            $viewer.text("<"+currentDocument.s+"> <"+currentDocument.p+"> \""+currentDocument.o+"\" .");
+            if( typeof currentDocument.AJAXText == 'undefined' ){
+                safeTagsReplace("<"+currentDocument.s+"> <"+currentDocument.p+"> \""+currentDocument.o+"\" .");
+            }
+            $viewer.html(currentDocument.AJAXText);
         }else{
             // if text is not yet loaded - load
             if( typeof currentDocument.AJAXText == 'undefined' || currentDocument.AJAXText === null ){
@@ -88,7 +106,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                     $.get(app.data.LogicServer + 'corsProxy?url=' +encodeURIComponent(url), function(data){
                         //var data = "<p>Extended answer info here</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.</p>"
                         if( data.length > 0 ){
-                            currentDocument.AJAXText = data;
+                            currentDocument.AJAXText = safeTagsReplace(data);
                             $viewer.html(data);
                         }else{
                             currentDocument.AJAXText = 0;
@@ -248,12 +266,13 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             // add doc data to annotation
             currentAnnotation["annotationDocument"] = currentDocument.uri;
             currentAnnotation["annotationText"] = text;
-            currentAnnotation["annotationHTML"] = annTemplate({text: text, id: currentAnnotation.id});
+            currentAnnotation["annotationHTML"] = annTemplate({text: safeTagsUnescape(text), id: currentAnnotation.id});
 
             // render annotation in text
-            if(currentDocument.title.indexOf(text) != -1){
+            stext = safeTagsUnescape(text);
+            if(currentDocument.title.indexOf(stext) != -1){
                 currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                    text,
+                    stext,
                     currentAnnotation.annotationHTML
                 );
             }else if(currentDocument.domClass == 'documentResult'){
@@ -267,8 +286,14 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                     }
                 }
             }else{
+                var repl;
+                if( currentDocument.AJAXText.indexOf(text) != -1 ){
+                    repl = text;
+                }else if(currentDocument.AJAXText.indexOf(stext) != -1){
+                    repl = stext;
+                }
                 currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                    text,
+                    repl,
                     currentAnnotation.annotationHTML
                 );
             }
