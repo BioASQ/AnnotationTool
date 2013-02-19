@@ -335,10 +335,16 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     $('.more-info').live('click', function () {
         if (!$(this).parent().siblings('.search-result-info').length) {
             var id = $(this).parents('.search-result').data('id'),
-                index = id.replace(/\D+/,''),
                 sectionName = id.replace(/-[\d:]+/, '');
 
-            var doc = results[sectionName][index];
+            var doc;
+            for (var i = 0; i < results[sectionName].length; i++) {
+                if (results[sectionName][i]['_internalID'] == id) {
+                    doc = results[sectionName][i];
+                    break;
+                }
+            }
+
             var html;
             if (sectionName == 'documents') {
                 html = documentExtensionTemplate(doc);
