@@ -271,23 +271,21 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             stext = safeTagsUnescape(text);
             if(currentDocument.title.indexOf(stext) != -1){
                 currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                    stext,
+                    new RegExp(stext, 'g'),
                     currentAnnotation.annotationHTML
                 );
             }else if(currentDocument.domClass == 'documentResult'){
                 for(var i = 0; i < currentDocument.sections.length; i++){
                     if(currentDocument.sections[i].indexOf(text) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            text,
+                            new RegExp(text, 'g'),
                             currentAnnotation.annotationHTML
                         );
-                        break;
                     }else if(currentDocument.sections[i].indexOf(stext) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            stext,
+                            new RegExp(stext, 'g'),
                             currentAnnotation.annotationHTML
                         );
-                        break;
                     }
                 }
             }else{
@@ -298,7 +296,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                     repl = stext;
                 }
                 currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                    repl,
+                    new RegExp(repl, 'g'),
                     currentAnnotation.annotationHTML
                 );
             }
@@ -374,22 +372,21 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         var text = ann.annotationText;
         if(currentDocument.renderTitle.indexOf(text) != -1){
             currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                ann.annotationHTML,
+                new RegExp(ann.annotationHTML, 'g'),
                 text
             );
         }else if(currentDocument.domClass == 'documentResult'){
             for(var j = 0; j < currentDocument.sections.length; j++){
                 if(currentDocument.sections[j].indexOf(text) != -1 ){
                     currentDocument.sections[j] = currentDocument.sections[j].replace(
-                        ann.annotationHTML,
+                        new RegExp(ann.annotationHTML, 'g'),
                         text
                     );
-                    break;
                 }
             }
         }else{
             currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                ann.annotationHTML,
+                new RegExp(ann.annotationHTML, 'g'),
                 text
             );
         }
