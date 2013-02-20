@@ -301,6 +301,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
                 }
                 $(this).children('.icon-minus').removeClass('icon-minus').addClass('icon-plus');
             } else {
+                // store current query
+                res.query = currentQuery;
                 // append to entities
                 app.data.question.entities.push(res);
                 $(this).children('.icon-plus').removeClass('icon-plus').addClass('icon-minus');
