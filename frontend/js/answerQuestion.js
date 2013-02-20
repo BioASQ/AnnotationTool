@@ -58,6 +58,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     var safeTagsUnescape = function(str) {
         return $('<div/>').html(str).text();
     };
+    var quoteRegex = function(str) {
+        return (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+    };
     var getSelectionHtml = function() {
         var html = "";
         if (typeof window.getSelection != "undefined") {
@@ -271,19 +274,19 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             stext = safeTagsUnescape(text);
             if(currentDocument.title.indexOf(stext) != -1){
                 currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                    new RegExp(stext, 'g'),
+                    new RegExp( quoteRegex(stext), 'g'),
                     currentAnnotation.annotationHTML
                 );
             }else if(currentDocument.domClass == 'documentResult'){
                 for(var i = 0; i < currentDocument.sections.length; i++){
                     if(currentDocument.sections[i].indexOf(text) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            new RegExp(text, 'g'),
+                            new RegExp( quoteRegex(text), 'g'),
                             currentAnnotation.annotationHTML
                         );
                     }else if(currentDocument.sections[i].indexOf(stext) != -1 ){
                         currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            new RegExp(stext, 'g'),
+                            new RegExp( quoteRegex(stext), 'g'),
                             currentAnnotation.annotationHTML
                         );
                     }
@@ -296,7 +299,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                     repl = stext;
                 }
                 currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                    new RegExp(repl, 'g'),
+                    new RegExp( quoteRegex(repl), 'g'),
                     currentAnnotation.annotationHTML
                 );
             }
@@ -372,21 +375,21 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         var text = ann.annotationText;
         if(currentDocument.renderTitle.indexOf(text) != -1){
             currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                new RegExp(ann.annotationHTML, 'g'),
+                new RegExp( quoteRegex(ann.annotationHTML), 'g'),
                 text
             );
         }else if(currentDocument.domClass == 'documentResult'){
             for(var j = 0; j < currentDocument.sections.length; j++){
                 if(currentDocument.sections[j].indexOf(text) != -1 ){
                     currentDocument.sections[j] = currentDocument.sections[j].replace(
-                        new RegExp(ann.annotationHTML, 'g'),
+                        new RegExp( quoteRegex(ann.annotationHTML), 'g'),
                         text
                     );
                 }
             }
         }else{
             currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                new RegExp(ann.annotationHTML, 'g'),
+                new RegExp( quoteRegex(ann.annotationHTML), 'g'),
                 text
             );
         }
