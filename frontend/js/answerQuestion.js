@@ -453,4 +453,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     // append to dom
     $("#resultList").html(html);
+
+    $('tr.result-row').tooltip();
 });

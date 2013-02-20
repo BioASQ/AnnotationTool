@@ -86,22 +86,22 @@
 
             <div class="row">
                 <!-- LIST OF RESULTS -->
-                <div class="span3">
-                    <table class="table table-striped table-bordered table-hover">
+                <div class="span5">
+                    <table class="table table-bordered table-hover">
                         <caption>Selected results</caption>
                         <tbody id="resultList">
                         </tbody>
                     </table>
                 </div>
                 <!-- RESULT EXTENDED INFO -->
-                <div class="span9">
+                <div class="span7">
                     <div class="row">
-                        <div class="span9">
-                            <h1 id="docTitle"></h1>
+                        <div class="span7">
+                            <h2 id="docTitle"></h2>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="span9">
+                        <div class="span7">
                             <div id="viewer"></div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
 
         <!-- RESULT TEMPLATE -->
         <script id="resultTemplate" type="text/x-handlebars-template">
-            <tr>
+            <tr class="result-row" data-toggle="tooltip" data-placement="right" data-title="{{query}}">
                 <td>{{type}}</td>
                 <td><a href="#" class="resultDocument" data-num="{{_internalID}}" data-url="#">{{title}}</a></td>
                 <td width="20px">
