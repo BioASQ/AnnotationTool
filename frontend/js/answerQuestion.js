@@ -373,14 +373,14 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         // remove annotation from text
         var text = ann.annotationText;
-        if(currentDocument.renderTitle.indexOf(text) != -1){
+        if(currentDocument.renderTitle.indexOf(ann.annotationHTML) != -1){
             currentDocument.renderTitle = currentDocument.renderTitle.replace(
                 new RegExp( quoteRegex(ann.annotationHTML), 'g'),
                 text
             );
         }else if(currentDocument.domClass == 'documentResult'){
             for(var j = 0; j < currentDocument.sections.length; j++){
-                if(currentDocument.sections[j].indexOf(text) != -1 ){
+                if(currentDocument.sections[j].indexOf(ann.annotationHTML) != -1 ){
                     currentDocument.sections[j] = currentDocument.sections[j].replace(
                         new RegExp( quoteRegex(ann.annotationHTML), 'g'),
                         text
