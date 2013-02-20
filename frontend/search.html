@@ -68,7 +68,7 @@
                 </div>
             </div>
             <!-- concept search results -->
-            <div id="concepts-results-container">
+            <div class="results-container">
                 <div class="row search-source" id="conceptsResult" style="display: none;">
                     <div class="span9 result-header" data-name="Concepts">
                         Concepts
@@ -86,12 +86,14 @@
                 </div>
             </div>
             <!-- documents search results -->
-            <div class="row search-source" id="documentsResult" style="display:none;">
-                <div class="span9 result-header" data-name="Documents">
-                    Documents
-                </div>
-                <div class="span3">
-                    <a href="#" id="toggleDocs" data-state="hidden">Expand</a>
+            <div class="results-container">
+                <div class="row search-source" id="documentsResult" style="display:none;">
+                    <div class="span9 result-header" data-name="Documents">
+                        Documents
+                    </div>
+                    <div class="span3">
+                        <a href="#" id="toggleDocs" data-state="hidden">Expand</a>
+                    </div>
                 </div>
             </div>
 
@@ -102,12 +104,14 @@
                 </div>
             </div>
             <!-- statements search results -->
-            <div class="row search-source" id="statementsResult" style="display:none;">
-                <div class="span9 result-header" data-name="Statements">
-                    Statements
-                </div>
-                <div class="span3">
-                    <a href="#" id="toggleStatments" data-state="hidden">Expand</a>
+            <div class="results-container">
+                <div class="row search-source" id="statementsResult" style="display:none;">
+                    <div class="span9 result-header" data-name="Statements">
+                        Statements
+                    </div>
+                    <div class="span3">
+                        <a href="#" id="toggleStatements" data-state="hidden">Expand</a>
+                    </div>
                 </div>
             </div>
         </div> <!-- /container -->
@@ -230,7 +234,7 @@
         <script id="paginationTemplate" type="text/x-handlebars-template">
             <div class="row search-result {{rclass}}">
                 <div class="span5 offset1">
-                    <div class="pagination {{rclass}}" style="display:none">
+                    <div class="pagination {{rclass}}" style="display:none" data-section-name="{{section}}">
                         <ul>
                             <li><a class="prev" style="width:2em;text-align:center" href="#">&larr;</a></li>
                             {{#each pages}}
