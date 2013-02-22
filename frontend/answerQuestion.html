@@ -84,6 +84,28 @@
                 </div>
             </div>
 
+            <!-- LIST OF ALL SNIPPETS -->
+            <div class="row">
+                <div class="span12">
+                    <div class="accordion" id="accordion2">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                    List of snippets
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse">
+                                <div class="accordion-inner">
+                                    <table class="table table-bordered" id="snippetsList">
+                                        <!-- list of snippets content here -->
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <!-- LIST OF RESULTS -->
                 <div class="span5">
@@ -137,6 +159,14 @@
                 {{text}}
             </span>
             <a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a>
+        </script>
+
+        <!-- SNIPPET TEMPLATE -->
+        <script id="snippetTemplate" type="text/x-handlebars-template">
+            <tr>
+                <td>{{text}}</td>
+                <td><a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a></td>
+            </tr>
         </script>
     </body>
 </html>

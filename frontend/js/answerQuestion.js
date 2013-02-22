@@ -3,7 +3,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     var $saveButton = $("#saveButton"),
         $questionAnswer = $("#questionAnswer"),
         $answerSpace = $("#answerSpace"),
-        $questionTitle = $("#questionTitle");
+        $questionTitle = $("#questionTitle"),
+        $snippetsList = $("#snippetsList");
 
     // annotation btns
     var $startAnn = $("#startAnn"),
@@ -30,6 +31,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // annotation highlight tempalte
     source = $("#annotationTemplate").html();
     var annTemplate = Handlebars.compile(source);
+
+    // snippet template
+    source = $("#snippetTemplate").html();
+    var snipTemplate = Handlebars.compile(source);
 
     // init edit question title widget
     var eqtW = new EditQuestionWidget(app);
@@ -125,6 +130,17 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 }
             }
         }
+
+        // render annotations list
+        renderAnnotationsList();
+    };
+
+    var renderAnnotationsList = function () {
+        var html = '';
+        for(var i = 0; i < answer.annotations.length; i++){
+            html += snipTemplate({text: safeTagsUnescape(answer.annotations[i].annotationText), id: answer.annotations[i].id});
+        }
+        $snippetsList.html(html);
     };
 
     var prepareAnnotation = function(){
@@ -453,6 +469,9 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 lastAnnotationId = annid;
             }
         }
+
+        // render annotations
+        renderAnnotationsList();
     }
 
     // append to dom
