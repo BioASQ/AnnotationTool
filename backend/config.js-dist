@@ -58,5 +58,6 @@ exports.defaults.search = {
   },
   documents: 'http://www.gopubmed.org/web/gopubmedbeta/bioasq/pubmed',
   triples: 'http://gopubmed.org/web/bioasq/linkedlifedata/triples',
-  verbalizer: 'http://139.18.2.164:9998/verbalizer'
+  triples2: 'http://www.gopubmed.org/web/bioasq/linkedlifedata2/triples',
+  verbalizer: 'http://139.18.2.164:9998/batchverbalizer'
 };
