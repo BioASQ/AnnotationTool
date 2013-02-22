@@ -46,5 +46,13 @@ define(['jquery',
     var currentApp = new App();
     currentApp.load();
 
+    Handlebars.registerHelper('renderObject', function () {
+        if (this.o.search(/^http:/) === 0) {
+            return ('<' + this.o + '>');
+        }
+
+        return ('"' + this.o + '"');
+    });
+
     return currentApp;
 });
