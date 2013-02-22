@@ -14,12 +14,13 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         searchQuery   = $("#searchQuery");
 
     // other vars
-    var source, currentQuery, conceptResults = [], filteredConcepts = [];
+    var source, currentQuery;
 
+    // cache of currently displayed results
     var results = {
-        'concepts':    [],
-        'documents':   [],
-        'statements':  []
+        concepts:   [],
+        documents:  [],
+        statements: []
     };
 
     var conceptSources = [
@@ -44,7 +45,9 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             toggle:            $("#toggleConcepts"),
             resultClass:       'conceptResult',
             sectionName:       'concepts',
-            sources:           conceptSources
+            sources:           conceptSources,
+            results:           [],
+            allSources:        []
         },
         documents: {
             currentPage:       1,
@@ -58,7 +61,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             container:         $("#documentsResult").parent('.results-container'),
             toggle:            $("#toggleDocs"),
             resultClass:       'documentResult',
-            sectionName:       'documents'
+            sectionName:       'documents',
+            results:           []
         },
         statements: {
             currentPage:       1,
@@ -69,9 +73,11 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             progress:          $("#statementsProgress"),
             header:            $("#statementsResult .result-header"),
             result:            $("#statementsResult"),
+            container:         $("#statementsResult").parent('.results-container'),
             toggle:            $("#toggleStatements"),
             resultClass:       'statementResult',
-            sectionName:       'statements'
+            sectionName:       'statements',
+            results:           []
         }
     }
 
@@ -156,14 +162,14 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         renderState[sectionName].toggle.click().click();
     };
 
-    var conceptSearch = renderState.concepts.search = function (query, page, cb) {
-        if (page == 1 && !conceptResults.length) {
+    var searchConcepts = renderState.concepts.search = function (query, page, cb) {
+        if (page == 1 && !renderState.concepts.results.length) {
             fetchConcepts(query, page, function (concepts) {
-                conceptResults                   = concepts;
-                filteredConcepts                 = conceptResults;
+                renderState.concepts.results     = concepts;
+                renderState.concepts.allSources  = concepts;
                 renderState.concepts.currentPage = 1;
-                renderState.concepts.totalPages  = Math.ceil(filteredConcepts.length / itemsPerPage);
-                renderState.concepts.size        = filteredConcepts.length;
+                renderState.concepts.totalPages  = Math.ceil(renderState.concepts.results.length / itemsPerPage);
+                renderState.concepts.size        = renderState.concepts.results.length;
                 showConcepts(1, cb);
             });
         } else {
@@ -173,6 +179,8 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
     };
 
     var fetchConcepts = function (query, page, cb) {
+        renderState.concepts.progress.parent().show();
+
         renderState.concepts.request = $.post(
             app.data.LogicServer + 'concepts',
             { query: query },
@@ -191,12 +199,107 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         });
     };
 
-    var isSelected = function (item) {
-        for (var i = 0; i < app.data.question.entities.length; i++) {
-            var current = app.data.question.entities[i];
-            if (equal(current, item)) { return true; }
+    var showConcepts = function (page, cb) {
+        renderState.concepts.result.show();
+
+        // render one page of concepts
+        var begin = (page - 1) * itemsPerPage,
+            html = renderResults(renderState.concepts.results.slice(begin, begin + itemsPerPage),
+                                 searchResultConceptTemplate,
+                                 'conceptResult',
+                                 'concepts');
+
+        cb(html);
+    };
+
+    var filterConcepts = function (source, sourceNames) {
+        return source.filter(function (result, index) {
+            return (sourceNames.indexOf(result.source) > -1);
+        });
+    };
+
+    var searchDocuments = renderState.documents.search = function (query, page, cb) {
+        renderState.documents.progress.parent().show();
+
+        renderState.documents.request = $.post(
+            app.data.LogicServer + 'documents',
+            { query: query, page: page - 1, pageSize: itemsPerPage },
+            function (data) {
+                renderState.documents.request     = null;
+                renderState.documents.totalPages  = Math.ceil(data.size / itemsPerPage);
+                renderState.documents.currentPage = data.page + 1;
+                renderState.documents.size        = data.size;
+                renderState.documents.results     = data.results.documents;
+
+                renderState.documents.result.show();
+
+                // show documents
+                var html = '';
+                if (data.results.documents.length) {
+                    html = renderResults(renderState.documents.results,
+                                         searchResultTemplate,
+                                         'documentResult',
+                                         'documents');
+                }
+
+                cb(html);
+            }
+        ).error(function () {
+            renderState.documents.request = null;
+            renderState.documents.progress.parent().hide();
+            renderState.documents.result.show();
+            renderState.documents.header.html('Search for documents failed.');
+        });
+    };
+
+    var searchStatements = renderState.statements.search = function (query, page, cb) {
+        if (page == 1 && !renderState.statements.results.length) {
+            fetchStatements(query, page, function (statements) {
+                renderState.statements.results     = statements;
+                renderState.statements.currentPage = 1;
+                renderState.statements.totalPages  = Math.ceil(statements.length / itemsPerPage);
+                renderState.statements.size        = statements.length;
+
+                showStatements(1, cb);
+            });
+        } else {
+            renderState.statements.currentPage = page;
+            showStatements(page, cb);
         }
-        return false;
+    };
+
+    var fetchStatements = function (query, page, cb) {
+        renderState.statements.progress.parent().show();
+
+        renderState.statements.request = $.post(
+            app.data.LogicServer + 'statements',
+            { query: query, page: page - 1, pageSize: itemsPerPage },
+            function (data) {
+                renderState.statements.request = null;
+                if (data.results.statements.length) {
+                    cb(data.results.statements);
+                } else {
+                    cb([]);
+                }
+            }
+        ).error(function () {
+            renderState.statements.request = null;
+            renderState.statements.progress.parent().hide();
+            renderState.statements.result.show();
+            renderState.statements.header.html('Search for statements failed.');
+        });
+    };
+
+    var showStatements = function (page, cb) {
+        renderState.statements.result.show();
+
+        // render one page of statements
+        var begin = (page - 1) * itemsPerPage,
+            html  = renderResults(renderState.statements.results.slice(begin, begin + itemsPerPage),
+                                  statementSearchResultTemplate,
+                                  'statementResult',
+                                  'statements');
+        cb(html);
     };
 
     var equal = function (lhs, rhs) {
@@ -212,54 +315,12 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         return false;
     };
 
-    var showConcepts = function (page, cb) {
-        renderState.concepts.result.show();
-        results.concepts = [];
-        var begin = (page - 1) * itemsPerPage,
-            html = renderResults(filteredConcepts.slice(begin, begin + itemsPerPage),
-                                 searchResultConceptTemplate,
-                                 'conceptResult',
-                                 'concepts');
-
-        cb(html);
-    };
-
-    var filterConcepts = function (sources) {
-        return conceptResults.filter(function (result, index) {
-            return (sources.indexOf(result.source) > -1);
-        });
-    };
-
-    var documentSearch = renderState.documents.search = function (query, page, cb) {
-        renderState.documents.request = $.post(
-            app.data.LogicServer + 'documents',
-            { query: query, page: page - 1 },
-            function (data) {
-                renderState.documents.request = null;
-                renderState.documents.totalPages = Math.ceil(data.size / itemsPerPage);
-                renderState.documents.currentPage = data.page + 1;
-                renderState.documents.size = data.size;
-
-                results.documents = [];
-                var html = '';
-
-                // show documents
-                if (data.results.documents.length) {
-                    renderState.documents.result.show();
-                    html = renderResults(data.results.documents,
-                                         searchResultTemplate,
-                                         'documentResult',
-                                         'documents');
-                }
-
-                cb(html);
-            }
-        ).error(function () {
-            renderState.documents.request = null;
-            renderState.documents.progress.parent().hide();
-            renderState.documents.result.show();
-            renderState.documents.header.html('Search for documents failed.');
-        });
+    var isSelected = function (item) {
+        for (var i = 0; i < app.data.question.entities.length; i++) {
+            var current = app.data.question.entities[i];
+            if (equal(current, item)) { return true; }
+        }
+        return false;
     };
 
     var renderResults = function (renderData, template, className, resultSection) {
@@ -345,6 +406,9 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         currentQuery = query;
 
         jQuery.each(['concepts', 'documents', 'statements'], function (key, sectionName) {
+            // reset results
+            results[sectionName] = [];
+
             // reset toggle
             var tc = renderState[sectionName].toggle;
             if (tc.data('state') !== 'hidden') {
@@ -363,17 +427,17 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             renderState[sectionName].result.hide();
         });
 
-        // show concept spinner
-        renderState.concepts.progress.parent().show();
         // reset concept search
-        conceptResults = [];
+        renderState.concepts.results    = [];
+        renderState.concepts.allSources = [];
+        // reset concepts pager
         renderState.concepts.currentPage = 1;
         // enable all sources
         jQuery.each(renderState.concepts.sources, function (index, sourceDescription) {
             sourceDescription.active = true;
         });
         // do concept request
-        conceptSearch(query, renderState.concepts.currentPage, function (result) {
+        searchConcepts(query, renderState.concepts.currentPage, function (result) {
             renderState.concepts.progress.parent().hide();
 
             var sectionTitle = renderState.concepts.header.data('name')
@@ -382,12 +446,10 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             renderSection('concepts', result);
         });
 
-        // show concept spinner
-        renderState.documents.progress.parent().show();
         // reset documents pager
         renderState.documents.currentPage = 1;
         // do document request
-        documentSearch(query, renderState.documents.currentPage, function (result) {
+        searchDocuments(query, renderState.documents.currentPage, function (result) {
             renderState.documents.progress.parent().hide();
             var sectionTitle = renderState.documents.header.data('name')
                              + ' (' + renderState.documents.size + ')';
@@ -395,35 +457,18 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             renderSection('documents', result);
         });
 
-        // show concept spinner
-        // renderState.statements.progress.parent().show();
+        // reset statement results
+        renderState.statements.results = [];
+        // reset statements pager
+        renderState.statements.currentPage = 1;
         // do statement request
-/*
- *         renderState.statements.request = $.post(app.data.LogicServer + 'statements', { query: query }, function (data) {
- *             renderState.statements.request = null;
- *             renderState.statements.progress.parent().hide();
- *             var size = data.results.statements.length || 0;
- *             renderState.statements.header.html(renderState.statements.header.data('name') + ' (' + size + ')');
- * 
- *             results.statements = [];
- *             renderState.statements.result.show();
- * 
- *             // show statements
- *             if (data.results.statements.length) {
- *                 var html = renderResults(data.results.statements,
- *                                          statementSearchResultTemplate,
- *                                          'statementResult',
- *                                          'statements');
- *                 // append to dom
- *                 $(html).insertAfter(renderState.statements.result);
- *             }
- *         }).error(function () {
- *             renderState.statements.request = null;
- *             renderState.statements.progress.parent().hide();
- *             renderState.statements.result.show();
- *             renderState.statements.header.html('Search for statements failed.');
- *         });
- */
+        searchStatements(query, renderState.statements.currentPage, function (result) {
+            renderState.statements.progress.parent().hide();
+            var sectionTitle = renderState.statements.header.data('name')
+                             + ' (' + renderState.statements.size + ')';
+            renderState.statements.header.html(sectionTitle);
+            renderSection('statements', result);
+        });
     });
 
     $('.pagination a').live('click', function () {
@@ -436,14 +481,16 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         if (newPage == section.currentPage) { return false; }
         $('.' + section.resultClass).remove();
 
+        renderState[sectionName].progress.parent().show();
         section.search(currentQuery, newPage, function (result) {
+            renderState[sectionName].progress.parent().hide();
             renderSection(sectionName, result);
         });
     });
 
-    $('#toggleConcepts').click(function ()  { toggleClass('conceptResult', $(this)); });
-    $('#toggleDocs').click(function ()      { toggleClass('documentResult', $(this)); });
-    $('#toggleStatments').click(function () { toggleClass('statementResult', $(this)); });
+    $('#toggleConcepts').click(function ()   { toggleClass('conceptResult', $(this)); });
+    $('#toggleDocs').click(function ()       { toggleClass('documentResult', $(this)); });
+    $('#toggleStatements').click(function () { toggleClass('statementResult', $(this)); });
 
     $('.source-toggle').live('click', function () {
         var toggledSource = $(this).html(),
@@ -457,10 +504,10 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
         var sourceNames = sources.filter(function (source) { return source.active; })
                                  .map(function (source)    { return source.name; });
 
-        filteredConcepts                 = filterConcepts(sourceNames);
+        renderState.concepts.results     = filterConcepts(renderState.concepts.allSources, sourceNames);
         renderState.concepts.currentPage = 1;
-        renderState.concepts.totalPages  = Math.ceil(filteredConcepts.length / itemsPerPage);
-        renderState.concepts.size        = filteredConcepts.length;
+        renderState.concepts.totalPages  = Math.ceil(renderState.concepts.results.length / itemsPerPage);
+        renderState.concepts.size        = renderState.concepts.results.length;
 
         var sectionTitle = renderState.concepts.header.data('name')
                          + ' (' + renderState.concepts.size + ')';
