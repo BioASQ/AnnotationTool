@@ -478,4 +478,11 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     $("#resultList").html(html);
 
     $('tr.result-row').tooltip();
+
+    $('#annTxt').affix({
+        offset: {
+            top: $('#annTxt').offset().top - $('.navbar-fixed-top').first().height()
+        }
+    });
+    $('#annTxt').parent().css('height', $('#annTxt').parent().height());
 });
