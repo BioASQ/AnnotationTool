@@ -1,5 +1,4 @@
-const
-    itemsPerPage = 10;
+const kItemsPerPage = 10;
 
 var journey = require('journey'),
     url = require('url'),
@@ -9,7 +8,7 @@ var journey = require('journey'),
     step = require('step'),
     Search = require('./search').Search,
     TIDocuments = require('./tidocuments').TIDocuments,
-    TITriples = require('./titriples').TITriples,
+    TITriples = require('./titriples2').TITriples,
     Verbalizer = require('./verbalizer').Verbalizer,
     config = require(require('path').join(__dirname, '..', 'config')).defaults,
     logger = require('./logging.js').logger,
@@ -178,7 +177,8 @@ exports.createRouter = function (model, authentication) {
             router.path(/\/documents\/?/, function () {
                 var documentSearch = new TIDocuments(config.search.documents);
                 this.post().bind(function (req, res, keywords) {
-                    var page = parseInt(keywords.page) || 0;
+                    var page = parseInt(keywords.page) || 0,
+                        itemsPerPage = parseInt(keywords.itemsPerPage) || kItemsPerPage;
                     documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, size) {
                         var logData = {
                             user: req.session.data.user,
@@ -202,10 +202,12 @@ exports.createRouter = function (model, authentication) {
              * POST to /statements searches for statements
              */
             router.path(/\/statements\/?/, function () {
-                var tripleSearch = new TITriples(config.search.triples);
+                var tripleSearch = new TITriples(config.search.triples2);
                 var verbalizer = new Verbalizer(config.search.verbalizer);
                 this.post().bind(function (req, res, keywords) {
-                    tripleSearch.find(keywords.query, function (err, triplesResult) {
+                    var page = parseInt(keywords.page) || 0,
+                        itemsPerPage = parseInt(keywords.itemsPerPage) || kItemsPerPage;
+                    tripleSearch.find(keywords.query, page, itemsPerPage, function (err, triplesResult) {
                         var logData = {
                             user: req.session.data.user,
                             path: 'statements',
@@ -215,41 +217,42 @@ exports.createRouter = function (model, authentication) {
                         if (err) {
                             logData.error = err;
                             logger('error', 'search for statements failed', logData);
-                            res.send(502);
-                        } else {
-                            var result = [];
-                            if (triplesResult.length) {
-                                step(
-                                    function () {
-                                    for (var i = 0, max = Math.min(10, triplesResult.length); i < max; i++) {
-                                        var curr = triplesResult[i];
-                                        verbalizer.verbalize(curr.s_l, curr.p_l, curr.o, this.parallel());
-                                    }
-                                },
-                                function (err /* variadic arguments */) {
-                                    if (err) {
-                                        logData.error = err;
-                                        logger('error', 'search for statements failed', logData);
-                                        res.send(502);
-                                    } else {
-                                        for (var i = 1; i < arguments.length; i++) {
-                                            var verbalization = String(arguments[i]).replace(/\{|\}|\"/g, '');
-                                            result.push({
-                                                s: triplesResult[i - 1].s,
-                                                p: triplesResult[i - 1].p,
-                                                o: triplesResult[i - 1].o,
-                                                title: verbalization
-                                            });
-                                        }
-                                        logger('info', 'search for statements', logData);
-                                        res.send(200, {}, { 'results': { 'statements': result } });
-                                    }
+                            return res.send(502);
+                        }
+
+                        if (triplesResult.statements.length) {
+                            var verbalizerInput = triplesResult.statements.map(function (statement) {
+                                return {
+                                    s: statement.s_l,
+                                    p: statement.p_l,
+                                    o: statement.o_l
                                 }
-                                );
-                            } else {
+                            });
+                            verbalizer.verbalize(verbalizerInput, function (err, results) {
+                                if (err) {
+                                    logData.error = err;
+                                    logger('error', 'verbalization failed', logData);
+                                    return res.send(502);
+                                }
+                                try {
+                                    JSON.parse(results).forEach(function (verbalization, index) {
+                                        triplesResult.statements[index].title = verbalization;
+                                    });
+                                } catch (err) {
+                                    logData.error = err;
+                                    logger('error', 'parsing verbalization result failed', logData);
+                                    return res.send(500);
+                                }
                                 logger('info', 'search for statements', logData);
-                                res.send(200, {}, { 'results': { 'statements': result } });
-                            }
+                                res.send(200, {}, {
+                                    results: { statements: triplesResult.statements },
+                                    size:    triplesResult.size,
+                                    page:    page
+                                });
+                            });
+                        } else {
+                            logger('info', 'search for statements', logData);
+                            res.send(200, {}, { results: { statements: [] }, size: 0, page: 0 });
                         }
                     });
                 });

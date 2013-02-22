@@ -40,7 +40,7 @@ Verbalizer.prototype._request = function (URL, options, /* Object */ data, cb) {
 };
 
 /*
- * Verbalizes hte given statement(s), returning an array of sentences.
+ * Verbalizes the given statement(s), returning an array of sentences.
  */
 Verbalizer.prototype.verbalize = function (param1, param2, param3, param4) {
     var method, data, callback;
