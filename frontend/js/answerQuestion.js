@@ -319,6 +319,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         }else{
             alert('No text selected!');
         }
+
+        return false;
     });
 
     $saveButton.on('click', function(){
@@ -339,6 +341,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                 $("#saveError").show();
             }
         });
+
+        return false;
     });
 
     // on result docs click
