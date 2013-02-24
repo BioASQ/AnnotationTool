@@ -446,10 +446,14 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // render to string
     var html = "",
         type,
+        types = [],
         i = 0;
     for(i = 0; i < selectedDocuments.length; i++){
         type = selectedDocuments[i]._internalID[0].toUpperCase();
         html += template($.extend({}, selectedDocuments[i], { type: type }));
+
+        if ($.inArray(type, types) == -1)
+            types.push(type);
     }
 
     // restore answer
@@ -485,4 +489,43 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         }
     });
     $('#annTxt').parent().css('height', $('#annTxt').parent().height());
+
+    //sort result list
+    var sort = true;
+    var asc = false;
+    $("body").on("click", "#dataType", function () {
+        if (sort) {
+
+            asc ?
+                $("#dataType").html('<i class="icon-arrow-up"></i>')
+            :
+                $("#dataType").html('<i class="icon-arrow-down"></i>');
+            asc = !asc;
+
+            //bubble sort
+            var n = $("tr.result-row").length;
+            do {
+                var rep = 0;
+                for (var index = 0 ; index < n; index++) {
+                    var element = $("tr.result-row")[index];
+                    var next = $(element).next();
+                    if (!asc) {
+                        var tmp = element;
+                        element = next;
+                        next = tmp;
+                    }
+                    if ($(element).attr("data-type") > $(next).attr("data-type")) {
+                        $(element).replaceWith($(next).after($(element).clone(true)));
+                        rep = index;
+                    }
+                }
+                n = rep;
+            } while (n != 0);
+            sort = false;
+        } else {
+            $("#resultList").html(html);
+            $("#dataType").html('<i class="icon-resize-vertical"></i>');
+            sort = true;
+        }
+    });
 });

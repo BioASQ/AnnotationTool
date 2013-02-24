@@ -111,6 +111,11 @@
                 <div class="span5">
                     <table class="table table-bordered table-hover">
                         <caption>Selected results</caption>
+                        <thead><tr>
+                            <th id="dataType"><i class="icon-resize-vertical"></i></th>
+                            <th>Description</th>
+                            <th>Source</th><th>Remove</th>
+                        </tr></thead>
                         <tbody id="resultList">
                         </tbody>
                     </table>
@@ -134,7 +139,7 @@
 
         <!-- RESULT TEMPLATE -->
         <script id="resultTemplate" type="text/x-handlebars-template">
-            <tr class="result-row" data-toggle="tooltip" data-placement="right" data-title="{{query}}">
+            <tr class="result-row" data-toggle="tooltip" data-placement="right" data-title="{{query}}" data-type="{{type}}">
                 <td>{{type}}</td>
                 <td><a href="#" class="resultDocument" data-num="{{_internalID}}" data-url="#">{{title}}</a></td>
                 <td width="20px">
