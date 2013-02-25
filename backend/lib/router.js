@@ -600,8 +600,8 @@ exports.createRouter = function (model, authentication) {
                         });
 
                         response.on('end', function() {
-                            logger('info', 'corsProxy', logData);
-                            res.send(200, headers , content)
+                            logger('info', 'corsProxy ('+response.statusCode+')', logData);
+                            res.send(response.statusCode, headers , content);
                         });
                     });
 
