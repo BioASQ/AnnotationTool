@@ -453,14 +453,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     // render to string
     var html = "",
         type,
-        types = [],
         i = 0;
     for(i = 0; i < selectedDocuments.length; i++){
         type = selectedDocuments[i]._internalID[0].toUpperCase();
         html += template($.extend({}, selectedDocuments[i], { type: type }));
-
-        if ($.inArray(type, types) == -1)
-            types.push(type);
     }
 
     // restore answer
@@ -502,12 +498,13 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     var asc = false;
     $("body").on("click", "#dataType", function () {
         if (sort) {
-
-            asc ?
-                $("#dataType").html('<i class="icon-arrow-up"></i>')
-            :
-                $("#dataType").html('<i class="icon-arrow-down"></i>');
             asc = !asc;
+            asc ?
+                $("#dataType").html('<i class="icon-arrow-down"></i>')
+            :
+                $("#dataType").html('<i class="icon-arrow-up"></i>');
+
+            $('tr.result-row').tooltip('destroy');
 
             //bubble sort
             var n = $("tr.result-row").length;
@@ -522,7 +519,8 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
                         next = tmp;
                     }
                     if ($(element).attr("data-type") > $(next).attr("data-type")) {
-                        $(element).replaceWith($(next).after($(element).clone(true)));
+                        $(element).replaceWith($(next).after($(element).clone(true,true)));
+
                         rep = index;
                     }
                 }
@@ -534,5 +532,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
             $("#dataType").html('<i class="icon-resize-vertical"></i>');
             sort = true;
         }
+        $('tr.result-row').tooltip();
     });
 });
