@@ -58,7 +58,7 @@ Question.prototype.update = function (id, question, user, callback) {
     });
 };
 
-Question.prototype.delete = function (id, user, callback) {
+Question.prototype.del = function (id, user, callback) {
     if (typeof user == 'undefined') { return callback(Error('No valid user.')); }
 
     this._collection(callback, function (err, coll) {

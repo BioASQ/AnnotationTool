@@ -130,7 +130,7 @@ exports.createRouter = function (model, authentication) {
                  * DELETE to /questions/:id deletes question with id
                  */
                 this.del(idRegEx).bind(function (req, res, id) {
-                    model.delete(id, req.session.data.user, function (err) {
+                    model.del(id, req.session.data.user, function (err) {
                         var logData = {
                             user: req.session.data.user,
                             path: 'questions/:id',
@@ -180,8 +180,8 @@ exports.createRouter = function (model, authentication) {
              */
             router.path(/\/documents\/?/, function () {
                 this.post().bind(function (req, res, keywords) {
-                    var page = parseInt(keywords.page) || 0,
-                        itemsPerPage = parseInt(keywords.itemsPerPage) || kItemsPerPage;
+                    var page = parseInt(keywords.page, 10) || 0,
+                        itemsPerPage = parseInt(keywords.itemsPerPage, 10) || kItemsPerPage;
                     documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, size) {
                         var logData = {
                             user: req.session.data.user,
@@ -206,8 +206,9 @@ exports.createRouter = function (model, authentication) {
              */
             router.path(/\/statements\/?/, function () {
                 this.post().bind(function (req, res, keywords) {
-                    var page = parseInt(keywords.page) || 0,
-                        itemsPerPage = parseInt(keywords.itemsPerPage) || kItemsPerPage;
+                    var page = parseInt(keywords.page, 10) || 0,
+                        itemsPerPage = parseInt(keywords.itemsPerPage, 10) || kItemsPerPage;
+
                     tripleSearch.find(keywords.query, page, itemsPerPage, function (err, triplesResult) {
                         var logData = {
                             user: req.session.data.user,
@@ -227,7 +228,7 @@ exports.createRouter = function (model, authentication) {
                                     s: statement.s_l,
                                     p: statement.p_l,
                                     o: statement.o_l
-                                }
+                                };
                             });
                             verbalizer.verbalize(verbalizerInput, function (err, results) {
                                 if (err) {
@@ -239,8 +240,8 @@ exports.createRouter = function (model, authentication) {
                                     JSON.parse(results).forEach(function (verbalization, index) {
                                         triplesResult.statements[index].title = verbalization;
                                     });
-                                } catch (err) {
-                                    logData.error = err;
+                                } catch (exc) {
+                                    logData.error = exc;
                                     logger('error', 'parsing verbalization result failed', logData);
                                     return res.send(500);
                                 }
