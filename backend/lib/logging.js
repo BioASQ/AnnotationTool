@@ -22,23 +22,23 @@ var logging = function logging() {
         // gives the caller function name
         // console.log(arguments.callee.caller);
 
-        var time = new Date().toTimeString();
+        var date = new Date().toISOString();
 
         if (level && message) {
             if (meta && typeof meta === 'object') {
+                if (meta.date) {
+                    console.error('`date` attribute in logging data will be overwritten.');
+                }
 
-                if (meta.time)
-                    console.error('loggings 3rd parameter has an attribute "time", that is reserved and will be overridden');
-
-                meta.time = time;
+                meta.date = date;
                 self._logger.log(level, message, meta);
 
             } else if (meta) {
                 console.error('loggings 3rd parameter needs to be an object or will be ignored');
-                self._logger.log(level, message, { time: time });
+                self._logger.log(level, message, { date: time });
             }
             else {
-                self._logger.log(level, message, { time: time });
+                self._logger.log(level, message, { date: time });
             }
         }
     };
