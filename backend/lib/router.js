@@ -156,13 +156,15 @@ exports.createRouter = function (model, authentication) {
              */
             router.path(/\/concepts\/?/, function () {
                 this.post().bind(function (req, res, keywords) {
+                    var logData = {
+                        user: req.session.data.user,
+                        path: 'concepts',
+                        method: 'POST',
+                        params: keywords
+                    };
+                    logger('info', 'received concept search request', logData);
+
                     conceptSearch.find(keywords.query, function (err, conceptResult) {
-                        var logData = {
-                            user: req.session.data.user,
-                            path: 'concepts',
-                            method: 'POST',
-                            params: keywords
-                        };
                         if (err) {
                             logData.error = err;
                             logger('error', 'search for concepts failed', logData);
@@ -182,13 +184,16 @@ exports.createRouter = function (model, authentication) {
                 this.post().bind(function (req, res, keywords) {
                     var page = parseInt(keywords.page, 10) || 0,
                         itemsPerPage = parseInt(keywords.itemsPerPage, 10) || kItemsPerPage;
+
+                    var logData = {
+                        user: req.session.data.user,
+                        path: 'documents',
+                        method: 'POST',
+                        params: keywords
+                    };
+                    logger('info', 'received document search request', logData);
+
                     documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, size) {
-                        var logData = {
-                            user: req.session.data.user,
-                            path: 'documents',
-                            method: 'POST',
-                            params: keywords
-                        };
                         if (err) {
                             logData.error = err;
                             logger('error', 'search for documents failed', logData);
@@ -209,13 +214,15 @@ exports.createRouter = function (model, authentication) {
                     var page = parseInt(keywords.page, 10) || 0,
                         itemsPerPage = parseInt(keywords.itemsPerPage, 10) || kItemsPerPage;
 
+                    var logData = {
+                        user: req.session.data.user,
+                        path: 'statements',
+                        method: 'POST',
+                        params: keywords
+                    };
+                    logger('info', 'received statement search request', logData);
+
                     tripleSearch.find(keywords.query, page, itemsPerPage, function (err, triplesResult) {
-                        var logData = {
-                            user: req.session.data.user,
-                            path: 'statements',
-                            method: 'POST',
-                            params: keywords
-                        };
                         if (err) {
                             logData.error = err;
                             logger('error', 'search for statements failed', logData);
