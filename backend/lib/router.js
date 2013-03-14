@@ -14,6 +14,11 @@ var journey = require('journey'),
     logger = require('./logging.js').logger,
     path = require('path');
 
+var conceptSearch = new Search(),
+    documentSearch = new TIDocuments(config.search.documents),
+    tripleSearch = new TITriples(config.search.triples2),
+    verbalizer = new Verbalizer(config.search.verbalizer);
+
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
         strict: false,
@@ -150,7 +155,6 @@ exports.createRouter = function (model, authentication) {
              * POST to /concepts searches for concepts
              */
             router.path(/\/concepts\/?/, function () {
-                var conceptSearch = new Search();
                 this.post().bind(function (req, res, keywords) {
                     conceptSearch.find(keywords.query, function (err, conceptResult) {
                         var logData = {
@@ -175,7 +179,6 @@ exports.createRouter = function (model, authentication) {
              * POST to /documents searches for documents
              */
             router.path(/\/documents\/?/, function () {
-                var documentSearch = new TIDocuments(config.search.documents);
                 this.post().bind(function (req, res, keywords) {
                     var page = parseInt(keywords.page) || 0,
                         itemsPerPage = parseInt(keywords.itemsPerPage) || kItemsPerPage;
@@ -202,8 +205,6 @@ exports.createRouter = function (model, authentication) {
              * POST to /statements searches for statements
              */
             router.path(/\/statements\/?/, function () {
-                var tripleSearch = new TITriples(config.search.triples2);
-                var verbalizer = new Verbalizer(config.search.verbalizer);
                 this.post().bind(function (req, res, keywords) {
                     var page = parseInt(keywords.page) || 0,
                         itemsPerPage = parseInt(keywords.itemsPerPage) || kItemsPerPage;
