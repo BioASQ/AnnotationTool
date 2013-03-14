@@ -22,22 +22,16 @@ var logging = function logging() {
         // gives the caller function name
         // console.log(arguments.callee.caller);
 
-        var date = new Date().toISOString();
-
         if (level && message) {
             if (meta && typeof meta === 'object') {
-                if (meta.date) {
-                    console.error('`date` attribute in logging data will be overwritten.');
+                if (!meta.hasOwnProperty('date')) {
+                    meta.date = new Date().toISOString();
                 }
-
-                meta.date = date;
                 self._logger.log(level, message, meta);
-
             } else if (meta) {
                 console.error('loggings 3rd parameter needs to be an object or will be ignored');
                 self._logger.log(level, message, { date: time });
-            }
-            else {
+            } else {
                 self._logger.log(level, message, { date: time });
             }
         }
