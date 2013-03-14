@@ -46,9 +46,9 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
         'path': urlObj.path,
         'method': options.method ? options.method : 'POST',
         'headers': {
-            'accept': 'application/json',
+            'accept': 'application/json'
         }
-    }
+    };
     if (data !== cb) {
         dataStr = 'json=' + encodeURIComponent(JSON.stringify(data) + '\n');
         httpOptions.headers['content-length'] = dataStr.length;
@@ -99,7 +99,7 @@ TIService.prototype._requestJSON = function (URL, options, /* Object */ data, cb
 
         cb(null, response);
     });
-}
+};
 
 /*
  * Clears the current timeout (if any) and creates a new one.

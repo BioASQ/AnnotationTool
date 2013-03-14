@@ -31,7 +31,7 @@ TITriples.prototype._titleQuery = function (s) {
     return titleProperties.map(function (titleProperty) {
         return s + '[subj] AND ' + titleProperty + '[pred]';
     });
-}
+};
 
 TITriples.prototype._dereferenceTitle = function (entity, cb) {
     if (entity.search(/^http:/) === -1) { return cb(null, entity); }
@@ -54,7 +54,7 @@ TITriples.prototype._dereferenceTitle = function (entity, cb) {
                 labelCache[entity] = response.result.triples.shift().obj;
                 cb(null, labelCache[entity]);
             }
-        )
+        );
     });
 };
 
@@ -79,7 +79,7 @@ TITriples.prototype._topLabel = function (entity, relationDescription, cb) {
         labelCache[entity] = localPart;
         cb(null, labelCache[entity]);
     });
-}
+};
 
 TITriples.prototype._title = function (entityDescription, relationDescription, cb) {
     if (labelCache.hasOwnProperty(entityDescription.entity)) {
@@ -103,11 +103,11 @@ TITriples.prototype._title = function (entityDescription, relationDescription, c
         labelCache[entityDescription.entity] = localPart;
         cb(null, labelCache[entityDescription.entity]);
     });
-}
+};
 
 TITriples.prototype._localPart = function (uri, cb) {
     return cb(null, uri.replace(/^\S+[#/](\S+)$/, '$1'));
-}
+};
 
 TITriples.prototype._transform = function (results, page, itemsPerPage, cb) {
     var self          = this,

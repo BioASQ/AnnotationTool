@@ -18,7 +18,7 @@ TITriples.prototype._titleQuery = function (s) {
     return titleProperties.map(function (titleProperty) {
         return s + '[subj] AND ' + titleProperty + '[pred]';
     });
-}
+};
 
 TITriples.prototype._dereferenceTitle = function (URI, cb) {
     var self = this;
@@ -37,7 +37,7 @@ TITriples.prototype._dereferenceTitle = function (URI, cb) {
                 }
                 cb(null, title);
             }
-        )
+        );
     });
 };
 
@@ -50,9 +50,9 @@ TITriples.prototype._transform = function (results, cb) {
             var pGroup = this.group();
             for (var i = 0; i < results.triples.length; i++) {
                 // fake first group passes through original statement to the next step
-                oGroup()(null, results.triples[i]),
-                self._dereferenceTitle(results.triples[i].subj, sGroup()),
-                self._dereferenceTitle(results.triples[i].pred, pGroup())
+                oGroup()(null, results.triples[i]);
+                self._dereferenceTitle(results.triples[i].subj, sGroup());
+                self._dereferenceTitle(results.triples[i].pred, pGroup());
             }
         },
         function (err, passThrough, subjectLabels, predicateLabels) {
