@@ -189,6 +189,7 @@ TITriples.prototype.find = function (/* String */ keywords, page, itemsPerPage, 
             URL,
             { 'method': 'POST' }, { 'findEntities': [ keywords ] },
             function (err, response) {
+                if (err) { return cb(err); }
                 self._transform(response.result, page, itemsPerPage, function (err, statements, size) {
                     if (err) { return cb(err); }
                     cb(null, { size: size, statements: statements });
