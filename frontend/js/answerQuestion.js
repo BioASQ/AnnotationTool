@@ -58,7 +58,7 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
         return tagsToEscape[tag] || tag;
     };
     var safeTagsReplace = function(str) {
-        return str.replace(/[&<>]/g, escapeTag);
+        return str.replace(/[&<>]/gi, escapeTag);
     };
     var safeTagsUnescape = function(str) {
         return $('<div/>').html(str).text();
@@ -92,7 +92,6 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
         // render body
         if(currentDocument.domClass == 'documentResult'){
-            // render to string
             var html = docTemplate(currentDocument);
             $viewer.html(html);
         }else if(currentDocument.domClass == 'statementResult'){
@@ -445,6 +444,15 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
 
     // get view contatiner
     $viewer = $("#viewer");
+
+    // escape html
+    for(var i = 0, len = selectedDocuments.length; i < len; i++){
+        if(selectedDocuments[i].domClass == 'documentResult'){
+            for(var j = 0, jlen = selectedDocuments[i].sections.length; j < jlen; j++){
+                selectedDocuments[i].sections[j] = safeTagsReplace(selectedDocuments[i].sections[j]);
+            }
+        }
+    }
 
     // render docs
     // compile template
