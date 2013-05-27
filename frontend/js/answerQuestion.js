@@ -449,6 +449,10 @@ require(["app", "editQuestionTitle"], function(app, EditQuestionWidget) {
     for (var i = 0, len = selectedDocuments.length; i < len; i++) {
         if (selectedDocuments[i].domClass == 'documentResult') {
             for (var j = 0, jlen = selectedDocuments[i].sections.length; j < jlen; j++) {
+                // Fix broken documents with `null` section
+                if (!selectedDocuments[i].sections[j]) {
+                    continue;
+                }
                 // Don't doubly escape annotations
                 if (selectedDocuments[i].sections[j].indexOf('Remove annotation') == -1) {
                     selectedDocuments[i].sections[j] = safeTagsReplace(selectedDocuments[i].sections[j]);
