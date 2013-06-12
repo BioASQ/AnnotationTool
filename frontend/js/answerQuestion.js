@@ -1,4 +1,4 @@
-require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
+require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     // cache pointers to DOM
     var $saveButton = $('#saveButton'),
         $questionAnswer = $('#questionAnswer'),
@@ -178,7 +178,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
     };
 
     // event for freezing answer
-    /*$('#freezeButton').on('click', function() {
+    /*$('#freezeButton').on('click', function () {
         // swap buttons
         $(this).hide();
         $saveButton.show();
@@ -221,7 +221,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
     // starting annotation
     $startAnn.on('click', prepareAnnotation);
 
-    $annCancel.on('click', function() {
+    $annCancel.on('click', function () {
         // revert
         // answer.html = answer.html.replace(currentAnnotation.html, currentAnnotation.text);
         // updateQuestionText();
@@ -236,7 +236,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
         $annTxt.hide();
     });
 
-    $annDoc.on('click', function() {
+    $annDoc.on('click', function () {
         if (typeof currentDocument == 'undefined' || currentDocument === null) {
             alert('No document selected!');
             return;
@@ -267,7 +267,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
         // $annTxt.hide();
     });
 
-    $annTxt.on('click', function() {
+    $annTxt.on('click', function () {
         answer.text = $questionAnswer.val();
         var text = getSelectionHtml();
 
@@ -345,7 +345,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
         return false;
     });
 
-    $saveButton.on('click', function() {
+    $saveButton.on('click', function () {
         var question = app.data.question;
         question.answer = answer;
         app.save();
@@ -368,7 +368,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
     });
 
     // on result docs click
-    $('body').on('click', '.resultDocument', function() {
+    $('body').on('click', '.resultDocument', function () {
         // get pdf url
         var num = $(this).data('num');
 
@@ -386,7 +386,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
 
         return false;
     })
-    .on('click', '.annotationText', function() {
+    .on('click', '.annotationText', function () {
         var id = $(this).data('id'),
             i, ann;
 
@@ -426,7 +426,7 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
         // re-render
         renderCurrentDocument();
     })
-    .on('click', '.removeFromResults', function() {
+    .on('click', '.removeFromResults', function () {
         var that = $(this),
             num = that.data('num');
 
@@ -466,19 +466,18 @@ require(['app', 'editQuestionTitle'], function(app, EditQuestionWidget) {
     source = $('#resultTemplate').html();
     var template = Handlebars.compile(source);
     // render to string
-    var html = '',
-        type,
-        i = 0;
-    for (i = 0; i < selectedDocuments.length; i++) {
-        type = selectedDocuments[i]._internalID[0].toUpperCase();
+    var html = '';
+    for (var i = 0; i < selectedDocuments.length; i++) {
+        var type = selectedDocuments[i]._internalID[0].toUpperCase();
         html += template($.extend({}, selectedDocuments[i], { type: type }));
     }
 
     // restore answer
     if (app.data.question.answer !== null && typeof app.data.question.answer != 'undefined') {
         // render text
-        if (app.data.question.answer.hasOwnProperty('text') )
+        if (app.data.question.answer.hasOwnProperty('text')) {
             $questionAnswer.val(app.data.question.answer.text);
+        }
 
         // get answer
         answer = app.data.question.answer;
