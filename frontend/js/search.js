@@ -551,6 +551,13 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
 
     // on done
     $('#doneButton').click(function () {
+        var newLocation;
+        if (window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT) {
+            newLocation = 'editAnswer.html';
+        } else {
+            newLocation = 'answerQuestion.html';
+        }
+
         app.save();
         // post
         $.ajax({
@@ -559,7 +566,7 @@ require(["app", "editQuestionTitle", "spinner"], function (app, EditQuestionWidg
             dataType:    'json',
             data:        JSON.stringify(app.data.question),
             type:        'POST',
-            success:     function (data) { window.location = 'answerQuestion.html'; },
+            success:     function (data) { window.location = newLocation; },
             error:       function ()     { alert('Something went wrong'); }
         });
 

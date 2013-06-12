@@ -20,6 +20,10 @@ body {
     padding-bottom: 5px;
 }
 
+.golden, .golden input, .golden textarea {
+  background-color: #f3c768;
+}
+
 .answer-buttons {
     text-align: right;
 }

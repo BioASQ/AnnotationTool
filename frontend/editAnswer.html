@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <title>BioASQ &mdash; Answer</title>
+        <!-- Bootstrap -->
+        <link href="./css/bootstrap.min.css" rel="stylesheet">
+        <link href="./css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="./css/main.css" rel="stylesheet">
+
+        <!-- javascript -->
+        <script data-main="./js/editAnswer" src="./js-libs/require-jquery.js"></script>
+        <script src="./js/shared.js"></script>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <img class="brand logo-top" src="img/BioASQ_logo.png">
+                    <a class="btn btn-small btn-primary pull-left userButton" href="user.html"><i class="icon-user"></i></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li><a href="createQuestion.html">Questions</a></li>
+                            <li class="divider"><a>|</a></li>
+                            <li><a href="search.html">Search</a></li>
+                            <li class="divider"><a>|</a></li>
+                            <li class="active"><a href="#">Answer</a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+
+                    <a class="btn btn-small btn-warning pull-right" href="#" id="editQuestionTitle"><i class="icon-edit"></i></a>
+                    <a class="btn btn-small btn-success pull-right" href="#" style="display:none" id="saveQuestionTitle"><i class="icon-ok"></i></a>
+                    <textarea rows="1" class="pull-right" style="margin-top: 6px; display:none;" id="questionTitleInput"></textarea>
+                    <p class="navbar-text pull-right" data-toggle="tooltip" data-placement="bottom" id="questionTitle"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="alert alert-success" style="display:none" id="saveSuccess">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Saved!</strong> All data saved successfully!
+            </div>
+            <div class="alert alert-error" style="display:none" id="saveError">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Error!</strong> Something went wrong! Try again?
+            </div>
+
+            <div class="row answer-caption">
+                <div class="span9">
+                    <!--form>
+                        <label>Question type</label>
+                        <select name="questionType" id="questionType">
+                            <option value="decisive">Yes/No</option>
+                            <option value="factoid">Factoid</option>
+                            <option value="list">List</option>
+                            <option value="summary">Summary</option>
+                        </select>
+                    </form-->
+                </div>
+                <div class="span3 answer-buttons">
+                    <a href="#" id="saveButton" class="btn btn-success">Save</a>
+                </div>
+            </div>
+
+            <div id="idealAnswer"></div>
+
+            <div id="exactAnswer" class="row"></div>
+
+
+
+            <!-- ANNOTATION BUTTONS -->
+            <div class="row annotation-buttons">
+                <div class="span2">
+                    <!-- <a href="#" id="startAnn" class="btn btn-primary">Annotate selected text</a> --> 
+                </div>
+                <div class="span10" style="text-align: right;"> <!-- btn-group -->
+                    <!-- <a href="#" id="annDoc" class="btn btn-primary">Annotate with selected document</a> -->
+                    <!-- <a href="#" id="annTxt" class="btn btn-info">Annotate with selected snippet</a> -->
+                    <!-- <a href="#" id="annCancel" class="btn btn-danger" style="display: none;">Cancel</a> -->
+                </div>
+            </div>
+
+            <!-- LIST OF ALL SNIPPETS -->
+            <div class="row">
+                <div class="span12">
+                    <div class="accordion" id="accordion2">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                    List of snippets
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse">
+                                <div class="accordion-inner">
+                                    <table class="table table-bordered" id="snippetsList">
+                                        <!-- list of snippets content here -->
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- LIST OF RESULTS -->
+                <div class="span5">
+                    <table id="annotations-table" class="table table-bordered table-hover">
+                        <caption>Annotations</caption>
+                        <thead><tr>
+                            <th id="dataType"><i class="icon-resize-vertical"></i></th>
+                            <th>Description</th>
+                            <th>Link</th>
+                            <th>Del</th>
+                        </tr></thead>
+                        <tbody id="resultList">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- RESULT EXTENDED INFO -->
+                <div class="span7">
+                    <div class="row">
+                        <div class="span7">
+                            <h2 id="docTitle"></h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span7">
+                            <div id="viewer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- /container -->
+
+
+        <!-- Ideal answer template -->
+        <script id="idealAnswerTemplate" type="text/x-handlebars-template">
+        <div class="row">
+        <div class="span5"><label>Ideal answers:</label></div>
+        </div>
+        {{#each dimensionData}}
+        <form id="idealAnswer.{{@index}}" data-answer="{{@index}}">
+        {{#if isGolden}}
+        <div class="row golden">
+        {{else}}
+        <div class="row">
+        {{/if}}
+          <div class="span9">
+              <textarea class="idealAnswer" rows="3" style="width: 99%;">{{answer}}</textarea>
+          </div>
+          <div class="span3">
+          {{#each dimensions}}
+          <label class="checkbox inline">{{label}}:&nbsp;</label>
+            {{#each values}}
+              {{#if selected}}
+                <input type="radio" checked class="ideal-score" name="{{../../name}}" value="{{value}}" />&nbsp;
+              {{else}}
+                <input type="radio" class="ideal-score" name="{{../../name}}" value="{{value}}" />&nbsp;
+              {{/if}}
+            {{/each}}
+            <br />
+          {{/each}}
+          </div>
+        </div>
+        </form>
+        {{/each}}
+        </script>
+
+        <!-- Exact answer template -->
+        <script id="exactAnswerTemplate" type="text/x-handlebars-template">
+        {{#if exact}}
+          <div class="span5"><label>Exact answer:</label></div>
+          {{#if isDecisive}}
+            <div class="span12">
+            {{#if exactValue}}
+              <label><input style="margin:-5px 5px 0 0" type="radio" name="exactAnswer" value="yes" checked /> Yes</label>
+              <label><input style="margin:-5px 5px 0 0" type="radio" name="exactAnswer" value="no"/> No</label>
+            {{else}}
+              <label><input style="margin:-5px 5px 0 0" type="radio" name="exactAnswer" value="yes"/> Yes</label>
+              <label><input style="margin:-5px 5px 0 0" type="radio" name="exactAnswer" value="no" checked /> No</label>
+            {{/if}}
+            </div>
+          {{/if}}
+          {{#if isFactoid}}
+            <div class="span12"><input class="span3" name="exactAnswer" type="text" value="{{exact}}" /></div>
+          {{/if}}
+          {{#if isList}}
+          <div class="span12">
+            <ul>
+              {{#each exact}}
+                <li><input type="text" name="exactAnswer" data-index="{{@index}}" value="{{this}}"/></li>
+              {{/each}}
+            </ul>
+          </div>
+          {{/if}}
+        {{/if}}
+        </script>
+
+        <!-- RESULT TEMPLATE -->
+        <script id="resultTemplate" type="text/x-handlebars-template">
+            {{#if isGolden}}
+            <tr class="result-row golden" data-toggle="tooltip" data-placement="right" data-title="{{query}}" data-type="{{type}}">
+            {{else}}
+            <tr class="result-row" data-toggle="tooltip" data-placement="right" data-title="{{query}}" data-type="{{type}}">
+            {{/if}}
+                <td>{{type}}</td>
+                <td><a href="#" class="{{class}}" data-num="{{_internalID}}" data-url="#">{{title}}</a></td>
+                {{#if assessmentMode}}
+                <td>
+                  {{#if isGolden}}
+                    <a href="#" data-num="{{_internalID}}" class="modify-golden remove-golden icon-minus-sign"></a>
+                  {{else}}
+                    <a href="#" data-num="{{_internalID}}" class="modify-golden add-golden icon-plus-sign"></a>
+                  {{/if}}
+                </td>
+                {{/if}}
+
+                <td width="20px">
+                    <a href="{{uri}}"><i class="icon-file"></i></a>
+                </td>
+                <td width="20px">
+                    <a href="#" class="removeFromResults" data-num="{{_internalID}}"><i class="icon-minus"></i></a>
+                </td>
+            </tr>
+        </script>
+
+        <!-- DOCUMENT TEMPLATE -->
+        <script id="documentTemplate" type="text/x-handlebars-template">
+            {{#each sections}}
+            <p>{{{this}}}</p>
+            {{/each}}
+        </script>
+
+        <!-- DOCUMENT TEMPLATE -->
+        <script id="annotationTemplate" type="text/x-handlebars-template">
+            <span style='background-color:#fff000;'>
+                {{text}}
+            </span>
+            <a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a>
+        </script>
+
+        <!-- SNIPPET TEMPLATE -->
+        <script id="snippetTemplate" type="text/x-handlebars-template">
+            {{#if isGolden}}
+            <tr class="golden">
+            {{else}}
+            <tr>
+            {{/if}}
+                <td>{{text}}</td>
+                {{#if assessmentMode}}
+                <td>
+                    {{#if isGolden}}
+                    <a href="#" data-num="{{id}}" class="modify-golden remove-golden icon-minus-sign"></a>
+                    {{else}}
+                    <a href="#" data-num="{{id}}" class="modify-golden add-golden icon-plus-sign"></a>
+                    {{/if}}
+                </td>
+                {{/if}}
+                <td><a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a></td>
+            </tr>
+        </script>
+    </body>
+</html>
