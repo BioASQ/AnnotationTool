@@ -22,5 +22,7 @@ exports.shared.login = {
 */
 exports.shared.mode = MODE_ASSESSMENT;
 
+exports.shared.description = 'Assessment Tool for benchmark creation';
+
 })((typeof process === 'undefined' || !process.versions) ?
 window.shared = window.shared || {} : exports);

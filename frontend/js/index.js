@@ -5,6 +5,8 @@ require(["app"], function (app) {
         window.location = 'createQuestion.html';
     }
 
+    $('.description').html(window.shared.shared.description);
+
     // alert hide function
     $('.alert .close').live("click", function (e) {
         $(this).parent().hide();
