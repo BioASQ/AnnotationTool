@@ -50,9 +50,9 @@ require(["app"], function (app) {
         } else {
 
             var regExpObj = new RegExp(window.shared.shared.login.passwordRegEx, "g");
-            if (regExpObj.test(pass) == false) {
+            if (regExpObj.test(pass) === false) {
                 $("#noRegexp").show();
-                return
+                return;
             }
         }
 
