@@ -79,7 +79,11 @@ require(["app"], function (app) {
             app.data.question = data;
             app.save();
 
-            window.location = 'search.html';
+            if (window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT) {
+                window.location = 'editAnswer.html';
+            } else {
+                window.location = 'search.html';
+            }
         });
     });
 
