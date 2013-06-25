@@ -93,17 +93,21 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         $('#questionType').select(question.type);
 
         var dimensions = [{
-                name: 'dimension1',
-                label: 'Dimension 1',
-                values: []
+                name: 'recall',
+                label: 'Information recall',
+                info: 'All the necessary information is reported.'
             }, {
-                name: 'dimension2',
-                label: 'Dimension 2',
-                values: []
+                name: 'precision',
+                label: 'Information precision',
+                info: 'No irrelevant information is reported.'
             }, {
-                name: 'dimension3',
-                label: 'Dimension 3',
-                values: []
+                name: 'repetition',
+                label: 'Information repetition',
+                info: 'The answer does not repeat the same information multiple times.'
+            }, {
+                name: 'readability',
+                label: 'Readability',
+                info: 'The answer is easily readable and fluent.'
             }
         ];
 
@@ -120,6 +124,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 var dimension = {
                     name:   dimensions[dimensionIndex].name,
                     label:  dimensions[dimensionIndex].label,
+                    info:   dimensions[dimensionIndex].info,
                     values: []
                 };
                 for (var k = 0; k < dimensionValues.length; k++) {
@@ -139,7 +144,10 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             dimensionData.push(answerDimensions);
         }
 
-        $('#idealAnswer').html(idealAnswerTemplate({ dimensionData: dimensionData }));
+        $('#idealAnswer').html(idealAnswerTemplate({
+            dimensionData: dimensionData,
+            dimensionValues: dimensionValues
+        }));
 
         var templateData = {};
         switch (question.type) {
@@ -156,22 +164,24 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         }
 
         $('#exactAnswer').html(exactAnswerTemplate($.extend({}, question.answer, templateData)));
+
+        $('label').tooltip();
     };
 
     $('.idealAnswer').live('change', function () {
-        var idealAnswerIndex = parseInt($(this).closest('form').data('answer'));
+        var idealAnswerIndex = parseInt($(this).closest('form').data('answer'), 10);
         answer.ideal[idealAnswerIndex].body = $(this).val();
     });
 
     $('input.ideal-score').live('click', function () {
         var dimension = $(this).attr('name'),
-            idealAnswerIndex = parseInt($(this).closest('form').data('answer')),
-            value = parseInt($(this).val());
+            idealAnswerIndex = parseInt($(this).closest('form').data('answer'), 10),
+            value = parseInt($(this).val(), 10);
 
         answer.ideal[idealAnswerIndex].scores = answer.ideal[idealAnswerIndex].scores || {};
         answer.ideal[idealAnswerIndex].scores[dimension] = value;
         app.data.question.answer = answer;
-        app.save;
+        app.save();
     });
 
     $('input[name="exactAnswer"]').live('change', function () {
@@ -187,12 +197,11 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             $('input[name="exactAnswer"]').each(function (item) {
                 list.push($(this).val());
             });
-            var index = parseInt($(this).data('index'));
             answer.exact = list;
             break;
         }
         app.data.question.answer = answer;
-        app.save;
+        app.save();
     });
 
     $('.modify-golden').live('click', function () {
@@ -206,24 +215,36 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             if (itemID === id) {
                 if (jel.hasClass('add-golden')) {
                     answer.annotations[i].golden = true;
-                    jel.removeClass('add-golden');
-                    jel.removeClass('icon-plus-sign');
-                    jel.addClass('remove-golden');
-                    jel.addClass('icon-minus-sign');
+                    jel.removeClass('add-golden').addClass('remove-golden');
+                    jel.children('i').removeClass('icon-plus-sign').addClass('icon-minus-sign');
                     jel.parents('tr').addClass('golden');
                 } else {
                     answer.annotations[i].golden = false;
-                    jel.removeClass('remove-golden');
-                    jel.removeClass('icon-minus-sign');
-                    jel.addClass('add-golden');
-                    jel.addClass('icon-plus-sign');
+                    jel.removeClass('remove-golden').addClass('add-golden');
+                    jel.children('i').removeClass('icon-minus-sign').addClass('icon-plus-sign');
                     jel.parents('tr').removeClass('golden');
                 }
                 break;
             }
         }
         app.data.question.answer = answer;
-        app.save;
+        app.save();
+    });
+
+    $('.modify-ideal').live('click', function () {
+        var jel = $(this),
+            index = parseInt(jel.data('id'), 10);
+        if (jel.hasClass('add-golden')) {
+            answer.ideal[index].golden = true;
+            jel.removeClass('add-golden').addClass('remove-golden');
+            jel.children('i').removeClass('icon-plus-sign').addClass('icon-minus-sign');
+            jel.closest('.row').addClass('golden');
+        } else {
+            answer.ideal[index].golden = false;
+            jel.removeClass('remove-golden').addClass('add-golden');
+            jel.children('i').removeClass('icon-minus-sign').addClass('icon-plus-sign');
+            jel.closest('.row').removeClass('golden');
+        }
     });
 
     var renderCurrentDocument = function () {

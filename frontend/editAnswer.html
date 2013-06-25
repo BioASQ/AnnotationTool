@@ -34,8 +34,6 @@
                         <ul class="nav">
                             <li><a href="createQuestion.html">Questions</a></li>
                             <li class="divider"><a>|</a></li>
-                            <li><a href="search.html">Search</a></li>
-                            <li class="divider"><a>|</a></li>
                             <li class="active"><a href="#">Answer</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
@@ -160,21 +158,39 @@
         {{else}}
         <div class="row">
         {{/if}}
-          <div class="span9">
+          <div class="span8">
               <textarea class="idealAnswer" rows="3" style="width: 99%;">{{answer}}</textarea>
           </div>
           <div class="span3">
+          <table>
           {{#each dimensions}}
-          <label class="checkbox inline">{{label}}:&nbsp;</label>
+          <tr>
+          <td><label data-toggle="tooltip" title="{{info}}" class="checkbox inline">{{label}}:&nbsp;</label></td>
             {{#each values}}
+            <td>
               {{#if selected}}
-                <input type="radio" checked class="ideal-score" name="{{../../name}}" value="{{value}}" />&nbsp;
+                <input type="radio" checked title="{{../../info}}" class="ideal-score" name="{{../../name}}" value="{{value}}" />&nbsp;
               {{else}}
-                <input type="radio" class="ideal-score" name="{{../../name}}" value="{{value}}" />&nbsp;
+                <input type="radio" title="{{info}}" class="ideal-score" name="{{../../name}}" value="{{value}}" />&nbsp;
               {{/if}}
             {{/each}}
-            <br />
+            </td>
+          </tr>
           {{/each}}
+          <tr>
+          <td></td>
+          {{#each ../dimensionValues}}
+          <td style="text-align:center">{{this}}</td>
+          {{/each}}
+          </tr>
+          </table>
+          </div>
+          <div class="span1">
+            {{#if isGolden}}
+              <a href="#" data-id="{{@index}}" class="modify-ideal remove-golden btn"><i class="icon-minus-sign"></i></a>
+            {{else}}
+              <a href="#" data-id="{{@index}}" class="modify-ideal add-golden btn"><i class="icon-plus-sign"></i></a>
+            {{/if}}
           </div>
         </div>
         </form>
@@ -223,9 +239,9 @@
                 {{#if assessmentMode}}
                 <td>
                   {{#if isGolden}}
-                    <a href="#" data-num="{{_internalID}}" class="modify-golden remove-golden icon-minus-sign"></a>
+                    <a href="#" data-num="{{_internalID}}" class="modify-golden remove-golden btn btn-mini"><i class="icon-minus-sign"></i></a>
                   {{else}}
-                    <a href="#" data-num="{{_internalID}}" class="modify-golden add-golden icon-plus-sign"></a>
+                    <a href="#" data-num="{{_internalID}}" class="modify-golden add-golden btn btn-mini"><i class="icon-plus-sign"></i></a>
                   {{/if}}
                 </td>
                 {{/if}}
@@ -234,7 +250,7 @@
                     <a href="{{uri}}"><i class="icon-file"></i></a>
                 </td>
                 <td width="20px">
-                    <a href="#" class="removeFromResults" data-num="{{_internalID}}"><i class="icon-minus"></i></a>
+                    <a href="#" class="removeFromResults btn btn-mini" data-num="{{_internalID}}"><i class="icon-remove"></i></a>
                 </td>
             </tr>
         </script>
@@ -265,9 +281,9 @@
                 {{#if assessmentMode}}
                 <td>
                     {{#if isGolden}}
-                    <a href="#" data-num="{{id}}" class="modify-golden remove-golden icon-minus-sign"></a>
+                    <a href="#" data-num="{{id}}" class="modify-golden remove-golden btn btn-mini"><i class="icon-minus-sign"></i></a>
                     {{else}}
-                    <a href="#" data-num="{{id}}" class="modify-golden add-golden icon-plus-sign"></a>
+                    <a href="#" data-num="{{id}}" class="modify-golden add-golden btn btn-mini"><i class="icon-plus-sign"></i></a>
                     {{/if}}
                 </td>
                 {{/if}}
