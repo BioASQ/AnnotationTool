@@ -195,9 +195,15 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         case 'list':
             var list = [];
             $('input[name="exactAnswer"]').each(function (item) {
-                list.push($(this).val());
+                var jel = $(this),
+                    itemIndex = parseInt(jel.closest('li').data('itemId'), 10),
+                    synonymIndex = parseInt(jel.data('synonymId'), 10);
+
+                list[itemIndex] = list[itemIndex] || [];
+                list[itemIndex][synonymIndex] = jel.val();
             });
             answer.exact = list;
+            console.log(list);
             break;
         }
         app.data.question.answer = answer;
@@ -246,6 +252,24 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             jel.closest('.row').removeClass('golden');
         }
     });
+
+    $('.expand-horizontally').live('click', function () {
+        var jel = $(this),
+            itemIndex = parseInt(jel.closest('li').data('itemId'), 10);
+
+            answer.exact[itemIndex].push('');
+
+            $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
+    });
+
+    $('.expand-vertically').live('click', function () {
+        var jel = $(this);
+
+            answer.exact.push(['']);
+
+            $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
+    });
+
 
     var renderCurrentDocument = function () {
         // set title

@@ -213,15 +213,26 @@
             </div>
           {{/if}}
           {{#if isFactoid}}
-            <div class="span12"><input class="span3" name="exactAnswer" type="text" value="{{exact}}" /></div>
+            <div class="span12">
+            {{#each exact}}
+              <input class="span3" name="exactAnswer" data-id="{{@index}}" type="text" value="{{this}}" />
+            {{/each}}
+              <a href="#" class="expand-horizontally btn"><i class="icon-chevron-right"></i></a>
+            </div>
           {{/if}}
           {{#if isList}}
           <div class="span12">
             <ul>
               {{#each exact}}
-                <li><input type="text" name="exactAnswer" data-index="{{@index}}" value="{{this}}"/></li>
+                <li data-item-id="{{@index}}">
+                {{#each this}}
+                  <input type="text" name="exactAnswer" data-synonym-id="{{@index}}" value="{{this}}"/>
+                {{/each}}
+                <a href="#" class="expand-horizontally btn"><i class="icon-chevron-right"></i></a>
+                </li>
               {{/each}}
             </ul>
+            <a href="#" class="expand-vertically btn"><i class="icon-chevron-down"></i></a>
           </div>
           {{/if}}
         {{/if}}
