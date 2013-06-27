@@ -512,7 +512,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     });
 
     var keepSelection = false;
-    $annotateButton.mousedown(function () {
+    $annotateButton.mousedown(function (event) {
+        console.log('mousedown button');
         keepSelection = true;
     });
 
@@ -568,7 +569,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         return false;
     });
 
-    $viewer.mousedown(function () {
+    $viewer.mousedown(function (event) {
         if (!keepSelection) {
             highlighter.removeAllHighlights();
         }
@@ -603,8 +604,10 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     });
 
     $('body').mouseup(function (event) {
-        $annotateButton.fadeOut(500);
-        highlighter.removeAllHighlights();
+        if (!keepSelection) {
+            $annotateButton.fadeOut(500);
+            highlighter.removeAllHighlights();
+        }
     });
 
     renderAnswer(app.data.question);
