@@ -21,7 +21,13 @@ body {
 }
 
 .golden, .golden input, .golden textarea {
-  background-color: #f3c768;
+  background-color: #f3c768 !important;
+}
+
+.annotation {
+  background-color: #f368c7;
+  border-radius: 0.4em;
+  padding: 0 2px;
 }
 
 .answer-buttons {

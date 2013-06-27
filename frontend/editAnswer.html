@@ -17,6 +17,10 @@
 
         <!-- javascript -->
         <script data-main="./js/editAnswer" src="./js-libs/require-jquery.js"></script>
+        <script src="./js-libs/rangy-core.js"></script>
+        <script src="./js-libs/rangy-textrange.js"></script>
+        <script src="./js-libs/rangy-cssclassapplier.js"></script>
+        <script src="./js-libs/rangy-highlighter.js"></script>
         <script src="./js/shared.js"></script>
     </head>
     <body>
@@ -86,7 +90,7 @@
                 </div>
                 <div class="span10" style="text-align: right;"> <!-- btn-group -->
                     <!-- <a href="#" id="annDoc" class="btn btn-primary">Annotate with selected document</a> -->
-                    <!-- <a href="#" id="annTxt" class="btn btn-info">Annotate with selected snippet</a> -->
+                    <a style="position:absolute;display:none" href="#" id="annotate-button" class="btn btn-info">Annotate with selected snippet</a>
                     <!-- <a href="#" id="annCancel" class="btn btn-danger" style="display: none;">Cancel</a> -->
                 </div>
             </div>
@@ -132,7 +136,7 @@
                 <div class="span7">
                     <div class="row">
                         <div class="span7">
-                            <h2 id="docTitle"></h2>
+                            <h2 id="document-title"></h2>
                         </div>
                     </div>
                     <div class="row">
@@ -187,9 +191,9 @@
           </div>
           <div class="span1">
             {{#if isGolden}}
-              <a href="#" data-id="{{@index}}" class="modify-ideal remove-golden btn"><i class="icon-minus-sign"></i></a>
+              <a href="#" data-id="{{@index}}" title="Remove from golden answer" class="modify-ideal remove-golden btn"><i class="icon-minus-sign"></i></a>
             {{else}}
-              <a href="#" data-id="{{@index}}" class="modify-ideal add-golden btn"><i class="icon-plus-sign"></i></a>
+              <a href="#" data-id="{{@index}}" title="Add to golden answer" class="modify-ideal add-golden btn"><i class="icon-plus-sign"></i></a>
             {{/if}}
           </div>
         </div>
@@ -215,9 +219,9 @@
           {{#if isFactoid}}
             <div class="span12">
             {{#each exact}}
-              <input class="span3" name="exactAnswer" data-id="{{@index}}" type="text" value="{{this}}" />
+              <input class="span3" name="exactAnswer" data-synonym-id="{{@index}}" type="text" value="{{this}}" />
             {{/each}}
-              <a href="#" class="expand-horizontally btn"><i class="icon-chevron-right"></i></a>
+              <a href="#" title="Add a synonym" class="expand-horizontally btn"><i class="icon-chevron-right"></i></a>
             </div>
           {{/if}}
           {{#if isList}}
@@ -228,11 +232,11 @@
                 {{#each this}}
                   <input type="text" name="exactAnswer" data-synonym-id="{{@index}}" value="{{this}}"/>
                 {{/each}}
-                <a href="#" class="expand-horizontally btn"><i class="icon-chevron-right"></i></a>
+                <a href="#" title="Add a synonym" class="expand-horizontally btn"><i class="icon-chevron-right"></i></a>
                 </li>
               {{/each}}
             </ul>
-            <a href="#" class="expand-vertically btn"><i class="icon-chevron-down"></i></a>
+            <a href="#" title="Add a new list entry" class="expand-vertically btn"><i class="icon-chevron-down"></i></a>
           </div>
           {{/if}}
         {{/if}}
@@ -246,13 +250,13 @@
             <tr class="result-row" data-toggle="tooltip" data-placement="right" data-title="{{query}}" data-type="{{type}}">
             {{/if}}
                 <td>{{type}}</td>
-                <td><a href="#" class="{{class}}" data-num="{{_internalID}}" data-url="#">{{title}}</a></td>
+                <td><a href="#" class="{{class}}" data-num="{{localID}}" data-url="#">{{title}}</a></td>
                 {{#if assessmentMode}}
                 <td>
                   {{#if isGolden}}
-                    <a href="#" data-num="{{_internalID}}" class="modify-golden remove-golden btn btn-mini"><i class="icon-minus-sign"></i></a>
+                    <a href="#" data-num="{{localID}}" title="Remove from golden answer" class="modify-golden remove-golden btn btn-mini"><i class="icon-minus-sign"></i></a>
                   {{else}}
-                    <a href="#" data-num="{{_internalID}}" class="modify-golden add-golden btn btn-mini"><i class="icon-plus-sign"></i></a>
+                    <a href="#" data-num="{{localID}}" title="Add to golden answer" class="modify-golden add-golden btn btn-mini"><i class="icon-plus-sign"></i></a>
                   {{/if}}
                 </td>
                 {{/if}}
@@ -261,7 +265,7 @@
                     <a href="{{uri}}"><i class="icon-file"></i></a>
                 </td>
                 <td width="20px">
-                    <a href="#" class="removeFromResults btn btn-mini" data-num="{{_internalID}}"><i class="icon-remove"></i></a>
+                    <a href="#" title="Delete annotation" class="removeFromResults btn btn-mini" data-num="{{localID}}"><i class="icon-remove"></i></a>
                 </td>
             </tr>
         </script>
@@ -269,16 +273,20 @@
         <!-- DOCUMENT TEMPLATE -->
         <script id="documentTemplate" type="text/x-handlebars-template">
             {{#each sections}}
-            <p>{{{this}}}</p>
+            <p class="section" data-section-id="{{@index}}">{{{this}}}</p>
             {{/each}}
         </script>
+
+        <!-- Annotation template -->
+        <script id="annotationTemplate2" type="text/x-handlebars-template"><span class="{{classes}}" data-id="{{id}}">{{text}}<a href="#" data-id="{{id}}" title="Delete annotation" class="annotationText"><i class="icon-remove"></i></a></span></script>
+        <!-- <a href="#" title="Delete annotation" class="delete-annotation" "><i class="icon-remove"></i></a> -->
 
         <!-- DOCUMENT TEMPLATE -->
         <script id="annotationTemplate" type="text/x-handlebars-template">
             <span style='background-color:#fff000;'>
                 {{text}}
             </span>
-            <a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a>
+            <a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Delete annotation"><i class="icon-remove"></i></a>
         </script>
 
         <!-- SNIPPET TEMPLATE -->
@@ -292,13 +300,13 @@
                 {{#if assessmentMode}}
                 <td>
                     {{#if isGolden}}
-                    <a href="#" data-num="{{id}}" class="modify-golden remove-golden btn btn-mini"><i class="icon-minus-sign"></i></a>
+                    <a href="#" data-num="{{id}}" title="Remove from golden answer" class="modify-golden remove-golden btn btn-mini"><i class="icon-minus-sign"></i></a>
                     {{else}}
-                    <a href="#" data-num="{{id}}" class="modify-golden add-golden btn btn-mini"><i class="icon-plus-sign"></i></a>
+                    <a href="#" data-num="{{id}}" title="Add to golden answer" class="modify-golden add-golden btn btn-mini"><i class="icon-plus-sign"></i></a>
                     {{/if}}
                 </td>
                 {{/if}}
-                <td><a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Remove annotation"><i class="icon-remove"></i></a></td>
+                <td><a class="btn btn-mini annotationText" href="#" data-id="{{id}}" rel="tooltip" title="Delete snippet"><i class="icon-remove"></i></a></td>
             </tr>
         </script>
     </body>

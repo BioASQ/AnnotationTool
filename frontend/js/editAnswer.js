@@ -9,8 +9,11 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     // annotation btns
     var $startAnn = $('#startAnn'),
         $annDoc = $('#annDoc'),
-        $annTxt = $('#annTxt'),
+        $annotateButton = $('#annotate-button'),
         $annCancel = $('#annCancel');
+
+    // get view contatiner
+    $viewer = $('#viewer');
 
     // define data stuctures
     var answer = {
@@ -18,11 +21,15 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             'exact': null,
             'annotations': []
         },
-        lastAnnotationId = 0,
+        lastAnnotationID = 0,
         currentAnnotation = null,
         currentDocument = null;
 
-    var selectedDocuments = app.data.question.answer.annotations;
+    var tempClassApplier = rangy.createCssClassApplier('temp-highlight'),
+        highlighter      = rangy.createHighlighter();
+    highlighter.addClassApplier(tempClassApplier);
+
+    var resultTemplate = Handlebars.compile($('#resultTemplate').html());
 
     var idealAnswerTemplate = Handlebars.compile($('#idealAnswerTemplate').html());
     var exactAnswerTemplate = Handlebars.compile($('#exactAnswerTemplate').html());
@@ -34,6 +41,9 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     // annotation highlight tempalte
     source = $('#annotationTemplate').html();
     var annTemplate = Handlebars.compile(source);
+
+    // annotation highlight tempalte
+    var annotationTemplate = Handlebars.compile($('#annotationTemplate2').html());
 
     // snippet template
     source = $('#snippetTemplate').html();
@@ -51,6 +61,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     var updateQuestionText = function () {
         $answerSpace.html(answer.html);
     };
+
+    var currentSelectionRange = null;
 
     var tagsToEscape = {
         '&': '&amp;',
@@ -190,20 +202,44 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             answer.exact = $('input[name="exactAnswer"]:checked').val();
             break;
         case 'factoid':
-            answer.exact = $('input[name="exactAnswer"]').val();
+            var synonymList = [];
+            $('input[name="exactAnswer"]').each(function (item) {
+                var jel = $(this),
+                    synonymIndex = parseInt(jel.data('synonymId'), 10),
+                    val = jel.val().trim();
+
+                if (val) {
+                    synonymList[synonymIndex] = val;
+                }
+            });
+            answer.exact = synonymList.filter(function (item) { return item !== null; });
+
+            $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isFactoid: true })));
+
             break;
         case 'list':
             var list = [];
             $('input[name="exactAnswer"]').each(function (item) {
                 var jel = $(this),
                     itemIndex = parseInt(jel.closest('li').data('itemId'), 10),
-                    synonymIndex = parseInt(jel.data('synonymId'), 10);
+                    synonymIndex = parseInt(jel.data('synonymId'), 10),
+                    val = jel.val().trim();
 
-                list[itemIndex] = list[itemIndex] || [];
-                list[itemIndex][synonymIndex] = jel.val();
+                if (val) {
+                    list[itemIndex] = list[itemIndex] || [];
+                    list[itemIndex][synonymIndex] = val;
+                }
+
             });
-            answer.exact = list;
-            console.log(list);
+
+            list.forEach(function (synonymList, i) {
+                list[i] = synonymList.filter(function (item) { return item !== null; });
+            });
+
+            answer.exact = list.filter(function (synonymList) { return synonymList.length > 0; });
+
+            $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
+
             break;
         }
         app.data.question.answer = answer;
@@ -214,9 +250,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         var jel = $(this),
             id = jel.data('num');
         for (var i = 0; i < answer.annotations.length; i++) {
-            var itemID = answer.annotations[i].id
-                       ? answer.annotations[i].id
-                       : answer.annotations[i]._internalID;
+            var itemID = answer.annotations[i].localID;
 
             if (itemID === id) {
                 if (jel.hasClass('add-golden')) {
@@ -235,6 +269,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         }
         app.data.question.answer = answer;
         app.save();
+
+        renderCurrentDocument();
     });
 
     $('.modify-ideal').live('click', function () {
@@ -254,12 +290,16 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     });
 
     $('.expand-horizontally').live('click', function () {
-        var jel = $(this),
-            itemIndex = parseInt(jel.closest('li').data('itemId'), 10);
+        var jel = $(this);
 
+        if (app.data.question.type === 'factoid') {
+            answer.exact.push('');
+            $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isFactoid: true })));
+        } else if (app.data.question.type === 'list') {
+            var itemIndex = parseInt(jel.closest('li').data('itemId'), 10);
             answer.exact[itemIndex].push('');
-
             $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
+        }
     });
 
     $('.expand-vertically').live('click', function () {
@@ -270,60 +310,72 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
     });
 
-
-    var renderCurrentDocument = function () {
-        // set title
-        $('#docTitle').html(currentDocument.renderTitle);
-
-        // render body
-        if (currentDocument.domClass == 'documentResult') {
-            var html = docTemplate(currentDocument);
-            $viewer.html(html);
-        } else if (currentDocument.domClass == 'statementResult') {
-            if (typeof currentDocument.AJAXText == 'undefined')
-                currentDocument.AJAXText = safeTagsReplace('<' + currentDocument.s + '> <' + currentDocument.p + "> \"" + currentDocument.o + "\" .");
-            $viewer.html(currentDocument.AJAXText);
-        } else {
-            // if text is not yet loaded - load
-            if (typeof currentDocument.AJAXText == 'undefined' || currentDocument.AJAXText === null) {
-                // clean old stuff
-                $viewer.html('Loading..');
-
-                var url = currentDocument.uri;
-
-                if (typeof url == 'undefined' || url === null) {
-                    $viewer.html('This document has no body.');
-                } else {
-                    $.ajax({
-                        url: app.data.LogicServer + 'corsProxy?url=' + encodeURIComponent(url),
-                        type: 'GET',
-                        success: function (data) {
-                           if (data.length > 0) {
-                                currentDocument.AJAXText = data;
-                                $viewer.html(data);
+    var renderSnippets = function (document) {
+        var renderSections = document.sections.map(function (section, sectionIndex) {
+                var orderedSnippets = answer.annotations
+                    .filter(function (annotation) { return annotation.type === 'snippet'; })
+                    .sort(function (op1, op2) {
+                        if (op1.endSection < op2.beginSection) {
+                            return -1;
+                        } else if (op1.beginSection > op2.endSection) {
+                            return 1;
+                        } else {
+                            if (op1.endIndex < op2.beginIndex) {
+                                return -1;
+                            } else if (op1.beginIndex > op2.endIndex) {
+                                return 1;
                             } else {
-                                currentDocument.AJAXText = 0;
-                                $viewer.html('This document has no body.');
+                                throw Error('Overlapping snippets!');
                             }
-                        },
-                        error: function (xhr, err) {
-                            currentDocument.AJAXText = 0;
-                            $viewer.html('This document could not be found.');
                         }
                     });
-                }
-            } else {
-                // if text is loaded - just render
-                if (currentDocument.AJAXText !== 0) {
-                    $viewer.html(currentDocument.AJAXText);
-                } else {
-                    $viewer.html('This document has no body.');
-                }
-            }
-        }
 
-        // render annotations list
-        renderAnnotationsList();
+                var runningDisplacement = 0;
+                orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
+                    var beginSectionIndex = parseInt(snippetAnnotation.beginSection.split('.', 2)[1], 10),
+                        endSectionIndex   = parseInt(snippetAnnotation.endSection.split('.', 2)[1], 10);
+
+                    if (beginSectionIndex === sectionIndex && endSectionIndex === sectionIndex) {
+                        var highlighted = annotationTemplate({
+                                text: snippetAnnotation.text,
+                                id: snippetAnnotation.localID,
+                                classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
+                            });
+
+                        section = section.substring(0, snippetAnnotation.beginIndex + runningDisplacement)
+                                + highlighted
+                                + section.substring(snippetAnnotation.endIndex + runningDisplacement + 1);
+
+                        runningDisplacement += highlighted.length - snippetAnnotation.text.length;
+                    }
+                });
+
+            return section;
+        });
+
+        $viewer.html(docTemplate({ sections: renderSections }));
+    };
+
+    var renderCurrentDocument = function () {
+        if (currentDocument) {
+            var scroll = $(document).scrollTop();
+            // set title
+            $('#docTitle').html(currentDocument.title);
+
+            // render body
+            if (currentDocument.type == 'document') {
+                var html = docTemplate(currentDocument);
+                $viewer.html(html);
+                renderSnippets(currentDocument);
+            }
+
+            // render annotations list
+            renderAnnotationsList();
+
+            window.setTimeout(function () {
+                $(document).scrollTop(scroll);
+            });
+        }
     };
 
     var renderAnnotationsList = function () {
@@ -332,8 +384,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             if (answer.annotations[i].type === 'snippet') {
                 html += snipTemplate({
                     assessmentMode: window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT,
-                    text: safeTagsUnescape(answer.annotations[i].annotationText),
-                    id: answer.annotations[i].id,
+                    text: answer.annotations[i].text,
+                    id: answer.annotations[i].localID,
                     isGolden: answer.annotations[i].golden
                 });
             }
@@ -347,7 +399,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         var begin = answer.text.indexOf(text);
         if (begin != -1) {
-            var id = ++lastAnnotationId;
+            var id = ++lastAnnotationID;
             answer.annotations.push({
                 'beginIndex': begin,
                 'length': text.length,
@@ -459,82 +511,100 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         // $annTxt.hide();
     });
 
-    $annTxt.on('click', function () {
-        answer.text = $questionAnswer.val();
-        var text = getSelectionHtml();
+    var keepSelection = false;
+    $annotateButton.mousedown(function () {
+        keepSelection = true;
+    });
 
-        if (text.length > 0) {
-            if (typeof currentDocument == 'undefined' || currentDocument === null) {
-                alert('No document selected!');
+    $annotateButton.click(function () {
+        var selection, range;
+        try {
+            selection = rangy.getSelection();
+            range     = selection.getRangeAt(0);
+        } catch (e) {
+            alert('Please select text.');
+            return false;
+        }
+
+        if (range.startOffset === range.endOffset) {
+            return;
+        }
+
+        var startSectionIndex = $(range.startContainer).closest('.section').data('sectionId'),
+            endSectionIndex   = $(range.endContainer).closest('.section').data('sectionId');
+
+        if (startSectionIndex >= 0 && endSectionIndex >= 0) {
+            var cRange = range.toCharacterRange($(range.startContainer).closest('.section').get(0));
+            answer.annotations.push({
+                type: 'snippet',
+                beginSection: 'sections.' + String(startSectionIndex),
+                endSection: 'sections.' + String(endSectionIndex),
+                beginIndex: cRange.start,
+                endIndex: cRange.end,
+                text: String(range),
+                annotationDocument: currentDocument.uri,
+                golden: true,
+                localID: ++lastAnnotationID
+            });
+
+
+            try {
+                renderSnippets(currentDocument);
+                renderAnnotationsList();
+            } catch (e) {
+                alert('Snippets cannot overlap!');
+                selection.removeAllRanges();
+                answer.annotations.pop();
                 return;
             }
 
-            // prepare new annotation
-            prepareAnnotation();
-
-            // update view
-            // var oldHtml = currentAnnotation.html;
-            // TODO: randomly generate color
-            // currentAnnotation.html = currentAnnotation.html.replace('#fff000', '#ff0000');
-            // answer.html = answer.html.replace(oldHtml, currentAnnotation.html);
-            // updateQuestionText();
-
-            // add doc data to annotation
-            currentAnnotation['annotationDocument'] = currentDocument.uri;
-            currentAnnotation['annotationText'] = text;
-            currentAnnotation['annotationHTML'] = annTemplate({text: safeTagsUnescape(text), id: currentAnnotation.id});
-
-            // render annotation in text
-            stext = safeTagsUnescape(text);
-            if (currentDocument.title.indexOf(stext) != -1) {
-                currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                    new RegExp( quoteRegex(stext), 'g'),
-                    currentAnnotation.annotationHTML
-                );
-            } else if (currentDocument.domClass == 'documentResult') {
-                for (var i = 0; i < currentDocument.sections.length; i++) {
-                    if (currentDocument.sections[i].indexOf(text) != -1) {
-                        currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            new RegExp( quoteRegex(text), 'g'),
-                            currentAnnotation.annotationHTML
-                        );
-                    } else if (currentDocument.sections[i].indexOf(stext) != -1) {
-                        currentDocument.sections[i] = currentDocument.sections[i].replace(
-                            new RegExp( quoteRegex(stext), 'g'),
-                            currentAnnotation.annotationHTML
-                        );
-                    }
-                }
-            } else {
-                var repl;
-                if (currentDocument.AJAXText.indexOf(text) != -1) {
-                    repl = text;
-                } else if (currentDocument.AJAXText.indexOf(stext) != -1) {
-                    repl = stext;
-                }
-                currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                    new RegExp( quoteRegex(repl), 'g'),
-                    currentAnnotation.annotationHTML
-                );
-            }
-
-            // re-render
-            renderCurrentDocument();
-
-            // store current annotation
             app.data.question.answer = answer;
             app.save();
-
-            // show buttons
-            // $startAnn.show();
-            // $annCancel.hide();
-            // $annDoc.hide();
-            // $annTxt.hide();
-        } else {
-            alert('No text selected!');
         }
 
+        $annotateButton.fadeOut(500);
+        highlighter.removeAllHighlights();
+
         return false;
+    });
+
+    $viewer.mousedown(function () {
+        if (!keepSelection) {
+            highlighter.removeAllHighlights();
+        }
+        keepSelection = false;
+    });
+
+    $viewer.mouseup(function () {
+        var range;
+        try {
+            range = rangy.getSelection().getRangeAt(0);
+        } catch (e) { return false; }
+
+        if (range.startOffset === range.endOffset) {
+            $annotateButton.fadeOut(500);
+            highlighter.removeAllHighlights();
+            return false;
+        }
+
+        var hl  = highlighter.highlightSelection('temp-highlight'),
+            jhl = $('.temp-highlight');
+
+        var tempOffset = jhl.offset(),
+            tempWidth  = jhl.width(),
+            tempHeight = jhl.height();
+        $annotateButton.css({
+            top: tempOffset.top + tempHeight + 10,
+            left: $viewer.position().left + 10
+        });
+        $annotateButton.fadeIn(500);
+
+        return false;
+    });
+
+    $('body').mouseup(function (event) {
+        $annotateButton.fadeOut(500);
+        highlighter.removeAllHighlights();
     });
 
     renderAnswer(app.data.question);
@@ -568,9 +638,9 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         // set current doc
         var i;
-        for (i = 0; i < selectedDocuments.length; i++) {
-            if (selectedDocuments[i]['_internalID'] === num) {
-                currentDocument = selectedDocuments[i];
+        for (i = 0; i < answer.annotations.length; i++) {
+            if (answer.annotations[i].localID === num) {
+                currentDocument = answer.annotations[i];
                 break;
             }
         }
@@ -581,96 +651,74 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         return false;
     });
 
+    // Delete annotation
     $('.annotationText').live('click', function () {
         var id = $(this).data('id'),
             i, ann;
 
         for (i = 0; i < answer.annotations.length; i++) {
-            if (answer.annotations[i].id == id) {
+            if (answer.annotations[i].localID == id) {
                 ann = answer.annotations[i];
                 break;
             }
         }
 
-        // remove annotation from text
-        var text = ann.annotationText;
-        if (currentDocument.renderTitle.indexOf(ann.annotationHTML) != -1) {
-            currentDocument.renderTitle = currentDocument.renderTitle.replace(
-                new RegExp( quoteRegex(ann.annotationHTML), 'g'),
-                text
-            );
-        } else if (currentDocument.domClass == 'documentResult') {
-            for (var j = 0; j < currentDocument.sections.length; j++) {
-                if (currentDocument.sections[j].indexOf(ann.annotationHTML) != -1) {
-                    currentDocument.sections[j] = currentDocument.sections[j].replace(
-                        new RegExp( quoteRegex(ann.annotationHTML), 'g'),
-                        text
-                    );
-                }
-            }
-        } else {
-            currentDocument.AJAXText = currentDocument.AJAXText.replace(
-                new RegExp( quoteRegex(ann.annotationHTML), 'g'),
-                text
-            );
-        }
-
         // remove from array
         answer.annotations.splice(i, 1);
 
+        app.data.question.answer = answer;
+        app.save();
+
         // re-render
         renderCurrentDocument();
-    })
-    .on('click', '.removeFromResults', function () {
+
+        renderAnnotationsList();
+    });
+
+    var getRelatedSnippets = function (document) {
+        return answer.annotations.filter(function (item) {
+            return (item.type === 'snippet' && item.annotationDocument === document.uri);
+        });
+    };
+
+    $('.removeFromResults').live('click', function () {
         var that = $(this),
             num = that.data('num');
 
         // remove from storage
-        for (var i = 0; i < app.data.question.annotations.length; i++) {
-            if (app.data.question.annotations[i]._internalID == num) {
-                app.data.question.annotations.splice(i, 1);
-                app.save();
+        for (var i = 0; i < answer.annotations.length; i++) {
+            if (answer.annotations[i].localID == num) {
+                if (answer.annotations[i].type === 'document') {
+                    var relatedSnippets = getRelatedSnippets(answer.annotations[i]);
+                    if (relatedSnippets.length) {
+                        alert('There are ' + relatedSnippets.length + ' snippets associated with this document. Please delete those snippets first.');
+                        return;
+                    }
+                }
+                answer.annotations.splice(i, 1);
                 break;
             }
         }
 
+        app.data.question.answer = answer;
+        app.save();
+
         that.parent().parent().remove();
     });
 
-    // get view contatiner
-    $viewer = $('#viewer');
-
     // escape html
-    for (var i = 0, len = selectedDocuments.length; i < len; i++) {
-        if (selectedDocuments[i].type == 'document') {
-            for (var j = 0, jlen = selectedDocuments[i].sections.length; j < jlen; j++) {
+    for (var i = 0, len = answer.annotations.length; i < len; i++) {
+        if (answer.annotations[i].type == 'document') {
+            for (var j = 0, jlen = answer.annotations[i].sections.length; j < jlen; j++) {
                 // Fix broken documents with `null` section
-                if (!selectedDocuments[i].sections[j]) {
+                if (!answer.annotations[i].sections[j]) {
                     continue;
                 }
                 // Don't doubly escape annotations
-                if (selectedDocuments[i].sections[j].indexOf('Remove annotation') == -1) {
-                    selectedDocuments[i].sections[j] = safeTagsReplace(selectedDocuments[i].sections[j]);
+                if (answer.annotations[i].sections[j].indexOf('Remove annotation') == -1) {
+                    answer.annotations[i].sections[j] = safeTagsReplace(answer.annotations[i].sections[j]);
                 }
             }
-        }
-    }
-
-    // render docs
-    // compile template
-    source = $('#resultTemplate').html();
-    var template = Handlebars.compile(source);
-    // render to string
-    var html = '';
-    for (var i = 0; i < selectedDocuments.length; i++) {
-        if (selectedDocuments[i].type !== 'snippet') {
-            var type = selectedDocuments[i]._internalID[0].toUpperCase();
-            html += template($.extend({}, selectedDocuments[i], {
-                type: type,
-                class: selectedDocuments[i].type,
-                assessmentMode: window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT,
-                isGolden: selectedDocuments[i].golden
-            }));
         }
     }
 
@@ -684,17 +732,31 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         // get answer
         answer = app.data.question.answer;
 
-        // get last id
-        var annid = null;
-        for (i = 0; i < app.data.question.answer.annotations.length; i++) {
-            annid = parseInt(app.data.question.answer.annotations[i].id, 10);
-            if (lastAnnotationId < annid) {
-                lastAnnotationId = annid;
-            }
+        // Assign local annotation IDs
+        for (i = 0; i < answer.annotations.length; i++) {
+            answer.annotations[i].localID = i;
         }
+
+        lastAnnotationID = answer.annotations[answer.annotations.length - 1].localID;
 
         // render annotations
         renderAnnotationsList();
+    }
+
+    // render docs
+    // render to string
+    var html = '';
+    for (var i = 0; i < answer.annotations.length; i++) {
+        if (answer.annotations[i].type !== 'snippet') {
+            var type = answer.annotations[i].type[0].toUpperCase();
+
+            html += resultTemplate($.extend({}, answer.annotations[i], {
+                type: type,
+                class: answer.annotations[i].type,
+                assessmentMode: window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT,
+                isGolden: answer.annotations[i].golden
+            }));
+        }
     }
 
     // append to dom
@@ -703,12 +765,12 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     $('tr.result-row').tooltip();
 
     /*
-     * $('#annTxt').affix({
+     * $annotateButton.affix({
      *     offset: {
-     *         top: $('#annTxt').offset().top - $('.navbar-fixed-top').first().height()
+     *         top: $annotateButton.offset().top - $('.navbar-fixed-top').first().height()
      *     }
      * });
-     * $('#annTxt').parent().css('height', $('#annTxt').parent().height());
+     * $annotateButton.parent().css('height', $annotateButton.parent().height());
      */
 
     // sort result list
