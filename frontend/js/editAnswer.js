@@ -313,7 +313,10 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     var renderSnippets = function (document) {
         var renderSections = document.sections.map(function (section, sectionIndex) {
                 var orderedSnippets = answer.annotations
-                    .filter(function (annotation) { return annotation.type === 'snippet'; })
+                    .filter(function (annotation) {
+                        return (annotation.type === 'snippet' &&
+                                annotation.annotationDocument === document.uri);
+                    })
                     .sort(function (op1, op2) {
                         if (op1.endSection < op2.beginSection) {
                             return -1;
