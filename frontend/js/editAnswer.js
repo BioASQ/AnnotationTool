@@ -196,7 +196,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         app.save();
     });
 
-    $('input[name="exactAnswer"]').live('change', function () {
+    var updateExactAnswer = function () {
         switch (app.data.question.type) {
         case 'decisive':
             answer.exact = $('input[name="exactAnswer"]:checked').val();
@@ -244,6 +244,14 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         }
         app.data.question.answer = answer;
         app.save();
+    };
+
+    $('input[name="exactAnswer"]').live('blur', function () {
+        updateExactAnswer();
+    });
+
+    $('input[name="exactAnswer"]').live('change', function () {
+        updateExactAnswer();
     });
 
     $('.modify-golden').live('click', function () {
@@ -537,6 +545,11 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         var startSectionIndex = $(range.startContainer).closest('.section').data('sectionId'),
             endSectionIndex   = $(range.endContainer).closest('.section').data('sectionId');
 
+        if (startSectionIndex !== endSectionIndex) {
+            alert('Snippets spanning sections are currently not supported!');
+            return;
+        }
+
         if (startSectionIndex >= 0 && endSectionIndex >= 0) {
             var cRange = range.toCharacterRange($(range.startContainer).closest('.section').get(0));
             answer.annotations.push({
@@ -544,7 +557,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 beginSection: 'sections.' + String(startSectionIndex),
                 endSection: 'sections.' + String(endSectionIndex),
                 beginIndex: cRange.start,
-                endIndex: cRange.end,
+                endIndex: cRange.start + String(range).length - 1,
                 text: String(range),
                 annotationDocument: currentDocument.uri,
                 golden: true,
@@ -616,6 +629,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     renderAnswer(app.data.question);
 
     $saveButton.on('click', function () {
+        updateExactAnswer();
         var question = app.data.question;
         question.answer = answer;
         app.save();
