@@ -23,6 +23,7 @@ body {
 .golden, .golden input, .golden textarea {
   /* background-color: #f3c768 !important; */
   background-color: #ffdd88 !important;
+  border-radius: 4px;
 }
 
 .annotation {
