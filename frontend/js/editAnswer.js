@@ -40,6 +40,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     var idealAnswerTemplate = Handlebars.compile($('#idealAnswerTemplate').html());
     var exactAnswerTemplate = Handlebars.compile($('#exactAnswerTemplate').html());
+    var systemResponsesTemplate = Handlebars.compile($('#systemResponsesTemplate').html());
 
     // docs template
     var source = $('#documentTemplate').html(),
@@ -186,6 +187,33 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         $('label').tooltip();
     };
+
+    var renderSystemResponses = function (question) {
+        var responses = [];
+        question.answer.systemResponses.forEach(function (response) {
+            var templateData = {};
+            switch (question.type) {
+            case 'decisive':
+                templateData.isDecisive = true;
+                templateData.response = response;
+                break;
+            case 'factoid':
+                templateData.isFactoid = true;
+                templateData.response = response.join(', ');
+                break;
+            case 'list':
+                templateData.isList = true;
+                templateData.response = response.map(function (item) {
+                    return item.join(', ');
+                });
+                break;
+            }
+            responses.push($.extend({}, response, templateData));
+        });
+        $('#system-responses').html(systemResponsesTemplate({'responses': responses}));
+    };
+
+    renderSystemResponses(app.data.question);
 
     $('.idealAnswer').live('change', function () {
         var idealAnswerIndex = parseInt($(this).closest('form').data('answer'), 10);

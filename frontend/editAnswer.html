@@ -79,9 +79,9 @@
 
             <div id="idealAnswer"></div>
 
+            <hr />
+
             <div id="exactAnswer" class="row"></div>
-
-
 
             <!-- ANNOTATION BUTTONS -->
             <div class="row annotation-buttons">
@@ -94,6 +94,26 @@
                     <!-- <a href="#" id="annCancel" class="btn btn-danger" style="display: none;">Cancel</a> -->
                 </div>
             </div>
+
+            <!-- list of exact system answers -->
+            <div class="row">
+              <div class="span12">
+                <div class="accordion" id="accordion3">
+                  <div class="accordion-group">
+                    <div class="accordion-heading">
+                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseTwo">Exact System Responses</a>
+                      <div id="collapseTwo" class="accordion-body collapse">
+                          <div class="accordion-inner">
+                            <ul id="system-responses"></ul>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr />
 
             <!-- LIST OF ALL SNIPPETS -->
             <div class="row">
@@ -240,6 +260,23 @@
           </div>
           {{/if}}
         {{/if}}
+        </script>
+
+        <!-- System responses template -->
+        <script id="systemResponsesTemplate" type="text/x-handlebars-template">
+        {{#each responses}}
+        <li>
+          {{#if isList}}
+            <ul>
+            {{#each response}}
+              <li>{{this}}</li>
+            {{/each}}
+            </ul>
+          {{else}}
+            {{response}}
+          {{/if}}
+        </li>
+        {{/each}}
         </script>
 
         <!-- RESULT TEMPLATE -->
