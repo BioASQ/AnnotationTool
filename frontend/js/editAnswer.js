@@ -1,4 +1,11 @@
 require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
+    if ((typeof Array.prototype.filter === 'undefined') ||
+        (typeof Array.prototype.map === 'undefined') ||
+        (typeof Array.prototype.forEach === 'undefined')) {
+        alert('This browser is too old and not supported. Please update your browser.');
+        return;
+    }
+    
     // cache pointers to DOM
     var $saveButton = $('#saveButton'),
         $questionAnswer = $('#questionAnswer'),
