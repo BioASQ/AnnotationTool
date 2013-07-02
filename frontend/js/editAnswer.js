@@ -687,23 +687,27 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     });
 
     // on result docs click
-    $('.document').live('click', function () {
+    $('.result-row td a').live('click', function () {
         // get pdf url
-        var num = $(this).data('num');
+        if ($(this).hasClass('document')) {
+            var num = $(this).data('num');
 
-        // set current doc
-        var i;
-        for (i = 0; i < answer.annotations.length; i++) {
-            if (answer.annotations[i].localID === num) {
-                currentDocument = answer.annotations[i];
-                break;
+            // set current doc
+            var i;
+            for (i = 0; i < answer.annotations.length; i++) {
+                if (answer.annotations[i].localID === num) {
+                    currentDocument = answer.annotations[i];
+                    break;
+                }
             }
+
+            // render content
+            renderCurrentDocument();
+
+            return false;
+        } else {
+            $viewer.html('');
         }
-
-        // render content
-        renderCurrentDocument();
-
-        return false;
     });
 
     // Delete annotation
