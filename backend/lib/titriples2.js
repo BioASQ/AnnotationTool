@@ -29,7 +29,7 @@ TITriples.prototype = Object.create(TIService.prototype);
 
 TITriples.prototype._titleQuery = function (s) {
     return titleProperties.map(function (titleProperty) {
-        return s + '[subj] AND ' + titleProperty + '[pred]';
+        return s + ' [subj] AND ' + titleProperty + ' [pred]';
     });
 };
 
@@ -46,7 +46,7 @@ TITriples.prototype._dereferenceTitle = function (entity, cb) {
 
         self._requestJSON(
             URL,
-            { 'method': 'POST' }, { 'findTriples': self._titleQuery(entity) },
+            { 'method': 'POST' }, { 'findTriples': self._titleQuery(entity)[0] },
             function (err, response) {
                 if (err || !response.result.triples.length) {
                     return self._localPart(entity, cb);
