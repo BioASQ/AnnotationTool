@@ -190,26 +190,28 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     var renderSystemResponses = function (question) {
         var responses = [];
-        question.answer.systemResponses.forEach(function (response) {
-            var templateData = {};
-            switch (question.type) {
-            case 'decisive':
-                templateData.isDecisive = true;
-                templateData.response = response;
-                break;
-            case 'factoid':
-                templateData.isFactoid = true;
-                templateData.response = response.join(', ');
-                break;
-            case 'list':
-                templateData.isList = true;
-                templateData.response = response.map(function (item) {
-                    return item.join(', ');
-                });
-                break;
-            }
-            responses.push($.extend({}, response, templateData));
-        });
+        if (typeof question.answer.systemResponses !== 'undefined') {
+            question.answer.systemResponses.forEach(function (response) {
+                var templateData = {};
+                switch (question.type) {
+                case 'decisive':
+                    templateData.isDecisive = true;
+                    templateData.response = response;
+                    break;
+                case 'factoid':
+                    templateData.isFactoid = true;
+                    templateData.response = response.join(', ');
+                    break;
+                case 'list':
+                    templateData.isList = true;
+                    templateData.response = response.map(function (item) {
+                        return item.join(', ');
+                    });
+                    break;
+                }
+                responses.push($.extend({}, response, templateData));
+            });
+        }
         $('#system-responses').html(systemResponsesTemplate({'responses': responses}));
     };
 
@@ -358,7 +360,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 var orderedSnippets = answer.annotations
                     .filter(function (annotation) {
                         return (annotation.type === 'snippet' &&
-                                annotation.annotationDocument === document.uri);
+                                annotation.document === document.uri &&
+                                annotation.beginSection.search('section') > -1);
                     })
                     .sort(function (op1, op2) {
                         if (op1.endSection < op2.beginSection) {
@@ -383,10 +386,10 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
                     if (beginSectionIndex === sectionIndex && endSectionIndex === sectionIndex) {
                         var highlighted = annotationTemplate({
-                                text: snippetAnnotation.text,
-                                id: snippetAnnotation.localID,
-                                classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
-                            });
+                            text: snippetAnnotation.text,
+                            id: snippetAnnotation.localID,
+                            classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
+                        });
 
                         section = section.substring(0, snippetAnnotation.beginIndex + runningDisplacement)
                                 + highlighted
@@ -399,19 +402,36 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             return section;
         });
 
-        $viewer.html(docTemplate({ sections: renderSections }));
+        var title = document.title,
+            runningDisplacement = 0;
+        answer.annotations.filter(function (annotation) {
+            return (annotation.type === 'snippet' &&
+                    annotation.document === document.uri &&
+                    annotation.beginSection === 'title');
+
+        }).forEach(function (titleAnnotation) {
+            var highlighted = annotationTemplate({
+                text: titleAnnotation.text,
+                id: titleAnnotation.localID,
+                classes: titleAnnotation.golden ? 'annotation golden': 'annotation'
+            });
+
+            title = title.substring(0, titleAnnotation.beginIndex + runningDisplacement)
+                  + highlighted
+                  + title.substring(titleAnnotation.endIndex + runningDisplacement + 1);
+
+            runningDisplacement += highlighted.length - titleAnnotation.text.length;
+        });
+
+        $viewer.html(docTemplate({ title: title, sections: renderSections }));
     };
 
     var renderCurrentDocument = function () {
         if (currentDocument) {
             var scroll = $(document).scrollTop();
-            // set title
-            $('#docTitle').html(currentDocument.title);
 
             // render body
             if (currentDocument.type == 'document') {
-                var html = docTemplate(currentDocument);
-                $viewer.html(html);
                 renderSnippets(currentDocument);
             }
 
@@ -543,7 +563,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         // updateQuestionText();
 
         // add doc data to annotation
-        currentAnnotation['annotationDocument'] = currentDocument.uri;
+        currentAnnotation['document'] = currentDocument.uri;
         currentAnnotation['annotationText'] = null;
 
         // store current annotation
@@ -577,24 +597,24 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             return;
         }
 
-        var startSectionIndex = $(range.startContainer).closest('.section').data('sectionId'),
-            endSectionIndex   = $(range.endContainer).closest('.section').data('sectionId');
+        var startSectionName = $(range.startContainer).closest('.section').data('sectionName'),
+            endSectionName   = $(range.endContainer).closest('.section').data('sectionName');
 
-        if (startSectionIndex !== endSectionIndex) {
+        if (startSectionName !== endSectionName) {
             alert('Snippets spanning sections are currently not supported!');
             return;
         }
 
-        if (startSectionIndex >= 0 && endSectionIndex >= 0) {
+        if (typeof startSectionName !== 'undefined' && typeof endSectionName !== 'undefined') {
             var cRange = range.toCharacterRange($(range.startContainer).closest('.section').get(0));
             answer.annotations.push({
                 type: 'snippet',
-                beginSection: 'sections.' + String(startSectionIndex),
-                endSection: 'sections.' + String(endSectionIndex),
+                beginSection: startSectionName,
+                endSection: endSectionName,
                 beginIndex: cRange.start,
                 endIndex: cRange.start + String(range).length - 1,
                 text: String(range),
-                annotationDocument: currentDocument.uri,
+                document: currentDocument.uri,
                 golden: true,
                 localID: ++lastAnnotationID
             });
@@ -736,7 +756,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     var getRelatedSnippets = function (document) {
         return answer.annotations.filter(function (item) {
-            return (item.type === 'snippet' && item.annotationDocument === document.uri);
+            return (item.type === 'snippet' && item.document === document.uri);
         });
     };
 
@@ -807,7 +827,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     var html = '';
     for (var i = 0; i < answer.annotations.length; i++) {
         if (answer.annotations[i].type !== 'snippet') {
-            var type = answer.annotations[i].type[0].toUpperCase();
+            var type = answer.annotations[i].type.charAt(0).toUpperCase();
 
             html += resultTemplate($.extend({}, answer.annotations[i], {
                 type: type,

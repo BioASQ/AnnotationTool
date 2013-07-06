@@ -156,11 +156,6 @@
                 <div class="span7">
                     <div class="row">
                         <div class="span7">
-                            <h2 id="document-title"></h2>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="span7">
                             <div id="viewer"></div>
                         </div>
                     </div>
@@ -309,8 +304,9 @@
 
         <!-- DOCUMENT TEMPLATE -->
         <script id="documentTemplate" type="text/x-handlebars-template">
+            <h2 class="section" data-section-name="title">{{{title}}}</h2>
             {{#each sections}}
-            <p class="section" data-section-id="{{@index}}">{{{this}}}</p>
+            <p class="section" data-section-id="{{@index}}" data-section-name="section.{{@index}}">{{{this}}}</p>
             {{/each}}
         </script>
 
