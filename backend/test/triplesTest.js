@@ -8,7 +8,7 @@ var queries = [
     'diabetes',
     'foxp2',
     'Sitagliptin',
-    'Do erythrocytes have a nucleus?'
+    'Do erythrocytes have a nucleus?',
 ];
 
 s.find(queries[3], function (err, res) {
