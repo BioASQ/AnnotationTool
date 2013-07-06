@@ -29,3 +29,18 @@ TIConcepts.prototype.find = function (/* String */ keywords, cb) {
     });
 };
 
+TIConcepts.prototype.retrieve = function (ID, cb) {
+    var self = this;
+    this._tokenURL(function (err, URL) {
+        if (err) { return cb(err); }
+
+        self._requestJSON(
+            URL,
+            { 'method': 'POST' }, { 'retrieveEntities': [ ID ] },
+            function (err, response) {
+                if (err) { return cb(err); }
+                cb(null, response.result);
+            }
+        );
+    });
+};
