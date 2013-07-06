@@ -19,7 +19,7 @@ TIService.prototype._tokenURL = function (cb) {
     var self = this;
     this._request(this.serviceURL, { 'method': 'GET' },
         function (err, data) {
-            if (err) { console.log(err, data); return cb(err); }
+            if (err) { return cb(err); }
 
             self.tokenURL = data;
             cb(null, self.tokenURL);
@@ -88,6 +88,7 @@ TIService.prototype._requestJSON = function (URL, options, /* Object */ data, cb
                 response = JSON.parse(String(data).replace(/[\u0000-\u001f]/g, ''));
             } catch (e2) {
                 // still not working? give up
+                process.stderr.write('Could not parse response: ' + data);
                 return cb(e);
             }
         }
