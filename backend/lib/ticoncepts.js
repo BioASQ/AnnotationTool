@@ -20,7 +20,7 @@ TIConcepts.prototype.find = function (/* String */ keywords, cb) {
 
         self._requestJSON(
             URL,
-            { 'method': 'POST' }, { 'findEntities': [ keywords ]},
+            { 'method': 'POST' }, { 'findEntities': [ keywords ] },
             function (err, response) {
                 if (err) { return cb(err); }
                 cb(null, response.result);
