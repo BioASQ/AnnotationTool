@@ -61,7 +61,7 @@
             </div>
 
             <div class="row answer-caption">
-                <div class="span9">
+                <div class="span6">
                     <!--form>
                         <label>Question type</label>
                         <select name="questionType" id="questionType">
@@ -72,8 +72,14 @@
                         </select>
                     </form-->
                 </div>
-                <div class="span3 answer-buttons">
-                    <a href="#" id="saveButton" class="btn btn-success">Save</a>
+                <div class="span6 answer-buttons">
+                  <ul class="inline">
+                    <li><span class="is-finalized" style="display:none">Question finalized <i class="icon-ok"></i></span></li>
+                    <li><a href="#" style="width:10em" id="finalize-button" class="btn" data-toggle="button">Finalize Question</a></li>
+                    <li><a href="#" id="saveButton" class="btn btn-success">Save Question</a></li>
+                  </ul>
+                    
+                    
                 </div>
             </div>
 

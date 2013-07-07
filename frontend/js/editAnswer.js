@@ -8,6 +8,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     
     // cache pointers to DOM
     var $saveButton = $('#saveButton'),
+        $finalizeButton = $('#finalize-button'),
         $questionAnswer = $('#questionAnswer'),
         $answerSpace = $('#answerSpace'),
         $questionTitle = $('#questionTitle'),
@@ -683,6 +684,38 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     renderAnswer(app.data.question);
 
+    $finalizeButton.on('click', function () {
+        var jel = $(this);
+
+        if (jel.hasClass('active')) {
+            app.data.question.finalized = false;
+        } else {
+            app.data.question.finalized = true;
+        }
+
+        app.save();
+
+        $.ajax({
+            url: app.data.LogicServer + 'questions/' + app.data.question._id,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({ finalized: app.data.question.finalized }),
+            type: 'POST',
+            success: function (data) {
+                if (app.data.question.finalized) {
+                    jel.text('Unfinalize Question');
+                    $('.is-finalized').fadeIn(250);
+                } else {
+                    jel.text('Finalize Question');
+                    $('.is-finalized').fadeOut(250);
+                }
+            },
+            error: function (XHR, textStatus, error) {
+                alert('Something went wrong (' + textStatus + ')');
+            }
+        });
+    });
+
     $saveButton.on('click', function () {
         updateExactAnswer();
         var question = app.data.question;
@@ -820,6 +853,11 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         // render annotations
         renderAnnotationsList();
+
+        if (app.data.question.finalized) {
+            $finalizeButton.addClass('active');
+            $('.is-finalized').show();
+        }
     }
 
     // render docs

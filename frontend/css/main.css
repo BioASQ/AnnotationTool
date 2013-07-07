@@ -160,3 +160,8 @@ body {
     width: 40%;
 }
 
+ul.inline > li, ol.inline > li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
+}
