@@ -356,6 +356,22 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
     });
 
+    var compareSnippets = function (op1, op2) {
+        if (op1.endSection < op2.beginSection) {
+            return 1;
+        } else if (op1.beginSection > op2.endSection) {
+            return -1;
+        } else {
+            if (op1.endIndex < op2.beginIndex) {
+                return 1;
+            } else if (op1.beginIndex > op2.endIndex) {
+                return -1;
+            } else {
+                throw Error('Overlapping snippets!');
+            }
+        }
+    };
+
     var renderSnippets = function (document) {
         var renderSections = document.sections.map(function (section, sectionIndex) {
                 var orderedSnippets = answer.annotations
@@ -364,23 +380,9 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                                 annotation.document === document.uri &&
                                 annotation.beginSection.search('section') > -1);
                     })
-                    .sort(function (op1, op2) {
-                        if (op1.endSection < op2.beginSection) {
-                            return -1;
-                        } else if (op1.beginSection > op2.endSection) {
-                            return 1;
-                        } else {
-                            if (op1.endIndex < op2.beginIndex) {
-                                return -1;
-                            } else if (op1.beginIndex > op2.endIndex) {
-                                return 1;
-                            } else {
-                                throw Error('Overlapping snippets!');
-                            }
-                        }
-                    });
+                    .sort(compareSnippets);
 
-                var runningDisplacement = 0;
+                var originalLength = section.length;
                 orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
                     var beginSectionIndex = parseInt(snippetAnnotation.beginSection.split('.', 2)[1], 10),
                         endSectionIndex   = parseInt(snippetAnnotation.endSection.split('.', 2)[1], 10);
@@ -392,11 +394,9 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                             classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
                         });
 
-                        section = section.substring(0, snippetAnnotation.beginIndex + runningDisplacement)
+                        section = section.substring(0, snippetAnnotation.beginIndex)
                                 + highlighted
-                                + section.substring(snippetAnnotation.endIndex + runningDisplacement + 1);
-
-                        runningDisplacement += highlighted.length - snippetAnnotation.text.length;
+                                + section.substring(snippetAnnotation.endIndex + 1);
                     }
                 });
 
@@ -580,7 +580,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     var keepSelection = false;
     $annotateButton.mousedown(function (event) {
-        console.log('mousedown button');
         keepSelection = true;
     });
 
