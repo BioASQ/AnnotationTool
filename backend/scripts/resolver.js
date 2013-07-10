@@ -7,6 +7,8 @@ var TIConcepts  = require('../lib/ticoncepts').TIConcepts,
     TITriples   = require('../lib/titriples2').TITriples,
     Verbalizer  = require('../lib/verbalizer').Verbalizer;
 
+var labelCache = JSON.parse(fs.readFileSync('./labelCache.json'));
+
 var services = {
     'doid':         new TIConcepts('http://www.gopubmed.org/web/bioasq/doid/json'),
     'geneontology': new TIConcepts('http://www.gopubmed.org/web/bioasq/go/json'),
@@ -71,51 +73,39 @@ exports.descriptionForDocument = function (documentURI, cb) {
 var tripleService = new TITriples('http://www.gopubmed.org/web/bioasq/linkedlifedata2/triples'),
     verbalizer    = new Verbalizer('http://139.18.2.164:9998/batchverbalizer');
 
+var labelForURI = function (URI, cb) {
+    var label = URI;
+    if (typeof labelCache[URI] !== 'undefined' && typeof labelCache[URI][0].o !== 'undefined') {
+        label = labelCache[URI][0].o;
+    }
+
+    cb(null, label.replace(/^.*[/#]/, ''));
+};
+
 exports.descriptionForTriple = function (triple, cb) {
-    var searchTerms = triple.s + ' [subj] '
-                    // + triple.p + ' [pred] '
-                    + triple.o + ' [obj]';
+    var labels = { p: triple.p.replace(/^.*[/#]/, '') };
 
-    tripleService.find(searchTerms, 0, 10, function (err, triplesResult) {
-        if (err) { return cb(err); }
+    labelForURI(triple.s, function (err, subjectLabel) {
+        labels.s = subjectLabel;
+        labelForURI(triple.o, function (err, objectLabel) {
+            labels.o = objectLabel;
 
-        var labels = {};
-        triplesResult.statements.forEach(function (statement) {
-            if (statement.s === triple.s) { labels.s = statement.s_l; }
-            if (statement.p === triple.p) { labels.p = statement.p_l; }
-            if (statement.o === triple.o) { labels.o = statement.o_l; }
+            verbalizer.verbalize([ labels ], function (err, results) {
+                if (err) { return cb(err); }
+                var verbalizationResult;
+                try {
+                    verbalizationResult = JSON.parse(results);
+                    cb(null, {
+                        s: triple.s,
+                        p: triple.p,
+                        o: triple.o,
+                        title: verbalizationResult[0]
+                    });
+                } catch (e) {
+                    cb(e);
+                }
+            });
         });
-
-        if (!triplesResult.statements.length) {
-            labels.s = triple.s.replace(/^.*[/#]/, '');
-            labels.p = triple.p.replace(/^.*[/#]/, '');
-            labels.o = triple.o.replace(/^.*[/#]/, '');
-        }
-
-        cb(null, {
-            s: triple.s,
-            p: triple.p,
-            o: triple.o,
-            title: [labels.s, labels.p, labels.o ].join(' ')
-        });
-
-        /*
-         * verbalizer.verbalize([ labels ], function (err, results) {
-         *     if (err) { return cb(err); }
-         *     var verbalizationResult;
-         *     try {
-         *         verbalizationResult = JSON.parse(results);
-         *         cb(null, {
-         *             s: triple.s,
-         *             p: triple.p,
-         *             o: triple.o,
-         *             title: verbalizationResult[0]
-         *         });
-         *     } catch (e) {
-         *         process.stderr.write(results);
-         *     }
-         * });
-         */
     });
 };
 
