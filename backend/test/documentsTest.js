@@ -9,7 +9,7 @@ var queries = [
     'diabetes',
     'hypertension AND proteomics AND diabetes AND genetics AND pcr AND fish',
     '23082254[uid]',
-    '23481675[uid]'
+    '22836204[uid]'
 ];
 
 s.find(queries[3], 0, 10, function (err, res) {
