@@ -75,8 +75,8 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
     req.end();
 };
 
-TIService.prototype._requestJSON = function (URL, options, /* Object */ data, cb) {
-    this._request(URL, options, data, function (err, data) {
+TIService.prototype._requestJSON = function (URL, options, /* Object */ query, cb) {
+    this._request(URL, options, query, function (err, data) {
         if (err) { return cb(err); }
 
         var response;
@@ -95,7 +95,7 @@ TIService.prototype._requestJSON = function (URL, options, /* Object */ data, cb
         
         // catch TI-specific exception
         if (response.exception) {
-            return cb(Error(response.exception));
+            return cb(Error(response.exception + ', query: ' + JSON.stringify(query)));
         }
 
         cb(null, response);
