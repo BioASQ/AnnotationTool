@@ -33,12 +33,18 @@ define(['jquery',
         this.save = function () {
             var s = LZString.compress(JSON.stringify(that.data));
             $.jStorage.set('app.data', s);
+            $.jStorage.set('app.compressed', 1);
         };
 
         this.load = function () {
-            var d = $.jStorage.get('app.data', null);
-            if (d !== null) {
-                that.data = JSON.parse(LZString.decompress(d));
+            var data       = $.jStorage.get('app.data', null),
+                compressed = parseInt($.jStorage.get('app.compressed', '0'), 10);
+
+            if (data !== null) {
+                if (compressed === 1) {
+                    data = LZString.decompress(data);
+                }
+                that.data = JSON.parse(data);
             }
         };
 
