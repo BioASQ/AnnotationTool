@@ -145,14 +145,14 @@
 
             <div class="row">
                 <!-- LIST OF RESULTS -->
-                <div class="span5">
-                    <table id="annotations-table" class="table table-bordered table-hover">
+                <div class="span5" style="overflow:scroll">
+                    <table style="table-layout:fixed;" id="annotations-table" class="table table-bordered table-hover">
                         <caption>Annotations</caption>
                         <thead><tr>
-                            <th id="dataType"><i class="icon-resize-vertical"></i></th>
+                            <th style="width:1em" id="dataType"><i class="icon-resize-vertical"></i></th>
                             <th>Description</th>
-                            <th>Link</th>
-                            <th>Del</th>
+                            <th style="width:2em">Link</th>
+                            <th style="width:2em">Del</th>
                         </tr></thead>
                         <tbody id="resultList">
                         </tbody>
@@ -288,7 +288,7 @@
             <tr class="result-row" data-toggle="tooltip" data-placement="right" data-title="{{query}}" data-type="{{type}}">
             {{/if}}
                 <td>{{type}}</td>
-                <td><a href="#" class="{{class}}" data-num="{{localID}}" data-url="#">{{title}}</a></td>
+                <td><a style="word-wrap:break-word;" href="#" class="{{class}}" data-num="{{localID}}" data-url="#">{{title}}</a></td>
                 {{#if assessmentMode}}
                 <td>
                   {{#if isGolden}}
@@ -312,7 +312,11 @@
         <script id="documentTemplate" type="text/x-handlebars-template">
             <h2 class="section" data-section-name="title">{{{title}}}</h2>
             {{#each sections}}
-            <p class="section" data-section-id="{{@index}}" data-section-name="section.{{@index}}">{{{this}}}</p>
+            {{#if hasMultipleSnippets}}
+            <a href="#" class="btn previous-snippet" title="Show previous snippet" data-section-id="{{@index}}" data-section-name="sections.{{@index}}"><i class="icon-arrow-left"></i></a>
+            <a href="#" class="btn next-snippet" title="Show next snippet" data-section-id="{{@index}}" data-section-name="sections.{{@index}}"><i class="icon-arrow-right"></i></a>
+            {{/if}}
+            <p class="section" data-section-id="{{@index}}" data-section-name="sections.{{@index}}">{{{text}}}</p>
             {{/each}}
         </script>
 

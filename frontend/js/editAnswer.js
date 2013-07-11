@@ -338,56 +338,105 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     var compareSnippets = function (op1, op2) {
         if (op1.endSection < op2.beginSection) {
-            return 1;
-        } else if (op1.beginSection > op2.endSection) {
             return -1;
+        } else if (op1.beginSection > op2.endSection) {
+            return 1;
         } else {
             if (op1.endIndex < op2.beginIndex) {
-                return 1;
-            } else if (op1.beginIndex > op2.endIndex) {
                 return -1;
+            } else if (op1.beginIndex > op2.endIndex) {
+                return 1;
             } else {
                 throw Error('Overlapping snippets!');
             }
         }
     };
 
-    var renderSnippets = function (document) {
+    var sectionConfig = {};
+
+    $('.previous-snippet').live('click', function () {
+        var jel = $(this),
+            sectionName = jel.data('sectionName'),
+            sectionIndex = parseInt(jel.data('sectionId'), 10);
+
+            if (sectionConfig[sectionName].currentSnippet === 0) {
+                sectionConfig[sectionName].currentSnippet = (sectionConfig[sectionName].numberOfSnippets - 1);
+            } else {
+                sectionConfig[sectionName].currentSnippet = sectionConfig[sectionName].currentSnippet - 1;
+            }
+
+            renderCurrentDocument();
+    });
+
+    $('.next-snippet').live('click', function () {
+        var jel = $(this),
+            sectionName = jel.data('sectionName'),
+            sectionIndex = parseInt(jel.data('sectionId'), 10);
+
+            if (sectionConfig[sectionName].currentSnippet ===
+                (sectionConfig[sectionName].numberOfSnippets - 1)) {
+                sectionConfig[sectionName].currentSnippet = 0;
+            } else {
+                sectionConfig[sectionName].currentSnippet = sectionConfig[sectionName].currentSnippet + 1;
+            }
+
+            renderCurrentDocument();
+    });
+
+    var renderSnippets = function (document, allowOverlaps) {
         var renderSections = document.sections.map(function (section, sectionIndex) {
-                var orderedSnippets = answer.annotations
-                    .filter(function (annotation) {
-                        return (annotation.type === 'snippet' &&
-                                annotation.document === document.uri &&
-                                annotation.beginSection.search('section') > -1);
-                    })
-                    .sort(compareSnippets);
+            var hasMultipleSnippets = false,
+                sectionName = 'sections.' + sectionIndex,
+                orderedSnippets = answer.annotations.filter(function (annotation) {
+                return (annotation.type === 'snippet' &&
+                        annotation.document === document.uri &&
+                        annotation.beginSection === sectionName);
+            });
 
-                var originalLength = section.length;
-                orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
-                    var beginSectionIndex = parseInt(snippetAnnotation.beginSection.split('.', 2)[1], 10),
-                        endSectionIndex   = parseInt(snippetAnnotation.endSection.split('.', 2)[1], 10);
+            if (orderedSnippets.length > 1) {
+                sectionConfig[sectionName] = sectionConfig[sectionName] || {
+                    currentSnippet: 0,
+                    numberOfSnippets: orderedSnippets.length
+                };
+            }
 
-                    if (beginSectionIndex === sectionIndex && endSectionIndex === sectionIndex) {
-                        var highlighted = annotationTemplate({
-                            text: snippetAnnotation.text,
-                            id: snippetAnnotation.localID,
-                            classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
-                        });
+            try {
+                orderedSnippets = orderedSnippets.sort(compareSnippets).reverse();
+            } catch (e) {
+                if (!allowOverlaps) {
+                    throw e;
+                }
+                hasMultipleSnippets = true;
+                orderedSnippets = orderedSnippets.slice(sectionConfig[sectionName].currentSnippet,
+                                                        sectionConfig[sectionName].currentSnippet + 1);
+            }
 
-                        section = section.substring(0, snippetAnnotation.beginIndex)
-                                + highlighted
-                                + section.substring(snippetAnnotation.endIndex + 1);
-                    }
-                });
+            var originalLength = section.length;
+            orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
+                var beginSectionIndex = parseInt(snippetAnnotation.beginSection.split('.', 2)[1], 10),
+                    endSectionIndex   = parseInt(snippetAnnotation.endSection.split('.', 2)[1], 10);
 
-            return section;
+                if (beginSectionIndex === sectionIndex && endSectionIndex === sectionIndex) {
+                    var highlighted = annotationTemplate({
+                        text: snippetAnnotation.text,
+                        id: snippetAnnotation.localID,
+                        classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
+                    });
+
+                    section = section.substring(0, snippetAnnotation.beginIndex)
+                            + highlighted
+                            + section.substring(snippetAnnotation.endIndex + 1);
+                }
+            });
+
+            return { hasMultipleSnippets: hasMultipleSnippets, text: section };
         });
 
         var title = document.title,
             runningDisplacement = 0;
         answer.annotations.filter(function (annotation) {
-            return (annotation.type === 'snippet' &&
-                    annotation.document === document.uri &&
+            return (annotation.type         === 'snippet' &&
+                    annotation.document     === document.uri &&
                     annotation.beginSection === 'title');
 
         }).forEach(function (titleAnnotation) {
@@ -413,7 +462,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
             // render body
             if (currentDocument.type == 'document') {
-                renderSnippets(currentDocument);
+                renderSnippets(currentDocument, true);
             }
 
             // render annotations list
@@ -638,7 +687,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
 
             try {
-                renderSnippets(currentDocument);
+                renderSnippets(currentDocument, false);
                 renderAnnotationsList();
             } catch (e) {
                 alert('Snippets cannot overlap!');
@@ -921,6 +970,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     });
 
     if (window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT) {
-        $('<th>Gold</th>').insertAfter('#annotations-table thead tr th:nth-child(2)');
+        $('<th style="width:2em">Gold</th>').insertAfter('#annotations-table thead tr th:nth-child(2)');
     }
 });
