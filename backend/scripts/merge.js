@@ -273,9 +273,12 @@ step(
                             delete annotation.offsetInBeginSection;
                             delete annotation.offsetInEndSection;
 
+                            annotation.beginSection = annotation.beginSection.replace(/section\./, 'sections.');
+                            annotation.endSection   = annotation.endSection.replace(/section\./, 'sections.');
+
                             return annotation;
                         }).filter(function (s) {
-                            return (typeof s !== 'undefined' && !systemStatements.some(function (ss) {
+                            return (typeof s !== 'undefined' && !systemSnippets.some(function (ss) {
                                 return (ss.document     === s.document &&
                                         ss.beginSection === s.beginSection &&
                                         ss.endSection   === s.endSection &&
