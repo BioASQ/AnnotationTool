@@ -14,12 +14,13 @@ define(['jquery',
     'libs/json2.min',
     'libs/bootstrap.min',
     'libs/handlebars.min',
-    'libs/jstorage.min'],
+    'libs/jstorage.min',
+    'libs/lz-string-min'],
     function($, Spinner){
     // define vars
     var logicServer = '/backend/';
 
-    var App = function(){
+    var App = function () {
         var that = this;
 
         this.data = {
@@ -29,15 +30,16 @@ define(['jquery',
             question: {}
         };
 
-        this.save = function(){
-            var s = JSON.stringify(that.data);
+        this.save = function () {
+            var s = LZString.compress(JSON.stringify(that.data));
             $.jStorage.set('app.data', s);
         };
 
-        this.load = function(){
+        this.load = function () {
             var d = $.jStorage.get('app.data', null);
-            if( d !== null )
-                that.data = JSON.parse( d );
+            if (d !== null) {
+                that.data = JSON.parse(LZString.decompress(d));
+            }
         };
 
         return this;

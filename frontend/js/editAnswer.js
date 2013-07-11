@@ -24,12 +24,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     $viewer = $('#viewer');
 
     // define data stuctures
-    var answer = {
-            'ideal': app.data.question.answer.ideal || [],
-            'exact': null,
-            'annotations': []
-        },
-        lastAnnotationID = 0,
+    var lastAnnotationID = 0,
         currentAnnotation = null,
         currentDocument = null;
 
@@ -57,19 +52,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     // snippet template
     source = $('#snippetTemplate').html();
     var snipTemplate = Handlebars.compile(source);
-
-    // init edit question title widget
-    var eqtW = new EditQuestionWidget(app);
-
-    // set question text
-    $questionTitle.text(app.data.question.body);
-    $questionTitle.attr('data-original-title', app.data.question.body);
-    $questionTitle.tooltip();
-
-    //
-    var updateQuestionText = function () {
-        $answerSpace.html(answer.html);
-    };
 
     var currentSelectionRange = null;
 
@@ -174,7 +156,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         switch (question.type) {
         case 'decisive':
             templateData.isDecisive = true;
-            templateData.exactValue = (question.answer.exact.toLowerCase() === 'yes');
+            templateData.exactValue = (question.answer.exact.substr(0, 3).toLowerCase() === 'yes');
             break;
         case 'factoid':
             templateData.isFactoid = true;
@@ -215,8 +197,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         }
         $('#system-responses').html(systemResponsesTemplate({'responses': responses}));
     };
-
-    renderSystemResponses(app.data.question);
 
     $('.idealAnswer').live('change', function () {
         var idealAnswerIndex = parseInt($(this).closest('form').data('answer'), 10);
@@ -458,6 +438,43 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             }
         }
         $snippetsList.html(html);
+    };
+
+    // restore answer
+    if (app.data.question.answer !== null && typeof app.data.question.answer != 'undefined') {
+        // get answer
+        answer = app.data.question.answer;
+        app.save();
+
+        // Assign local annotation IDs
+        for (i = 0; i < answer.annotations.length; i++) {
+            answer.annotations[i].localID = i;
+        }
+
+        lastAnnotationID = answer.annotations[answer.annotations.length - 1].localID;
+
+        // render annotations
+        renderAnnotationsList();
+
+        if (app.data.question.finalized) {
+            $finalizeButton.addClass('active');
+            $('.is-finalized').show();
+        }
+    }
+
+    renderSystemResponses(app.data.question);
+
+    // init edit question title widget
+    var eqtW = new EditQuestionWidget(app);
+
+    // set question text
+    $questionTitle.text(app.data.question.body);
+    $questionTitle.attr('data-original-title', app.data.question.body);
+    $questionTitle.tooltip();
+
+    //
+    var updateQuestionText = function () {
+        $answerSpace.html(answer.html);
     };
 
     var prepareAnnotation = function () {
@@ -830,32 +847,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                     answer.annotations[i].sections[j] = safeTagsReplace(answer.annotations[i].sections[j]);
                 }
             }
-        }
-    }
-
-    // restore answer
-    if (app.data.question.answer !== null && typeof app.data.question.answer != 'undefined') {
-        // render text
-        if (app.data.question.answer.hasOwnProperty('text')) {
-            $questionAnswer.val(app.data.question.answer.text);
-        }
-
-        // get answer
-        answer = app.data.question.answer;
-
-        // Assign local annotation IDs
-        for (i = 0; i < answer.annotations.length; i++) {
-            answer.annotations[i].localID = i;
-        }
-
-        lastAnnotationID = answer.annotations[answer.annotations.length - 1].localID;
-
-        // render annotations
-        renderAnnotationsList();
-
-        if (app.data.question.finalized) {
-            $finalizeButton.addClass('active');
-            $('.is-finalized').show();
         }
     }
 
