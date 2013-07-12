@@ -7,6 +7,7 @@ var fs         = require('fs'),
 program
     .option('-g, --golden-answers <file name>', 'JSON file with golden answers')
     .option('-s, --system-answers <file name>', 'JSON file with system answers')
+    .option('-f, --filter-user <user ID>', 'ID of the user whose questions are to be exported')
     .parse(process.argv);
 
 if (typeof program.goldenAnswers === 'undefined' || 
@@ -73,26 +74,13 @@ systemIn.questions.forEach(function (systemQuestion) {
     system[systemQuestion.id].push(systemQuestion);
 });
 
-var authors = [
-    'a.bunevicius@yahoo.com',
-    'christoforos.nikolaou@gmail.com',
-    'cpantos@med.uoa.gr',
-    'dsanoudou@bioacademy.gr',
-    'iervasi@ifc.cnr.it',
-    'roderic.guigo@crg.cat',
-    'samiotaki@fleming.gr',
-    'skossida@bioacademy.gr',
-    'toni_staykova@yahoo.co.nz',
-    'vasilis.promponas@gmail.com'
-];
-
 step(
     function () {
         var questionsGroup = this.group();
 
         golden.filter(function (question) {
             // return true;
-            return (question.creator === authors[1]);
+            return (question.creator === program.filterUser);
         }).forEach(function (question, questionIndex) {
             var systemConcepts   = [],
                 systemDocuments  = [],
