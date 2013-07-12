@@ -310,7 +310,11 @@
 
         <!-- DOCUMENT TEMPLATE -->
         <script id="documentTemplate" type="text/x-handlebars-template">
-            <h2 class="section" data-section-name="title">{{{title}}}</h2>
+            {{#if title.hasMultipleSnippets}}
+            <a href="#" class="btn previous-snippet" title="Show previous snippet" data-section-name="title"><i class="icon-arrow-left"></i></a>
+            <a href="#" class="btn next-snippet" title="Show next snippet" data-section-name="title"><i class="icon-arrow-right"></i></a>
+            {{/if}}
+            <h2 class="section" data-section-name="title">{{{title.text}}}</h2>
             {{#each sections}}
             {{#if hasMultipleSnippets}}
             <a href="#" class="btn previous-snippet" title="Show previous snippet" data-section-id="{{@index}}" data-section-name="sections.{{@index}}"><i class="icon-arrow-left"></i></a>

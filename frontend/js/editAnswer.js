@@ -383,77 +383,78 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             renderCurrentDocument();
     });
 
+    var highlightSnippetsInSection = function (document, section, sectionName, allowOverlaps) {
+        var hasMultipleSnippets = false;
+        var orderedSnippets = answer.annotations.filter(function (annotation) {
+            return (annotation.type === 'snippet' &&
+                    annotation.document === document.uri &&
+                    annotation.beginSection === sectionName);
+        });
+
+        if (orderedSnippets.length > 1) {
+            sectionConfig[sectionName] = sectionConfig[sectionName] || {
+                currentSnippet: 0,
+                numberOfSnippets: orderedSnippets.length
+            };
+        }
+
+        try {
+            orderedSnippets = orderedSnippets.sort(compareSnippets).reverse();
+        } catch (e) {
+            if (!allowOverlaps) {
+                throw e;
+            }
+            hasMultipleSnippets = true;
+            orderedSnippets = orderedSnippets.slice(sectionConfig[sectionName].currentSnippet,
+                                                    sectionConfig[sectionName].currentSnippet + 1);
+        }
+
+        var originalLength = section.length;
+        orderedSnippets
+            .forEach(function (snippetAnnotation, snippetIndex) {
+            var highlighted = annotationTemplate({
+                text: snippetAnnotation.text,
+                id: snippetAnnotation.localID,
+                classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
+            });
+
+            section = section.substring(0, snippetAnnotation.beginIndex)
+                    + highlighted
+                    + section.substring(snippetAnnotation.endIndex);
+        });
+
+        return { hasMultipleSnippets: hasMultipleSnippets, text: section };
+    };
+
     var renderSnippets = function (document, allowOverlaps) {
         var renderSections = document.sections.map(function (section, sectionIndex) {
-            var hasMultipleSnippets = false,
-                sectionName = 'sections.' + sectionIndex,
-                orderedSnippets = answer.annotations.filter(function (annotation) {
-                return (annotation.type === 'snippet' &&
-                        annotation.document === document.uri &&
-                        annotation.beginSection === sectionName);
-            });
-
-            if (orderedSnippets.length > 1) {
-                sectionConfig[sectionName] = sectionConfig[sectionName] || {
-                    currentSnippet: 0,
-                    numberOfSnippets: orderedSnippets.length
-                };
-            }
-
-            try {
-                orderedSnippets = orderedSnippets.sort(compareSnippets).reverse();
-            } catch (e) {
-                if (!allowOverlaps) {
-                    throw e;
-                }
-                hasMultipleSnippets = true;
-                orderedSnippets = orderedSnippets.slice(sectionConfig[sectionName].currentSnippet,
-                                                        sectionConfig[sectionName].currentSnippet + 1);
-            }
-
-            var originalLength = section.length;
-            orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
-                var beginSectionIndex = parseInt(snippetAnnotation.beginSection.split('.', 2)[1], 10),
-                    endSectionIndex   = parseInt(snippetAnnotation.endSection.split('.', 2)[1], 10);
-
-                if (beginSectionIndex === sectionIndex && endSectionIndex === sectionIndex) {
-                    var highlighted = annotationTemplate({
-                        text: snippetAnnotation.text,
-                        id: snippetAnnotation.localID,
-                        classes: snippetAnnotation.golden ? 'annotation golden': 'annotation'
-                    });
-
-                    section = section.substring(0, snippetAnnotation.beginIndex)
-                            + highlighted
-                            + section.substring(snippetAnnotation.endIndex + 1);
-                }
-            });
-
-            return { hasMultipleSnippets: hasMultipleSnippets, text: section };
+            var sectionName = 'sections.' + sectionIndex;
+            return highlightSnippetsInSection(document, section, sectionName, allowOverlaps);
         });
 
-        var title = document.title,
-            runningDisplacement = 0;
-        answer.annotations.filter(function (annotation) {
-            return (annotation.type         === 'snippet' &&
-                    annotation.document     === document.uri &&
-                    annotation.beginSection === 'title');
+        var titleData = highlightSnippetsInSection(document, document.title, 'title', allowOverlaps);
 
-        }).forEach(function (titleAnnotation) {
-            var highlighted = annotationTemplate({
-                text: titleAnnotation.text,
-                id: titleAnnotation.localID,
-                classes: titleAnnotation.golden ? 'annotation golden': 'annotation'
-            });
+/*
+ *         var title = document.title;
+ *         answer.annotations.filter(function (annotation) {
+ *             return (annotation.type         === 'snippet' &&
+ *                     annotation.document     === document.uri &&
+ *                     annotation.beginSection === 'title');
+ * 
+ *         }).forEach(function (titleAnnotation) {
+ *             var highlighted = annotationTemplate({
+ *                 text: titleAnnotation.text,
+ *                 id: titleAnnotation.localID,
+ *                 classes: titleAnnotation.golden ? 'annotation golden': 'annotation'
+ *             });
+ * 
+ *             title = title.substring(0, titleAnnotation.beginIndex)
+ *                   + highlighted
+ *                   + title.substring(titleAnnotation.endIndex);
+ *         });
+ */
 
-            title = title.substring(0, titleAnnotation.beginIndex + runningDisplacement)
-                  + highlighted
-                  + title.substring(titleAnnotation.endIndex + runningDisplacement + 1);
-
-            runningDisplacement += highlighted.length - titleAnnotation.text.length;
-        });
-
-        $viewer.html(docTemplate({ title: title, sections: renderSections }));
+        $viewer.html(docTemplate({ title: titleData, sections: renderSections }));
     };
 
     var renderCurrentDocument = function () {
