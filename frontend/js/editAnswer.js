@@ -434,26 +434,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         var titleData = highlightSnippetsInSection(document, document.title, 'title', allowOverlaps);
 
-/*
- *         var title = document.title;
- *         answer.annotations.filter(function (annotation) {
- *             return (annotation.type         === 'snippet' &&
- *                     annotation.document     === document.uri &&
- *                     annotation.beginSection === 'title');
- * 
- *         }).forEach(function (titleAnnotation) {
- *             var highlighted = annotationTemplate({
- *                 text: titleAnnotation.text,
- *                 id: titleAnnotation.localID,
- *                 classes: titleAnnotation.golden ? 'annotation golden': 'annotation'
- *             });
- * 
- *             title = title.substring(0, titleAnnotation.beginIndex)
- *                   + highlighted
- *                   + title.substring(titleAnnotation.endIndex);
- *         });
- */
-
         $viewer.html(docTemplate({ title: titleData, sections: renderSections }));
     };
 
@@ -645,6 +625,16 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         // $annTxt.hide();
     });
 
+    var doesSnippetOverlapWithSnippets = function (snippet, snippets) {
+        return snippets.some(function (s) {
+            try {
+                compareSnippets(snippet, s);
+            } catch (e) {
+                return true;
+            }
+        });
+    };
+
     var keepSelection = false;
     $annotateButton.mousedown(function (event) {
         keepSelection = true;
@@ -673,8 +663,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         }
 
         if (typeof startSectionName !== 'undefined' && typeof endSectionName !== 'undefined') {
-            var cRange = range.toCharacterRange($(range.startContainer).closest('.section').get(0));
-            answer.annotations.push({
+            var cRange = range.toCharacterRange($(range.startContainer).closest('.section').get(0)),
+                newSnippet = {
                 type: 'snippet',
                 beginSection: startSectionName,
                 endSection: endSectionName,
@@ -684,17 +674,26 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 document: currentDocument.uri,
                 golden: true,
                 localID: ++lastAnnotationID
-            });
+            };
 
-
-            try {
-                renderSnippets(currentDocument, false);
-                renderAnnotationsList();
-            } catch (e) {
+            if (doesSnippetOverlapWithSnippets(newSnippet, answer.annotations.filter(function (s) {
+                return (s.type === 'snippet' &&
+                        s.document === currentDocument.uri &&
+                        s.beginSection === startSectionName);
+            }))) {
                 alert('Snippets cannot overlap!');
                 selection.removeAllRanges();
-                answer.annotations.pop();
                 return;
+            } else {
+                answer.annotations.push(newSnippet);
+
+                sectionConfig[startSectionName].numberOfSnippets++;
+                // select last (just added) snippet
+                sectionConfig[startSectionName].currentSnippet =
+                    (sectionConfig[startSectionName].numberOfSnippets - 1);
+
+                renderSnippets(currentDocument, true);
+                renderAnnotationsList();
             }
 
             app.data.question.answer = answer;
@@ -843,13 +842,18 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         // remove from array
         answer.annotations.splice(i, 1);
+        
+        if (typeof sectionConfig[ann.beginSection] !== 'undefined') {
+            sectionConfig[ann.beginSection].currentSnippet = 0;
+            sectionConfig[ann.beginSection].numberOfSnippets =
+                Math.max(0, sectionConfig[ann.beginSection].numberOfSnippets - 1);
+        }
 
         app.data.question.answer = answer;
         app.save();
 
         // re-render
         renderCurrentDocument();
-
         renderAnnotationsList();
     });
 
