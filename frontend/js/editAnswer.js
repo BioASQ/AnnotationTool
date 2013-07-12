@@ -687,10 +687,12 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             } else {
                 answer.annotations.push(newSnippet);
 
-                sectionConfig[startSectionName].numberOfSnippets++;
-                // select last (just added) snippet
-                sectionConfig[startSectionName].currentSnippet =
-                    (sectionConfig[startSectionName].numberOfSnippets - 1);
+                if (typeof sectionConfig[startSectionName] !== 'undefined') {
+                    sectionConfig[startSectionName].numberOfSnippets++;
+                    // select last (just added) snippet
+                    sectionConfig[startSectionName].currentSnippet =
+                        (sectionConfig[startSectionName].numberOfSnippets - 1);
+                }
 
                 renderSnippets(currentDocument, true);
                 renderAnnotationsList();
