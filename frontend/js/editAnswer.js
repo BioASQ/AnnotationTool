@@ -669,7 +669,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 beginSection: startSectionName,
                 endSection: endSectionName,
                 beginIndex: cRange.start,
-                endIndex: cRange.start + String(range).length - 1,
+                endIndex: cRange.start + String(range).length,
                 text: String(range),
                 document: currentDocument.uri,
                 golden: true,
