@@ -493,7 +493,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     if (app.data.question.answer !== null && typeof app.data.question.answer != 'undefined') {
         // get answer
         answer = app.data.question.answer;
-        app.save();
+        // app.save();
 
         // Assign local annotation IDs
         for (i = 0; i < answer.annotations.length; i++) {
@@ -785,7 +785,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         updateExactAnswer();
         var question = app.data.question;
         question.answer = answer;
-        app.save();
+        // app.save();
         // post
         $.ajax({
             url: app.data.LogicServer + 'questions/' + question._id,
@@ -884,20 +884,22 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     });
 
     // escape html
-    for (var i = 0, len = answer.annotations.length; i < len; i++) {
-        if (answer.annotations[i].type == 'document') {
-            for (var j = 0, jlen = answer.annotations[i].sections.length; j < jlen; j++) {
-                // Fix broken documents with `null` section
-                if (!answer.annotations[i].sections[j]) {
-                    continue;
-                }
-                // Don't doubly escape annotations
-                if (answer.annotations[i].sections[j].indexOf('Remove annotation') == -1) {
-                    answer.annotations[i].sections[j] = safeTagsReplace(answer.annotations[i].sections[j]);
-                }
-            }
-        }
-    }
+    /*
+     * for (var i = 0, len = answer.annotations.length; i < len; i++) {
+     *     if (answer.annotations[i].type == 'document') {
+     *         for (var j = 0, jlen = answer.annotations[i].sections.length; j < jlen; j++) {
+     *             // Fix broken documents with `null` section
+     *             if (!answer.annotations[i].sections[j]) {
+     *                 continue;
+     *             }
+     *             // Don't doubly escape annotations
+     *             if (answer.annotations[i].sections[j].indexOf('Remove annotation') == -1) {
+     *                 answer.annotations[i].sections[j] = safeTagsReplace(answer.annotations[i].sections[j]);
+     *             }
+     *         }
+     *     }
+     * }
+     */
 
     // render docs
     // render to string
