@@ -7,7 +7,7 @@
     shared = require(require('path').join(__dirname, '..','..','frontend', 'js' , 'shared')).shared;
 
 var Login = exports.Login = function (database) {
-    this.md5Blob = config.login.salt,
+    this.md5Blob = config.login.salt;
     this.mail = new mymail.Mail();
     this.db = database;
     this.userSchema = {
@@ -28,7 +28,7 @@ Login.prototype.addUser = function (email, password, userEmail, callback) {
         // find user
         this._collection(callback, function (err, coll) {
             coll.find({ email: userEmail }).toArray(function (err, docs) {
-                if (docs.length != 0) {
+                if (docs.length !== 0) {
                     callback('user already exists, nothing changed');
                 } else {
                     var user = { email: userEmail, active : false };
@@ -55,10 +55,10 @@ Login.prototype.createUser = function (user, url, callback) {
     this._collection(callback, function (err, coll) {
         coll.find({ email: user.email }).toArray(function (err, docs) {
 
-            if (docs.length == 0) {
+            if (docs.length === 0) {
                 callback('Registration for this email address not allowed. Ask for an account!');
 
-            } else if (docs[0].active != false) {
+            } else if (docs[0].active !== false) {
                 callback('Email address already registered.');
 
             } else {
@@ -205,4 +205,4 @@ Login.prototype._createRandomPassword = function () {
 
 String.prototype.replaceAt = function (index, character) {
     return this.substr(0, index) + character + this.substr(index + character.length);
-}
+};

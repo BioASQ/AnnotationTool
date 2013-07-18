@@ -1,5 +1,5 @@
 ﻿var
-    nodemailer = require('nodemailer')
+    nodemailer = require('nodemailer'),
     config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
 var Mail = exports.Mail = function () {
@@ -54,4 +54,4 @@ Mail.prototype._mailOptions = function (email, html) {
         subject: 'BioASQ Annotation Tool',
         html: html
     };
-}
+};

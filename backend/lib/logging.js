@@ -42,16 +42,16 @@ var logging = function logging() {
 
         transports: [
           new (winston.transports.Console)({
-              level: config.logging.level,
+              level: config.logging.level
           }),
           new winston.transports.MongoDB({
               host: config.database.host,
               port: config.database.port,
               db: config.database.name,
-              level: config.logging.level,
+              level: config.logging.level
               //silent: false // Where is it?
           })
-        ],
+        ]
 
         /*
          * exceptionHandlers: [
@@ -61,6 +61,6 @@ var logging = function logging() {
          * ]
          */
     });
-}
+};
 
 module.exports = new logging();

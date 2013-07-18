@@ -358,7 +358,7 @@ exports.createRouter = function (model, authentication) {
                     var logData = {
                         user: req.session.data.user,
                         path: 'logout',
-                        method: 'GET',
+                        method: 'GET'
                     };
                     // logout
                     logger('info', 'logout', logData);
@@ -401,7 +401,7 @@ exports.createRouter = function (model, authentication) {
                         }
                     });
                 }else if (body.email) {
-                    var url = 'http://' + req.headers.host + '/backend/resetPassword'
+                    var url = 'http://' + req.headers.host + '/backend/resetPassword';
                     authentication.resetPassword(url, body.email, function (err, result) {
                         if (err) {
                             logData.error = err;
@@ -420,7 +420,7 @@ exports.createRouter = function (model, authentication) {
                     logData.error = 'missing parameters';
                     logger('error', 'reset password failed', logData);
                     res.send(400, {}, 'missing parameters');
-                };
+                }
             });
         });
 
@@ -450,7 +450,7 @@ exports.createRouter = function (model, authentication) {
                         body.password = body.newPassword;
                         if (schemajs.create(authentication.userSchema).validate(body).valid) {
                             // todo: fix inconsistent schemajs response to the frontend
-                            schemajs.create(authentication.userSchema).validate(body).valid
+                            schemajs.create(authentication.userSchema).validate(body).valid;
 
                             authentication.changePassword(body.oldPassword, body.newPassword, req.session.data.user, function (err, result) {
                                 if (err) {
@@ -542,7 +542,7 @@ exports.createRouter = function (model, authentication) {
                 if (body.email && body.password && body.name) {
                     if (schemajs.create(authentication.userSchema).validate(body).valid) {
                         // todo: fix inconsistent schemajs response to the frontend
-                        schemajs.create(authentication.userSchema).validate(body).valid
+                        schemajs.create(authentication.userSchema).validate(body).valid;
 
                         var url = 'http://' + req.headers.host + '/backend/activate';
                         authentication.createUser(body, url, function (err, results) {
@@ -597,7 +597,7 @@ exports.createRouter = function (model, authentication) {
                         }
                     };
 
-                    var req = http.request(options, function(response) {
+                    var r = http.request(options, function(response) {
 
                         var headers = response.headers;
                         headers['Access-Control-Allow-Origin'] = '*';
@@ -614,12 +614,12 @@ exports.createRouter = function (model, authentication) {
                         });
                     });
 
-                    req.on('error', function(e) {
+                    r.on('error', function(e) {
                         logData.error = e;
                         logger('error', 'corsProxy failed', logData);
                         res.send(503, {}, 'error');
                     });
-                    req.end();
+                    r.end();
 
                 } else {
                     logData.error = 'missing parameters';
@@ -633,4 +633,4 @@ exports.createRouter = function (model, authentication) {
     }); /* backend */
 
     return router;
-}
+};
