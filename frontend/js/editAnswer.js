@@ -272,6 +272,15 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         updateExactAnswer();
     });
 
+    var getRelatedDocument = function (snippet) {
+        for (var i = 0; i < answer.annotations.length; i++) {
+            if (answer.annotations[i].type === 'document' &&
+                answer.annotations[i].uri === snippet.document) {
+                return answer.annotations[i];
+            }
+        }
+    };
+
     $('.modify-golden').live('click', function () {
         var jel = $(this),
             id = jel.data('num');
@@ -284,6 +293,14 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                     jel.removeClass('add-golden').addClass('remove-golden');
                     jel.children('i').removeClass('icon-plus-sign').addClass('icon-minus-sign');
                     jel.parents('tr').addClass('golden');
+
+                    if (answer.annotations[i].type === 'snippet') {
+                        var document = getRelatedDocument(answer.annotations[i]);
+                        if (!document.golden) {
+                            document.golden = true;
+                            alert('Document "' + document.title + '" has been added to golden answer.');
+                        }
+                    }
                 } else {
                     answer.annotations[i].golden = false;
                     jel.removeClass('remove-golden').addClass('add-golden');
