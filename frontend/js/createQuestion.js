@@ -75,16 +75,14 @@ require(["app"], function (app) {
     $("#okButton").click(function(){
         var questionID = questionList.val();
 
-        $.getJSON(app.data.LogicServer+'questions/'+questionID, function(data){
-            app.data.question = data;
-            app.save();
+        app.data.questionID = questionID;
+        app.save();
 
-            if (window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT) {
-                window.location = 'editAnswer.html';
-            } else {
-                window.location = 'search.html';
-            }
-        });
+        if (window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT) {
+            window.location = 'editAnswer.html';
+        } else {
+            window.location = 'search.html';
+        }
     });
 
     $('#editButton').click(function () {

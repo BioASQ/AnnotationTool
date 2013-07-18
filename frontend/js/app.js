@@ -28,36 +28,16 @@ define(['jquery',
             LogicServer: logicServer,
             user: '',
             username : '',
-            question: {}
+            questionID: ''
         };
 
         this.save = function () {
-            var s = LZString.compress(JSON.stringify(that.data));
-            $.jStorage.set('app.data', s);
-            $.jStorage.set('app.compressed', 1);
+            $.jStorage.set('app.data', JSON.stringify(that.data));
         };
 
         this.load = function () {
-            var data       = $.jStorage.get('app.data', null),
-                compressed = parseInt($.jStorage.get('app.compressed', '0'), 10),
-                cleared    = parseInt($.jStorage.get('app.cleared', '0'), 10);
-
-            if (cleared === 1) {
-                console.log('Local storage has been cleared.');
-            }
-
-            if (data !== null) {
-                if (compressed === 1) {
-                    data = LZString.decompress(data);
-                }
-                try {
-                    that.data = JSON.parse(data);
-                } catch (e) {
-                    $.jStorage.flush();
-                    $.jStorage.set('app.cleared', 1);
-                    window.location.href = window.location.href;
-                }
-            }
+            var data = $.jStorage.get('app.data', null);
+            that.data = JSON.parse(data);
         };
 
         return this;

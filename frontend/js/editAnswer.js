@@ -55,6 +55,9 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     var currentSelectionRange = null;
 
+    var question = null,
+        answer   = null;
+
     var tagsToEscape = {
         '&': '&amp;',
         '<': '&lt;',
@@ -210,12 +213,12 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
         answer.ideal[idealAnswerIndex].scores = answer.ideal[idealAnswerIndex].scores || {};
         answer.ideal[idealAnswerIndex].scores[dimension] = value;
-        app.data.question.answer = answer;
+        question.answer = answer;
         app.save();
     });
 
     var updateExactAnswer = function () {
-        switch (app.data.question.type) {
+        switch (question.type) {
         case 'decisive':
             answer.exact = $('input[name="exactAnswer"]:checked').val();
             break;
@@ -260,7 +263,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
             break;
         }
-        app.data.question.answer = answer;
+        question.answer = answer;
         app.save();
     };
 
@@ -299,6 +302,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                         if (!document.golden) {
                             document.golden = true;
                             alert('Document "' + document.title + '" has been added to golden answer.');
+                            renderAnnotations(answer);
                         }
                     }
                 } else {
@@ -310,7 +314,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 break;
             }
         }
-        app.data.question.answer = answer;
+        question.answer = answer;
         app.save();
 
         renderCurrentDocument();
@@ -335,10 +339,10 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     $('.expand-horizontally').live('click', function () {
         var jel = $(this);
 
-        if (app.data.question.type === 'factoid') {
+        if (question.type === 'factoid') {
             answer.exact.push('');
             $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isFactoid: true })));
-        } else if (app.data.question.type === 'list') {
+        } else if (question.type === 'list') {
             var itemIndex = parseInt(jel.closest('li').data('itemId'), 10);
             answer.exact[itemIndex].push('');
             $('#exactAnswer').html(exactAnswerTemplate($.extend({}, answer, { isList: true })));
@@ -487,38 +491,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         $snippetsList.html(html);
     };
 
-    // restore answer
-    if (app.data.question.answer !== null && typeof app.data.question.answer != 'undefined') {
-        // get answer
-        answer = app.data.question.answer;
-        // app.save();
-
-        // Assign local annotation IDs
-        for (i = 0; i < answer.annotations.length; i++) {
-            answer.annotations[i].localID = i;
-        }
-
-        lastAnnotationID = answer.annotations[answer.annotations.length - 1].localID;
-
-        // render annotations
-        renderAnnotationsList();
-
-        if (app.data.question.finalized) {
-            $finalizeButton.addClass('active');
-            $('.is-finalized').show();
-        }
-    }
-
-    renderSystemResponses(app.data.question);
-
-    // init edit question title widget
-    var eqtW = new EditQuestionWidget(app);
-
-    // set question text
-    $questionTitle.text(app.data.question.body);
-    $questionTitle.attr('data-original-title', app.data.question.body);
-    $questionTitle.tooltip();
-
     //
     var updateQuestionText = function () {
         $answerSpace.html(answer.html);
@@ -587,7 +559,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
                 // save
                 answer.text = $questionAnswer.val();
-                app.data.question.answer = answer;
+                question.answer = answer;
                 app.save();
             }, 1000);
         }
@@ -632,7 +604,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         currentAnnotation['annotationText'] = null;
 
         // store current annotation
-        app.data.question.answer = answer;
+        question.answer = answer;
         app.save();
 
         // show buttons
@@ -715,7 +687,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 renderAnnotationsList();
             }
 
-            app.data.question.answer = answer;
+            question.answer = answer;
             app.save();
         }
 
@@ -766,27 +738,25 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         }
     });
 
-    renderAnswer(app.data.question);
-
     $finalizeButton.on('click', function () {
         var jel = $(this);
 
         if (jel.hasClass('active')) {
-            app.data.question.finalized = false;
+            question.finalized = false;
         } else {
-            app.data.question.finalized = true;
+            question.finalized = true;
         }
 
         app.save();
 
         $.ajax({
-            url: app.data.LogicServer + 'questions/' + app.data.question._id,
+            url: app.data.LogicServer + 'questions/' + question._id,
             contentType: 'application/json',
             dataType: 'json',
-            data: JSON.stringify({ finalized: app.data.question.finalized }),
+            data: JSON.stringify({ finalized: question.finalized }),
             type: 'POST',
             success: function (data) {
-                if (app.data.question.finalized) {
+                if (question.finalized) {
                     jel.text('Unfinalize Question');
                     $('.is-finalized').fadeIn(250);
                 } else {
@@ -802,7 +772,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
 
     $saveButton.on('click', function () {
         updateExactAnswer();
-        var question = app.data.question;
         question.answer = answer;
         // app.save();
         // post
@@ -868,7 +837,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 Math.max(0, sectionConfig[ann.beginSection].numberOfSnippets - 1);
         }
 
-        app.data.question.answer = answer;
+        question.answer = answer;
         app.save();
 
         // re-render
@@ -901,7 +870,7 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
             }
         }
 
-        app.data.question.answer = answer;
+        question.answer = answer;
         app.save();
 
         that.parent().parent().remove();
@@ -925,26 +894,6 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
      * }
      */
 
-    // render docs
-    // render to string
-    var html = '';
-    for (var i = 0; i < answer.annotations.length; i++) {
-        if (answer.annotations[i].type !== 'snippet') {
-            var type = answer.annotations[i].type.charAt(0).toUpperCase();
-
-            html += resultTemplate($.extend({}, answer.annotations[i], {
-                type: type,
-                class: answer.annotations[i].type,
-                assessmentMode: window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT,
-                isGolden: answer.annotations[i].golden
-            }));
-        }
-    }
-
-    // append to dom
-    $('#resultList').html(html);
-
-    $('tr.result-row').tooltip();
 
     /*
      * $annotateButton.affix({
@@ -998,4 +947,64 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
     if (window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT) {
         $('<th style="width:2em">Gold</th>').insertAfter('#annotations-table thead tr th:nth-child(2)');
     }
+
+    var renderAnnotations = function (answer) {
+        // render docs
+        var html = '';
+        for (var i = 0; i < answer.annotations.length; i++) {
+            if (answer.annotations[i].type !== 'snippet') {
+                var type = answer.annotations[i].type.charAt(0).toUpperCase();
+
+                html += resultTemplate($.extend({}, answer.annotations[i], {
+                    type: type,
+                    class: answer.annotations[i].type,
+                    assessmentMode: window.shared.shared.mode === window.shared.shared.MODE_ASSESSMENT,
+                    isGolden: answer.annotations[i].golden
+                }));
+            }
+        }
+
+        // append to dom
+        $('#resultList').html(html);
+        $('tr.result-row').tooltip();
+    };
+
+    // load question
+    $.getJSON(app.data.LogicServer + 'questions/' + app.data.questionID, function (data) {
+        question = data;
+
+        if (question.answer !== null && typeof question.answer != 'undefined') {
+            answer = question.answer;
+
+            // Assign local annotation IDs
+            for (i = 0; i < answer.annotations.length; i++) {
+                answer.annotations[i].localID = i;
+            }
+
+            lastAnnotationID = answer.annotations[answer.annotations.length - 1].localID;
+
+            // render annotations
+            renderAnnotationsList();
+
+            if (question.finalized) {
+                $finalizeButton.addClass('active');
+                $('.is-finalized').show();
+            }
+        }
+
+        renderAnswer(question);
+
+        renderSystemResponses(question);
+
+        // init edit question title widget
+        var eqtW = new EditQuestionWidget(app);
+
+        // set question text
+        $questionTitle.text(question.body);
+        $questionTitle.attr('data-original-title', question.body);
+        $questionTitle.tooltip();
+
+        renderAnnotations(answer);
+ 
+    });
 });
