@@ -11,11 +11,12 @@ requirejs.config({
 
 // load common libraries
 define(['jquery',
-    'libs/json2.min',
-    'libs/bootstrap.min',
-    'libs/handlebars.min',
-    'libs/jstorage.min',
-    'libs/lz-string-min'],
+        'libs/json2.min',
+        'libs/bootstrap.min',
+        'libs/handlebars.min',
+        'libs/jstorage.min',
+        'libs/lz-string-min'
+    ],
     function($, Spinner){
     // define vars
     var logicServer = '/backend/';
@@ -38,13 +39,24 @@ define(['jquery',
 
         this.load = function () {
             var data       = $.jStorage.get('app.data', null),
-                compressed = parseInt($.jStorage.get('app.compressed', '0'), 10);
+                compressed = parseInt($.jStorage.get('app.compressed', '0'), 10),
+                cleared    = parseInt($.jStorage.get('app.cleared', '0'), 10);
+
+            if (cleared === 1) {
+                console.log('Local storage has been cleared.');
+            }
 
             if (data !== null) {
                 if (compressed === 1) {
                     data = LZString.decompress(data);
                 }
-                that.data = JSON.parse(data);
+                try {
+                    that.data = JSON.parse(data);
+                } catch (e) {
+                    $.jStorage.flush();
+                    $.jStorage.set('app.cleared', 1);
+                    window.location.href = window.location.href;
+                }
             }
         };
 
