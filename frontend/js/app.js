@@ -14,8 +14,7 @@ define(['jquery',
         'libs/json2.min',
         'libs/bootstrap.min',
         'libs/handlebars.min',
-        'libs/jstorage.min',
-        'libs/lz-string-min'
+        'libs/jstorage.min'
     ],
     function($, Spinner){
     // define vars
