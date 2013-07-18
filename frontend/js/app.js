@@ -36,11 +36,13 @@ define(['jquery',
 
         this.load = function () {
             var data = $.jStorage.get('app.data', null);
-            try {
-                that.data = JSON.parse(data);
-            } catch (e) {
-                $.jStorage.flush();
-                window.location.href = window.location.href;
+            if (data !== null) {
+                try {
+                    that.data = JSON.parse(data);
+                } catch (e) {
+                    $.jStorage.flush();
+                    window.location.href = window.location.href;
+                }
             }
         };
 
