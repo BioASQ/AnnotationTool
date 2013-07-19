@@ -1,4 +1,4 @@
-require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
+require(['app', 'editQuestionTitle', 'spinner'], function (app, EditQuestionWidget) {
     if ((typeof Array.prototype.filter === 'undefined') ||
         (typeof Array.prototype.map === 'undefined') ||
         (typeof Array.prototype.forEach === 'undefined')) {
@@ -969,6 +969,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         $('tr.result-row').tooltip();
     };
 
+    $('#loadingProgress').parent().spin();
+
     // load question
     $.getJSON(app.data.LogicServer + 'questions/' + app.data.questionID, function (data) {
         question = data;
@@ -990,11 +992,13 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
                 $finalizeButton.addClass('active');
                 $('.is-finalized').show();
             }
+
+            renderAnswer(question);
         }
 
-        renderAnswer(question);
-
-        renderSystemResponses(question);
+        if (question.type !== 'summary') {
+            renderSystemResponses(question);
+        }
 
         // init edit question title widget
         var eqtW = new EditQuestionWidget(app);
@@ -1005,6 +1009,8 @@ require(['app', 'editQuestionTitle'], function (app, EditQuestionWidget) {
         $questionTitle.tooltip();
 
         renderAnnotations(answer);
- 
+
+        $('#loadingProgress').parent().data('spinner').stop();
+        $('#loadingProgress').hide();
     });
 });
