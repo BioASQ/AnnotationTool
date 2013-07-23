@@ -135,8 +135,11 @@ step(
                 }];
             }
 
+            var pendingSystemResults = 0;
             system[question.id].forEach(function (mapped, systemIndex, systems) {
                 if (!mapped) { return; }
+
+                pendingSystemResults++;
 
                 // system ideal answers
                 if (typeof mapped.ideal_answer !== 'undefined') {
@@ -284,7 +287,7 @@ step(
                         }));
 
                         // last system results returned, merge system results into question
-                        if (systemIndex === (systems.length - 1)) {
+                        if (--pendingSystemResults === 0) {
                             Array.prototype.push.apply(question.answer.annotations,
                                                        systemConcepts.filter(function (sc) {
                                 return (!question.answer.annotations.some(function (gc) {
