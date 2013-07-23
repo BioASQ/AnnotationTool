@@ -95,8 +95,13 @@ step(
         var questionsGroup = this.group();
 
         golden.filter(function (question) {
-            // return true;
-            return (question.creator === program.filterUser);
+            if (typeof program.filterUser !== 'undefined') {
+                return (question.creator === program.filterUser);
+            } else if (typeof program.filterQuestion !== 'undefined') {
+                return (question.id === program.filterQuestion);
+            } else {
+                return true;
+            }
         }).forEach(function (question, questionIndex) {
             var systemConcepts   = [],
                 systemDocuments  = [],
