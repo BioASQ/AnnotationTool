@@ -1,4 +1,5 @@
 var fs         = require('fs'),
+    path       = require('path'),
     util       = require('util'),
     step       = require('step'),
     program    = require('commander'),
@@ -6,8 +7,9 @@ var fs         = require('fs'),
 
 program
     .option('-g, --golden-answers <file name>', 'JSON file with golden answers')
-    .option('-s, --system-answers <file name>', 'JSON file with system answers')
-    .option('-f, --filter-user <user ID>', 'ID of the user whose questions are to be exported')
+    .option('-s, --system-answers <file name>', 'JSON file or directory with JSON files containing system answers')
+    .option('-u, --filter-user <user ID>', 'ID of the user whose questions are to be exported')
+    .option('-q, --filter-question <question ID>', 'ID of the question to be exported')
     .parse(process.argv);
 
 if (typeof program.goldenAnswers === 'undefined' || 
@@ -22,12 +24,34 @@ try {
     process.exit(-1);
 }
 
-try {
-    var systemIn = JSON.parse(fs.readFileSync(program.systemAnswers));
-} catch (error) {
-    process.stderr.write('Could not parse file with system answers.\n');
-    process.exit(-1);
+// create question index
+var system = {};
+var addSystemAnswers = function (systemResponse) {
+    systemResponse.questions.forEach(function (systemQuestion) {
+        system[systemQuestion.id] = system[systemQuestion.id] || [];
+        system[systemQuestion.id].push(systemQuestion);
+    });
+};
+
+var filesToRead = [],
+    stats = fs.statSync(program.systemAnswers);
+if (stats.isDirectory()) {
+    filesToRead = fs.readdirSync(program.systemAnswers).filter(function (fileName) {
+        return (fileName.substr(-5) === '.json');
+    });
+} else {
+    filesToRead = [ program.systemAnswers ];
 }
+
+filesToRead.forEach(function (fileName) {
+    try {
+        var filePath = path.join(program.systemAnswers, fileName),
+            fileData = String(fs.readFileSync(filePath)).replace(/\\\//g, '/');
+        addSystemAnswers(JSON.parse(fileData));
+    } catch (e) {
+        console.error('Could not read JSON file `' + filePath + '` (' + e + ')');
+    }
+});
 
 var documentByURI = function (question, URI) {
     var document = null;
@@ -63,16 +87,8 @@ var checkSnippet = function (question, document, snippetAnnotation) {
         console.error('----------');
     }
 
-
     return (snippet === snippetAnnotation.text);
 };
-
-// create question index
-var system = {};
-systemIn.questions.forEach(function (systemQuestion) {
-    system[systemQuestion.id] = system[systemQuestion.id] || [];
-    system[systemQuestion.id].push(systemQuestion);
-});
 
 step(
     function () {
