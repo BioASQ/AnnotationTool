@@ -164,16 +164,34 @@ step(
 
                 // system ideal answers
                 if (typeof mapped.ideal_answer !== 'undefined') {
-                    question.answer.ideal.push({
-                        body: mapped.ideal_answer,
-                        golden: false
-                    });
+                    if (!question.answer.ideal.some(function (idealAnswer) {
+                        return (idealAnswer.body === mapped.ideal_answer);
+                    })) {
+                        question.answer.ideal.push({
+                            body: mapped.ideal_answer,
+                            golden: false
+                        });
+                    }
                 }
 
                 // store system's exact answers as system responses
                 if (typeof mapped.exact_answer !== 'undefined') {
                     question.answer.systemResponses = question.answer.systemResponses || [];
-                    question.answer.systemResponses.push(mapped.exact_answer);
+                    var alreadyStored = question.answer.systemResponses.some(function (systemResponse) {
+                        if (typeof systemResponse === 'string' && typeof mapped.exact_answer === 'string') {
+                            return (systemResponse === mapped.exact_answer);
+                        } else if (util.isArray(systemResponse) && util.isArray(mapped.exact_answer)) {
+                            return systemResponse.every(function (item, index) {
+                                return (item === mapped.exact_answer[index]);
+                            });
+                        }
+
+                        return false;
+                    });
+
+                    if (!alreadyStored) {
+                        question.answer.systemResponses.push(mapped.exact_answer);
+                    }
                 }
 
                 // reserve callback slot
