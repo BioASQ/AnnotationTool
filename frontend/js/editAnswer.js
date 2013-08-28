@@ -178,15 +178,20 @@ require(['app', 'editQuestionTitle', 'spinner'], function (app, EditQuestionWidg
         var responses = [];
         if (typeof question.answer.systemResponses !== 'undefined') {
             question.answer.systemResponses.forEach(function (response) {
-                var templateData = {};
+                var templateData = {},
+                    flag = false;
                 switch (question.type) {
                 case 'decisive':
                     templateData.isDecisive = true;
                     templateData.response = response;
+                    flag = true;
                     break;
                 case 'factoid':
                     templateData.isFactoid = true;
-                    templateData.response = response.join(', ');
+                    if (response) {
+                        templateData.response = response.join(', ');
+                        flag = true;
+                    }
                     break;
                 case 'list':
                     templateData.isList = true;
@@ -195,7 +200,9 @@ require(['app', 'editQuestionTitle', 'spinner'], function (app, EditQuestionWidg
                     });
                     break;
                 }
-                responses.push($.extend({}, response, templateData));
+                if (flag) {
+                    responses.push($.extend({}, response, templateData));
+                }
             });
         }
         $('#system-responses').html(systemResponsesTemplate({'responses': responses}));
