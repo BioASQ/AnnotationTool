@@ -2,18 +2,40 @@ var step = require('step'),
     TIService = require('./tiservice').TIService;
 
 var titleProperties = [
-    'http://www.w3.org/2000/01/rdf-schema#label',
-    'http://www.w3.org/2004/02/skos/core#prefLabel',
-    'http://www.w3.org/2004/02/skos/core#altLabel',
-    /*
-     * SKOS-XL labels are resources so we don't want them as titles
-     * 'http://www.w3.org/2008/05/skos-xl#prefLabel',
-     * 'http://www.w3.org/2008/05/skos-xl#altLabel',
-     */
-    'http://www.w3.org/2008/05/skos-xl#literalForm',
+    'http://data.linkedct.org/resource/linkedct/acronym',
+    'http://purl.uniprot.org/core/alias',
+    'http://purl.uniprot.org/core/alternativeName',
+    'http://purl.uniprot.org/core/commonName',
+    'http://purl.uniprot.org/core/fullName',
     'http://purl.uniprot.org/core/name',
+    'http://purl.uniprot.org/core/orfName',
+    'http://purl.uniprot.org/core/otherName',
+    'http://purl.uniprot.org/core/recommendedName',
+    'http://purl.uniprot.org/core/scientificName',
+    'http://purl.uniprot.org/core/shortName',
+    'http://purl.uniprot.org/core/submittedName',
+    'http://purl.uniprot.org/core/synonym',
+    'http://www.w3.org/2000/01/rdf-schema#label',
+    'http://www.w3.org/2004/02/skos/core#altLabel',
+    'http://www.w3.org/2004/02/skos/core#broadSynonym',
+    'http://www.w3.org/2004/02/skos/core#narrowSynonym',
+    'http://www.w3.org/2004/02/skos/core#prefLabel',
+    'http://www.w3.org/2004/02/skos/core#relatedSynonym',
+    'http://www.w3.org/2008/05/skos-xl#altLabel',
+    'http://www.w3.org/2008/05/skos-xl#literalForm',
+    'http://www.w3.org/2008/05/skos-xl#prefLabel',
     'http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/name',
-    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/name'
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/brandName',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/chemicalIupacName',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/geneName',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/genericName',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/interactionInsert',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/name',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/pdbId',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/primaryAccessionNo',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/secondaryAccessionNumber',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/swissprotName',
+    'http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/synonym'
 ];
 
 var labelCache = {};
@@ -28,12 +50,10 @@ var TITriples = exports.TITriples = function (URL) {
 TITriples.prototype = Object.create(TIService.prototype);
 
 TITriples.prototype._titleQuery = function (s) {
-    return titleProperties.map(function (titleProperty) {
-        return s + ' [subj] AND ' + titleProperty + ' [pred]';
-    });
+    return s + ' [subj] AND (' + titleProperties.join(' [pred] OR ') + ' [pred])';
 };
 
-TITriples.prototype._dereferenceTitle = function (entity, cb) {
+TITriples.prototype.dereferenceTitle = function (entity, cb) {
     if (entity.search(/^http:/) === -1) { return cb(null, entity); }
 
     if (labelCache.hasOwnProperty(entity)) {
@@ -46,13 +66,16 @@ TITriples.prototype._dereferenceTitle = function (entity, cb) {
 
         self._requestJSON(
             URL,
-            { 'method': 'POST' }, { 'findTriples': self._titleQuery(entity)[0] },
+            { 'method': 'POST' }, { 'findTriples': [ self._titleQuery(entity) ] },
             function (err, response) {
                 if (err || !response.result.triples.length) {
                     return self._localPart(entity, cb);
                 }
-                labelCache[entity] = response.result.triples.shift().obj;
-                cb(null, labelCache[entity]);
+                /*
+                 * labelCache[entity] = response.result.triples.shift().obj;
+                 * cb(null, labelCache[entity]);
+                 */
+                cb(null, response.result.triples);
             }
         );
     });
