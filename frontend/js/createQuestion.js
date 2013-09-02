@@ -19,11 +19,18 @@ require(["app"], function (app) {
     var fetchQuestions = function () {
         // fetch question list on load
         $.getJSON(app.data.LogicServer+'questions', function(data){
-            var i, question,
+            data.questions.sort(function (lhs, rhs) {
+                if (lhs.finalized && !rhs.finalized) { return 1; }
+                if (!lhs.finalized && rhs.finalized) { return -1; }
+                return 0;
+            });
+            var question,
                 html = "";
-            for(i = 0; i < data.questions.length; i++){
+            for (var i = 0; i < data.questions.length; i++){
                 question = data.questions[i];
-                if( typeof question == 'undefined' ) continue;
+                if (typeof question == 'undefined') {
+                    continue;
+                }
 
                 // render to string
                 html += questionTemplate(question);

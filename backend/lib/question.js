@@ -15,9 +15,11 @@ Question.prototype.list = function (user, callback) {
     if (typeof user == 'undefined') { return callback(Error('No valid user.')); }
 
     this._collection(callback, function (err, coll) {
-        var cursor = coll.find({ 'creator': user }, { 'fields': [ 'body', 'creator' ], 'sort': [ '_id' ]});
+        var cursor = coll.find({ creator: user },
+                               { fields: [ 'body', 'creator', 'finalized' ],
+                                 sort: [ '_id' ] });
         cursor.toArray(function (err, res) {
-            if (err) { callback(err); }
+            if (err) { return callback(err); }
             callback(null, res);
         });
     });

@@ -97,7 +97,11 @@
 
         <!-- QUESTION TEMPLATE -->
         <script id="questionTemplate" type="text/x-handlebars-template">
-            <option value="{{_id}}">{{body}}</option>
+            {{#if finalized}}
+                <option value="{{_id}}">(finalized) {{body}}</option>
+            {{else}}
+                <option value="{{_id}}">{{body}}</option>
+            {{/if}}
         </script>
 
         <script id="editQuestionTemplate" type="text/x-handlebars-template">
