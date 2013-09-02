@@ -178,29 +178,24 @@ require(['app', 'editQuestionTitle', 'spinner'], function (app, EditQuestionWidg
         var responses = [];
         if (typeof question.answer.systemResponses !== 'undefined') {
             question.answer.systemResponses.forEach(function (response) {
-                var templateData = {},
-                    flag = false;
-                switch (question.type) {
-                case 'decisive':
-                    templateData.isDecisive = true;
-                    templateData.response = response;
-                    flag = true;
-                    break;
-                case 'factoid':
-                    templateData.isFactoid = true;
-                    if (response) {
+                if (response) {
+                    var templateData = {};
+                    switch (question.type) {
+                    case 'decisive':
+                        templateData.isDecisive = true;
+                        templateData.response = response;
+                        break;
+                    case 'factoid':
+                        templateData.isFactoid = true;
                         templateData.response = response.join(', ');
-                        flag = true;
+                        break;
+                    case 'list':
+                        templateData.isList = true;
+                        templateData.response = response.map(function (item) {
+                            return item.join(', ');
+                        });
+                        break;
                     }
-                    break;
-                case 'list':
-                    templateData.isList = true;
-                    templateData.response = response.map(function (item) {
-                        return item.join(', ');
-                    });
-                    break;
-                }
-                if (flag) {
                     responses.push($.extend({}, response, templateData));
                 }
             });
