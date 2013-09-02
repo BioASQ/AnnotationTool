@@ -7,8 +7,6 @@ var TIConcepts  = require('../lib/ticoncepts').TIConcepts,
     TITriples   = require('../lib/titriples2').TITriples,
     Verbalizer  = require('../lib/verbalizer').Verbalizer;
 
-var labelCache = JSON.parse(fs.readFileSync('./labelCache.json'));
-
 var services = {
     'doid':         new TIConcepts('http://www.gopubmed.org/web/bioasq/doid/json'),
     'geneontology': new TIConcepts('http://www.gopubmed.org/web/bioasq/go/json'),
@@ -27,6 +25,8 @@ var matchingService = function (term) {
     return null;
 };
 
+var labelCache = exports.labelCache = {};
+
 exports.descriptionForConcept = function (conceptURI, cb) {
     var service = matchingService(conceptURI);
     if (null === service) { return cb(Error('Could not match term ID to service.')); }
@@ -43,7 +43,7 @@ var documentsService = new TIDocuments('http://www.gopubmed.org/web/gopubmedbeta
 
 exports.descriptionForDocument = function (documentURI, cb) {
     var pmid = documentURI.replace(/^.*[/#]/, ''),
-        filePath = '/Users/norman/Projects/BioASQ/JSON/'
+        filePath = '/Volumes/JSON/'
                  + pmid
                  + '.json';
 

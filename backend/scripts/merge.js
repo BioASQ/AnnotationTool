@@ -10,6 +10,7 @@ program
     .option('-s, --system-answers <file name>', 'JSON file or directory with JSON files containing system answers')
     .option('-u, --filter-user [user ID]', 'Only write question for a certain user ID')
     .option('-q, --filter-question [question ID]', 'Only write question with ID')
+    .option('-l, --label-cache [file name] JSON file with labels')
     .option('-p, --print-uris', 'Only write URIs in requested statements to stdout')
     .parse(process.argv);
 
@@ -99,7 +100,6 @@ if (program.printUris) {
             if (typeof response.triples !== 'undefined') {
                 response.triples.forEach(function (t) {
                     uris[t.s] = true;
-                    uris[t.p] = true;
                     if (t.o.search(/^(https?|mailto|tel|urn):/) === 0) {
                         uris[t.o] = true;
                     }
@@ -111,6 +111,10 @@ if (program.printUris) {
     process.stdout.write(Object.keys(uris).join('\n'));
     process.stdout.write('\n');
     process.exit(0);
+}
+
+if (typeof program.labelCache !== 'undefined') {
+    resolver.labelCache = JSON.parse(fs.readFileSync(program.labelCache));
 }
 
 step(
