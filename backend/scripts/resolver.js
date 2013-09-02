@@ -49,15 +49,17 @@ exports.descriptionForDocument = function (documentURI, cb) {
 
     fs.readFile(filePath, function (err, data) {
         if (err) {
-            return documentsService.find(pmid + '[uid]', 0, 10, function (err, results) {
-                if (err) { return cb(err); }
-                if (!results.length) { return cb(ReferenceError('document ' + pmid + ' not found!')); }
-                return cb(null, {
-                    uri: documentURI,
-                    title: results[0].title,
-                    sections: results[0].sections
+            return setTimeout(function () {
+                documentsService.find(pmid + '[uid]', 0, 10, function (err, results) {
+                    if (err) { return cb(err); }
+                    if (!results.length) { return cb(ReferenceError('document ' + pmid + ' not found!')); }
+                    return cb(null, {
+                        uri: documentURI,
+                        title: results[0].title,
+                        sections: results[0].sections
+                    });
                 });
-            });
+            }, 1000);
         }
 
         var parsed = JSON.parse(data);
