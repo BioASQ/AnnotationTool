@@ -16,7 +16,7 @@ Question.prototype.list = function (user, callback) {
 
     this._collection(callback, function (err, coll) {
         var cursor = coll.find({ creator: user },
-                               { fields: [ 'body', 'creator', 'finalized' ],
+                               { fields: [ 'body', 'creator', 'finalized', 'type' ],
                                  sort: [ '_id' ] });
         cursor.toArray(function (err, res) {
             if (err) { return callback(err); }
