@@ -1,6 +1,6 @@
 var
     nodemailer = require('nodemailer'),
-    config = require(require('path').join(__dirname, '..', 'config')).defaults;
+    config = require(require('path').join(__dirname, '..', '..', 'config')).defaults;
 
 var Mail = exports.Mail = function () {
     this.transport = nodemailer.createTransport('SMTP', {

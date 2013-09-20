@@ -22,7 +22,7 @@ var
   send = require('send'),
   schemajs = require('schemajs'),
   path = require('path'),
-  config = require(path.join(__dirname, '..', 'config')).defaults,
+  config = require(path.join(__dirname, '..', '..', 'config')).defaults,
   dbConn = new mongodb.Db(config.database.name, new mongodb.Server(config.database.host, config.database.port, {}), { safe: false }),
   options = {
       host: '127.0.0.1',

@@ -10,7 +10,7 @@ var journey = require('journey'),
     TIDocuments = require('./tidocuments').TIDocuments,
     TITriples = require('./titriples2').TITriples,
     Verbalizer = require('./verbalizer').Verbalizer,
-    config = require(require('path').join(__dirname, '..', 'config')).defaults,
+    config = require(require('path').join(__dirname, '..', '..', 'config')).defaults,
     logger = require('./logging.js').logger,
     path = require('path');
 

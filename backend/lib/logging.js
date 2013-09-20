@@ -11,7 +11,7 @@ Parameters:
 var winston = require('winston');
 var mongoDB = require('winston-mongodb').MongoDB;
 var path = require('path');
-var config = require(path.join(__dirname, '..', 'config')).defaults;
+var config = require(path.join(__dirname, '..', '..', 'config')).defaults;
 
 var logging = function logging() {
     var self = this;

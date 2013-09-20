@@ -22,7 +22,7 @@ var options = {
   }
 };
 
-var server = require(path.join('..', 'lib', 'server.js'));
+var server = require(path.join('..', 'backend', 'lib', 'server.js'));
 server.start(options, function (err, server) {
   if (err) {
     return util.puts('Error starting annotation server: ' + err.message);

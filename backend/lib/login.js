@@ -3,7 +3,7 @@
     crypto = require('crypto'),
     schemajs = require('schemajs'),
     mymail = require('./mail'),
-    config = require(require('path').join(__dirname, '..', 'config')).defaults,
+    config = require(require('path').join(__dirname, '..', '..', 'config')).defaults,
     shared = require(require('path').join(__dirname, '..','..','frontend', 'js' , 'shared')).shared;
 
 var Login = exports.Login = function (database) {

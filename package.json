@@ -1,0 +1,29 @@
+{
+  "name": "bioasq-at",
+  "description": "BioASQ Annotation Tool",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "start": "bin/start"
+  },
+  "directories": {
+    "lib": "server/lib"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/AKSW/BioASQ-AT"
+  },
+  "dependencies": {
+      "mongodb": "1.2.10",
+      "send": "0.1.0",
+      "lazy": "1.0.11",
+      "commander": "1.2.0",
+      "sesh": "0.1.0",
+      "step": "0.0.5",
+      "schemajs": "0.1.10",
+      "journey": "0.4.0-pre-3",
+      "nodemailer": "0.3.37",
+      "winston": "0.6.2",
+      "winston-mongodb": "0.4.0"
+  }
+}

@@ -1,6 +1,6 @@
 var
     step = require('step'),
-    config = require(require('path').join(__dirname, '..', 'config')).defaults,
+    config = require(require('path').join(__dirname, '..', '..', 'config')).defaults,
     TIConcepts = require('./ticoncepts').TIConcepts;
 
 var Search = exports.Search = function () {
