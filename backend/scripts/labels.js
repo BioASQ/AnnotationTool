@@ -64,10 +64,14 @@ lazy(stream).lines.join(function (buffers) {
             buffers.forEach(function (uriBuffer) {
                 var uri = String(uriBuffer);
                 uriGroup()(null, uri);
-                tiservice._dereferenceTitle(uri, resultGroup());
+                tiservice.dereferenceTitle(uri, resultGroup());
             });
         },
         function (err, uris, results) {
+            if (err) {
+                console.error(err);
+                process.exit(-1);
+            }
             var cache = {};
             for (var i = 0; i < results.length; i++) {
                 for (var j = 0; j < results[i].length; j++) {
