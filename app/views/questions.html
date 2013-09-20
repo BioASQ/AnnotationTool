@@ -1,0 +1,86 @@
+<div data-ng-include="'views/partials/navigation.html'"></div>
+<div class="container">
+  <div class="row">
+    <h1 style="text-align:center">Pick a question <sup style="font-size: 0.5em;">or create a new one</sup></h1>
+    <hr class="span12"/>
+  </div>
+
+  <div class="row">
+    <div class="span pull-right">
+      <button data-ng-if="mode=='annotation'" class="btn" data-ng-click="newQuestion()">
+        <i class="icon-plus"></i>
+        Add Question
+      </button>
+      <button class="btn btn-primary" data-ng-disabled="!selectedQuestion||editing" data-ng-click="proceed()">
+        <i class="icon-chevron-right"></i>
+        Proceed
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span5">
+      <ol>
+        <li data-ng-repeat="question in questions">
+          <a class="question" data-ng-class="{selected: isSelected($index)}" href=""
+             data-ng-click="selectQuestion($index)">{{question.body}}</a>
+        </li>
+      </ol>
+    </div>
+
+   <div class="span7" data-ng-if="selectedQuestion">
+      <form>
+        <label>Question text</label>
+        <textarea placeholder="Question &hellip;" rows="5" class="span7"
+                  data-ng-disabled="!$parent.editing"
+                  data-ng-model="selectedQuestion.body"
+                  required></textarea>
+        <label>Question type</label>
+        <select data-ng-model="selectedQuestion.type" data-ng-disabled="!editing" required>
+          <option value="decisive">Yes/No</option>
+          <option value="factoid">Factoid</option>
+          <option value="list">List</option>
+          <option value="summary">Summary</option>
+        </select>
+          <div class="pull-right">
+            <button data-ng-if="mode=='annotation'" class="btn" data-ng-show="!$parent.editing" data-ng-click="deleteQuestion()">
+              <i class="icon-trash"></i>
+              Delete
+            </button>
+            <button class="btn" data-ng-show="!$parent.editing" data-ng-click="editQuestion()">
+              <i class="icon-edit"></i>
+              Edit
+            </button>
+            <button class="btn" data-ng-show="$parent.editing" data-ng-click="cancelEditing()">
+              Cancel
+            </button>
+            <button class="btn btn-primary" data-ng-show="$parent.editing" data-ng-click="saveQuestion()">
+              Save
+            </button>
+          </div>
+      </form>
+    </div>
+  </div>
+  <!--
+     - <div class="offset1 span10">
+     -   <hr/>
+     -   <div class="row">
+     -     <span class="span10">
+     -       <select class="span10" style="margin-bottom:0px;"
+     -               ng-model="selectedQuestion"
+     -               ng-options="question.body for question in questions">
+     -       </select>
+     -     </span>
+     -   </div>
+     -   <div class="row">
+     -     <button data-ng-if="mode=='annotation'" class="btn" href="#newQuestionModal" data-toggle="modal" id="addQuestion">
+     -       <i class="icon-plus"></i>New Question
+     -     </button>
+     -     <a class="btn" data-ng-click="editing=!editing">Edit Question</a>
+     -     
+     -   </div>
+     - </div>
+     - <div class="offset1 span10 well" style="margin-top:5em" data-ng-if="editing && selectedQuestion">
+     - </div>
+     -->
+</div>

@@ -1,0 +1,24 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <!--
+           - <span class="icon-bar"></span>
+           - <span class="icon-bar"></span>
+           - <span class="icon-bar"></span>
+           -->
+      </a>
+      <img class="brand logo-top" src="img/BioASQ_logo.png" alt="BioASQ logo">
+      <a class="btn btn-small btn-primary pull-left userButton" href="/#!/user"><i class="icon-user"></i></a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li data-ng-repeat="route in routes"
+              data-ng-class="{active: $uiRoute}"
+              data-ui-route="#/{{route.name}}">
+            <a data-ng-href="#!/{{route.name}}">{{route.name | inflector:humanize}}</a>
+          </li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>

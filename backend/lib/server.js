@@ -44,7 +44,7 @@ exports.createServer = function (port, model, authentication) {
                         response.end();
                     } else {
                         send(request, parsedURL.pathname)
-                            .root(path.join(__dirname, '..', '..', 'frontend'))
+                            .root(path.join(__dirname, '..', '..', 'app'))
                             .pipe(response);
                     }
                 }
@@ -75,5 +75,5 @@ exports.start = function (options, callback) {
 }
 
 function isIndexRequest(pathName) {
-    return (pathName.search(/^$|^\/$|index\.html$|\.css$|\.js$|\.png$/) > -1);
+    return (pathName.search(/^$|^\/$|\.html$|\.css$|\.js$|\.png$/) > -1);
 }
