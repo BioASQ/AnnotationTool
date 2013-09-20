@@ -1,4 +1,4 @@
-﻿var
+var
     nodemailer = require('nodemailer'),
     config = require(require('path').join(__dirname, '..', 'config')).defaults;
 
