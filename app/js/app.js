@@ -68,6 +68,15 @@ angular.module('bioasq-at.controllers', ['bioasq-at.services'])
     };
 })
 .controller('QuestionCtrl', function ($scope, $http, $location, Questions) {
+    $scope.allRoutes = $scope.routes;
+    $scope.$watch('selectedQuestion', function () {
+        if (!$scope.selectedQuestion || $scope.editing) {
+            $scope.routes = $scope.allRoutes.slice(0, 1);
+        } else {
+            $scope.routes = $scope.allRoutes;
+        }
+    });
+
     $scope.selectedQuestion = Questions.selectedQuestion();
     $http.get('/backend/questions').then(function (result) {
         $scope.questions = result.data.questions;
