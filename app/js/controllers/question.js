@@ -24,7 +24,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         Questions.select($scope.selectedQuestion);
     };
     $scope.newQuestion = function () {
-        $scope.questions.push({});
+        $scope.questions.push({ version: 2 });
         $scope.editing  = true;
         $scope.creating = true;
         $scope.selectedQuestion = $scope.questions[$scope.questions.length - 1];
