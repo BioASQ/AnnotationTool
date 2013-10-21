@@ -9,7 +9,6 @@
            -->
       </a>
       <img class="brand logo-top" src="img/BioASQ_logo.png" alt="BioASQ logo">
-      <a class="btn btn-small btn-primary pull-left userButton" href="/#!/user"><i class="icon-user"></i></a>
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li data-ng-repeat="route in routes"
@@ -18,6 +17,7 @@
             <a data-ng-href="#!/{{route.name}}">{{route.name | inflector:humanize}}</a>
           </li>
         </ul>
+        <a class="btn btn-small btn-primary pull-right userButton" href="/#!/user"><i class="icon-user"></i></a>
       </div><!--/.nav-collapse -->
     </div>
   </div>
