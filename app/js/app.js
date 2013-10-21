@@ -6,7 +6,8 @@ var dependencies = [
     'bioasq-at.controllers.search',
     'bioasq-at.controllers.answer',
     'bioasq-at.controllers.login',
-    'bioasq-at.services.question'
+    'bioasq-at.services.question',
+    'bioasq-at.filters'
 ];
 
 angular.module('bioasq-at', dependencies)
@@ -19,6 +20,10 @@ angular.module('bioasq-at', dependencies)
         modes:          [ 'annotation' ] },
     {   name:           'answer',
         controllerName: 'AnswerCtrl',
+        modes:          [ 'annotation', 'assessment' ] },
+    {   name:           'user',
+        controllerName: 'UserCtrl',
+        navigation:     false,
         modes:          [ 'annotation', 'assessment' ] },
     {   name:           'login',
         controllerName: 'LoginCtrl',
