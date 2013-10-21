@@ -73,9 +73,12 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
     }
 
     $scope.search = function () {
-        $scope.pages          = _.extend({}, pageSettings);
-        $scope.pages.conceptSources  = _.extend({}, conceptSources);
-        $scope.groupByLabel   = true;
+        $scope.pages                = _.extend({}, pageSettings);
+        $scope.pages.conceptSources = _.extend({}, conceptSources);
+        $scope.groupByLabel         = true;
+        $scope.conceptsShown        = false;
+        $scope.documentsShown       = false;
+        $scope.statementsShown      = false;
 
         delete $scope.concepts;
         fetchConceptsIfNeeded($scope.terms, $scope.pages.concepts.current - 1, itemsPerPage);
