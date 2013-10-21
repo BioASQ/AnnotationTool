@@ -41,9 +41,6 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
                 $scope.pages.concepts.total = response.size;
                 $scope.concepts = response.results.concepts;
                 $scope.sources = response.sources;
-                angular.forEach($scope.concepts, function (item) {
-                    item.type = 'concept';
-                });
             });
         }
     }
@@ -54,10 +51,6 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
             .then(function (response) {
                 $scope.pages.documents.total = response.size;
                 $scope.documents = response.results.documents;
-                angular.forEach($scope.documents, function (item) {
-                    item.type = 'document';
-                    item.abstract = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
-                });
             });
         }
     }

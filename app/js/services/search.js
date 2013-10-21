@@ -4,6 +4,7 @@ angular.module('bioasq-at.services.search', [])
     function group(data) {
         var groups = [];
         var newGroup = {
+            type: 'concept-group',
             group: true,
             title: null,
             source: null,
@@ -11,6 +12,8 @@ angular.module('bioasq-at.services.search', [])
         };
         var currentGroup = _.extend({}, newGroup);
         _.each(data, function (item) {
+            item.type = 'concept';
+            item.isChild = true;
             if (item.title === currentGroup.title && item.source === currentGroup.source) {
                 currentGroup.items.push(item);
             } else {
@@ -84,7 +87,12 @@ angular.module('bioasq-at.services.search', [])
             var deferred = $q.defer();
             $http.post('/backend/documents', { query: query, page: page, itemsPerPage: pageSize })
             .then(function (response) {
-                deferred.resolve(response.data);
+                var result = response.data;
+                result.results.documents = result.results.documents.map(function (d) {
+                    d.type = 'document';
+                    return d;
+                });
+                deferred.resolve(result);
             });
             return deferred.promise;
         },
@@ -94,7 +102,10 @@ angular.module('bioasq-at.services.search', [])
                 size: 1,
                 results: {
                     statements: [
-                        { type: 'statement', title: 'Not implemented' }
+                        { type: 'statement', title: 'Not implemented',
+                          s: 'http://example.com/Feature',
+                          p: 'http://example.com/not',
+                          o: 'implemented' }
                     ]
                 }
             });
