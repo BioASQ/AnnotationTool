@@ -22,7 +22,7 @@
     <div class="span5">
       <ol>
         <li data-ng-repeat="question in questions">
-          <a class="question" data-ng-class="{selected: isSelected($index)}" href=""
+          <a class="question" data-ng-class="{selected: isSelected($index)}"
              data-ng-click="selectQuestion($index)">{{question.body}}</a>
         </li>
       </ol>
