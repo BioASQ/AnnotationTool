@@ -102,4 +102,28 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
             $scope.pages.conceptSources[source] = !$scope.pages.conceptSources[source];
         }
     };
+
+    $scope.toggleSelection = function (annotation) {
+        if (!Questions.hasAnnotation(annotation)) {
+            Questions.addAnnotation(annotation);
+        } else {
+            Questions.removeAnnotation(annotation);
+        }
+    };
+
+    $scope.select = function (annotation) {
+        if (!Questions.hasAnnotation(annotation)) {
+            Questions.addAnnotation(annotation);
+        }
+    };
+
+    $scope.unselect = function (annotation) {
+        if (Questions.hasAnnotation(annotation)) {
+            Questions.removeAnnotation(annotation);
+        }
+    };
+
+    $scope.isSelected = function (annotation) {
+        return Questions.hasAnnotation(annotation);
+    };
 });
