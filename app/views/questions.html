@@ -7,14 +7,19 @@
 
   <div class="row">
     <div class="span pull-right">
-      <button data-ng-if="mode=='annotation'" class="btn" data-ng-click="newQuestion()">
-        <i class="icon-plus"></i>
-        Add Question
-      </button>
-      <button class="btn btn-primary" data-ng-disabled="!selectedQuestion||editing" data-ng-click="proceed()">
-        <i class="icon-chevron-right"></i>
-        Proceed
-      </button>
+      <ul class="inline">
+        <li>
+          <button data-ng-if="mode=='annotation'" class="btn" data-ng-click="newQuestion()">
+            <i class="icon-plus"></i>
+            Add Question
+          </button>
+        </li>
+        <li>
+          <button class="btn btn-primary" data-ng-disabled="!selectedQuestion||editing" data-ng-click="proceed()">
+            <i class="icon-chevron-right"></i>
+            Proceed
+          </button>
+        </li>
     </div>
   </div>
 
