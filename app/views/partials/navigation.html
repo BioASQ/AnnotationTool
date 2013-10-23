@@ -13,8 +13,13 @@
         <ul class="nav">
           <li data-ng-repeat="route in routes"
               data-ng-class="{active: $uiRoute}"
-              data-ui-route="#/{{route.name}}">
-            <a data-ng-href="#!/{{route.name}}">{{route.name | inflector:humanize}}</a>
+              data-ui-route="#/{{route.name}}.*">
+            <a data-ng-if="route.path" data-ng-href="#!/{{route.name}}/{{question._id}}">
+              {{route.name | inflector:humanize}}
+            </a>
+            <a data-ng-if="!route.path" data-ng-href="#!/{{route.name}}">
+              {{route.name | inflector:humanize}}
+            </a>
           </li>
         </ul>
         <a class="btn btn-small btn-primary pull-right userButton" href="/#!/user"><i class="icon-user"></i></a>

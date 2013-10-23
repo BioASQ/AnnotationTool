@@ -15,7 +15,7 @@
           </button>
         </li>
         <li>
-          <button class="btn btn-primary" data-ng-disabled="!selectedQuestion||editing" data-ng-click="proceed()">
+          <button class="btn btn-primary" data-ng-disabled="!question||editing" data-ng-click="proceed()">
             <i class="icon-chevron-right"></i>
             Proceed
           </button>
@@ -33,15 +33,17 @@
       </ol>
     </div>
 
-   <div class="span7" data-ng-if="selectedQuestion">
+   <div class="span7" data-ng-if="question">
       <form>
+        <label>Question ID</label>
+        <input type="text" disabled="true" data-ng-model="question._id"></input>
         <label>Question text</label>
         <textarea placeholder="Question &hellip;" rows="5" class="span7"
                   data-ng-disabled="!$parent.editing"
-                  data-ng-model="selectedQuestion.body"
+                  data-ng-model="question.body"
                   required></textarea>
         <label>Question type</label>
-        <select data-ng-model="selectedQuestion.type" data-ng-disabled="!editing" required>
+        <select data-ng-model="question.type" data-ng-disabled="!editing" required>
           <option value="decisive">Yes/No</option>
           <option value="factoid">Factoid</option>
           <option value="list">List</option>
@@ -72,7 +74,7 @@
      -   <div class="row">
      -     <span class="span10">
      -       <select class="span10" style="margin-bottom:0px;"
-     -               ng-model="selectedQuestion"
+     -               ng-model="question"
      -               ng-options="question.body for question in questions">
      -       </select>
      -     </span>
@@ -85,7 +87,7 @@
      -     
      -   </div>
      - </div>
-     - <div class="offset1 span10 well" style="margin-top:5em" data-ng-if="editing && selectedQuestion">
+     - <div class="offset1 span10 well" style="margin-top:5em" data-ng-if="editing && question">
      - </div>
      -->
 </div>

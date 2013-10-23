@@ -54,6 +54,9 @@ angular.module('bioasq-at.services.question', [])
         delete: function (question) {
             $http.delete('/backend/questions/' + question._id);
         },
+        load: function (id) {
+            return $http.get('/backend/questions/' + id);
+        },
         isSelected: function (question) {
             return (_selectedQuestion && (_selectedQuestion.id === question.id));
         },

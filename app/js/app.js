@@ -16,9 +16,11 @@ angular.module('bioasq-at', dependencies)
         controllerName: 'QuestionCtrl',
         modes:          [ 'annotation', 'assessment' ] },
     {   name:           'search',
+        path:           ':id',
         controllerName: 'SearchCtrl',
         modes:          [ 'annotation' ] },
     {   name:           'answer',
+        path:           ':id',
         controllerName: 'AnswerCtrl',
         modes:          [ 'annotation', 'assessment' ] },
     {   name:           'user',
@@ -33,7 +35,7 @@ angular.module('bioasq-at', dependencies)
 ])
 .config(['$routeProvider', '$locationProvider', 'Routes', function ($route, $location, Routes) {
     angular.forEach(Routes, function (route) {
-        $route.when('/' + route.name, {
+        $route.when('/' + route.name + (route.path ? '/' + route.path : ''), {
             templateUrl: 'views/' + route.name + '.html',
             controller:  route.controllerName
         });
