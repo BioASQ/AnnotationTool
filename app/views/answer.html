@@ -4,4 +4,121 @@
     <h1 class="span" style="color:#999">{{question.body}}</h1>
     <hr class="span12">
   </div>
-</div>
+  <div class="row">
+    <ul class="inline pull-right">
+      <li data-ng-if="question.finalized">
+        <span class="is-finalized">Question finalized <i class="icon-ok"></i></span>
+      </li>
+      <li>
+        <button class="btn" style="width:12em" data-ng-click="question.finalized=!question.finalized">
+          <span data-ng-if="question.finalized">Unfinalize Question</span>
+          <span data-ng-if="!question.finalized">Finalize Question</span>
+        </button>
+      </li>
+      <li><button class="btn btn-success">Save Question</button></li>
+    </ul>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  <div class="row">
+    <div class="span12">
+      <label>Verbal answer</label>
+      <textarea class="span12" rows="6" data-ng-model="question.answer.ideal"></textarea>
+    </div>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  <div class="row" data-ng-if="question.type!='summary'">
+    <div class="span12">
+      <label>Exact answer</label>
+      <span data-ng-switch="question.type">
+        <span data-ng-switch-when="yesno">
+          <input type="radio" data-ng-model="question.answer.exact">
+        </span>
+        <span data-ng-switch-when="factoid">
+          <ul class="inline">
+            <li data-ng-repeat="e in question.answer.exact track by $index">
+              <input type="text" data-ng-model="question.answer.exact[$index]">
+            </li>
+            <a title="Add a synonym" class="btn"
+               data-ng-disabled="!canAddSynonym()"
+               data-ng-click="addSynonym()">
+              <i class="icon-chevron-right"></i>
+            </a>
+          </ul>
+        </span>
+        <span data-ng-switch-when="list">
+          <ul>
+            <li data-ng-repeat="e in question.answer.exact">
+              <ul class="inline" data-ng-init="parentIndex=$index">
+                <li data-ng-repeat="ee in e track by parentIndex-$index">
+                  <input type="text" data-ng-model="question.answer.exact[parentIndex][$index]">
+                </li>
+                <a title="Add a synonym" class="btn"
+                   data-ng-disabled="!canAddSynonym(parentIndex)"
+                   data-ng-click="addSynonym(parentIndex)">
+                  <i class="icon-chevron-right"></i>
+                </a>
+              </ul>
+            </li>
+          </ul>
+          <a title="Add a new list entry" class="btn"
+            data-ng-disabled="!canAddEntry()"
+             data-ng-click="addEntry()">
+            <i class="icon-chevron-down"></i>
+          </a>
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  <div class="row">
+    <div class="span12">
+      <div data-tabset>
+        <div data-tab data-heading="Concepts ({{question.answer.concepts.length}})">
+          <div data-ng-if="!question.answer.concepts.length">No concepts selected.</div>
+          <ol><li data-ng-repeat="concept in question.answer.concepts">{{concept.title}}</li></ol>
+        </div>
+        <div data-tab data-heading="Documents ({{question.answer.documents.length}})">
+          <div data-ng-if="!question.answer.documents.length">No documents selected.</div>
+          <div class="row">
+            <div class="span5">
+              <ol>
+                <li data-ng-repeat="document in question.answer.documents">
+                  <a data-ng-class="{ selected: (selection.document.uri === document.uri) }"
+                    data-ng-click="selection.document=document">{{document.title}}</a>
+                </li>
+              </ol>
+            </div>
+            <div data-ng-controller="DocumentCtrl" class="span7">
+              <h4 style="margin-top: 0" data-section-name="title">{{title}}</h4>
+              <p class="abstract" data-section-name="abstract"
+                 data-highlight="{{snippets(document, 'abstract')}}"
+                 data-highlight-text="{{abstract}}"></p>
+              <p data-ng-repeat="section in sections"
+                 class="section"
+                 data-section-name="sections.{{$index}}">{{section}}</p>
+            </div>
+          </div>
+        </div>
+        <div data-tab data-heading="Statement ({{question.answer.statements.length}})">
+          <div data-ng-if="!question.answer.statements.length">No statements selected.</div>
+          <ol><li data-ng-repeat="statement in question.answer.statements">{{statement.title}}</li></ol>
+        </div>
+        <div data-tab data-heading="Snippets ({{question.answer.snippets.length}})">
+          <div data-ng-if="!question.answer.snippets.length">No snippets selected.</div>
+          <ol>
+            <li data-ng-repeat="snippet in question.answer.snippets">
+              <a data-ng-click="showSnippet(snippet)">{{snippet.text}}</a>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </span>
+  </div>
+
+</div> <!-- container -->
