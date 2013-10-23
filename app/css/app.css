@@ -34,6 +34,36 @@ hr.small {
   /* font-style: italic; */
 }
 
+ol.inline, ul.inline {
+  margin-left: 0;
+}
+
+ol {
+  margin-left: 2em;
+}
+
+ul:not(.nav) li {
+  margin-bottom: .25em;
+}
+
+input {
+  margin-bottom: 0 !important;
+}
+
+/*
+ * ol, ul {
+ *   margin-left: 0;
+ * }
+ * 
+ * ol.inline, ul.inline {
+ *   margin-left: 0;
+ * }
+ * 
+ * ol:not(.inline) li, ul:not(.inline) li {
+ *   margin-left: 2em;
+ * }
+ */
+
 .selected {
   background-color: #dd4814;
   color: white;
