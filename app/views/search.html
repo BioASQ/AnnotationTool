@@ -1,7 +1,12 @@
 <div data-ng-include="'views/partials/navigation.html'"></div>
-<div class="container">
+<div class="container" data-ui-if="!question">
+  <div class="alert alert-error">
+    <strong>Error!</strong> No question selected.
+  </div>
+</div>
+<div class="container" data-ui-if="question">
   <div class="row">
-    <h1 class="span" style="color:#999">{{question.body}}</h1>
+    <h2 class="span" style="color:#999">{{question.body}}</h2>
     <hr class="span12">
   </div>
 
@@ -127,7 +132,7 @@
     <div class="span2">
       <div data-ng-if="result.type!='concept-group'" class="pull-right">
         <a href="{{result.uri}}" target="_blank"><i class="icon-file"></i></a>
-        <a ng-click="toggleSelection(result)">
+        <a data-ng-if="question && !question.finalized" ng-click="toggleSelection(result)">
           <i ng-class="{ 'icon-minus': isSelected(result), 'icon-plus': !isSelected(result) }"></i>
         </a>
       </div>
