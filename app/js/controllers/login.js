@@ -5,7 +5,7 @@ angular.module('bioasq-at.controllers.login', [])
         if (!$scope.email) {
             $scope.messages.push({
                 type: 'error',
-                text: 'Email required'
+                text: 'Email address required'
             });
             return;
         }
@@ -33,6 +33,30 @@ angular.module('bioasq-at.controllers.login', [])
                     text: 'Could not sign in (' + status + ')'
                 });
             }
+        });
+    };
+
+    $scope.resetPassword = function () {
+        $scope.messages = [];
+        if (!$scope.email) {
+            $scope.messages.push({
+                type: 'error',
+                text: 'Email address required'
+            });
+            return;
+        }
+        $http.get('/backend/resetPassword', { params: { email: $scope.email } })
+        .success(function () {
+            $scope.messages.push({
+                type: 'success',
+                text: 'Password reset email sent.'
+            });
+        })
+        .error(function (data, status) {
+            $scope.messages.push({
+                type: 'error',
+                text: 'Could not send reset email.'
+            });
         });
     };
 });
