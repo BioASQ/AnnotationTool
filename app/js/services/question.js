@@ -1,9 +1,6 @@
 angular.module('bioasq-at.services.question', [])
-.factory('Questions', function ($http) {
-    // var _selectedQuestion = null;
-    var _selectedQuestion = {
-        body: 'Are CNEs particularly enriched in gene deserts?'
-    };
+.factory('Questions', function ($http, $routeParams) {
+    var _selectedQuestion = null;
 
     var equal = function (lhs, rhs) {
         // can be concept, document, statement
@@ -43,9 +40,10 @@ angular.module('bioasq-at.services.question', [])
         selectedQuestion: function () {
             return _selectedQuestion;
         },
-        create: function (question) {
+        create: function (question, cb) {
             $http.post('/backend/questions', question).then(function (result) {
                 question._id = result.id;
+                cb(result.data);
             });
         },
         save: function (question) {
