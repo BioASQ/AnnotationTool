@@ -4,7 +4,7 @@
     schemajs = require('schemajs'),
     mymail = require('./mail'),
     config = require(require('path').join(__dirname, '..', '..', 'config')).defaults,
-    shared = require(require('path').join(__dirname, '..','..','frontend', 'js' , 'shared')).shared;
+    shared = require(require('path').join(__dirname, '..','..', 'shared')).shared;
 
 var Login = exports.Login = function (database) {
     this.md5Blob = config.login.salt;
