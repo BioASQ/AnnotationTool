@@ -35,6 +35,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
             if ($scope.questions[i]._id === question._id) {
                 $scope.question = $scope.questions[i];
                 Questions.select($scope.question);
+                $scope.editing = false;
             }
         }
     };
