@@ -1,0 +1,52 @@
+<div data-ng-include="'views/partials/navigation.html'"></div>
+
+<div class="container">
+  <div class="row">
+    <h2 class="span" style="color:#999">Change password</h2>
+    <div class="span pull-right">
+      <a class="btn" href="backend/logout">
+        <i class="icon-off"></i>
+        Sign out
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <hr class="span12" />
+  </div>
+
+  <div class="row">
+    <div class="offset1 span10">
+      <div class="alert alert-{{message.type}}" data-ng-repeat="message in messages">
+        <strong>{{message.type | inflector:humanize}}!</strong>
+        {{message.text}}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="control-group offset7 span5">
+      <input class="span5" type="password" data-ng-model="user.password1" placeholder="New password">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="control-group offset7 span5">
+      <input class="span5" type="password" data-ng-model="user.password2" placeholder="New password (repeat)">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="control-group offset7 span5">
+      <input class="span5" type="password" data-ng-model="user.password" placeholder="Current password">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span pull-right">
+      <button class="btn" data-ng-click="cancel()">Cancel</button>
+      <button class="btn btn-success" data-ng-click="save()">Save changes</button>
+    </div>
+  </div>
+
+</div> <!-- /container -->

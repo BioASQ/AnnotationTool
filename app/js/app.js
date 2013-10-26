@@ -7,6 +7,7 @@ var dependencies = [
     'bioasq-at.controllers.answer',
     'bioasq-at.controllers.document',
     'bioasq-at.controllers.login',
+    'bioasq-at.controllers.user',
     'bioasq-at.services.question',
     'bioasq-at.filters'
 ];
@@ -53,8 +54,9 @@ angular.module('bioasq-at', dependencies)
         function success(response) { return response; }
         function error(response) {
             if (response.status === 401 || response.status === 403) {
-                $location.path('login');
-                return $q.reject(response);
+                if (response.config.url.indexOf('/changePassword') === -1) {
+                    $location.path('login');
+                }
             }
             return $q.reject(response);
         }
