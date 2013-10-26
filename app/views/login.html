@@ -7,11 +7,20 @@
       <form>
         <input type="text" name="email" placeholder="Email address" data-ng-model="email" />
         <input type="password" name="password" placeholder="Password" data-ng-model="password" />
-        <input type="submit" name="submit" class="btn btn-primary" value="Login" data-ng-click="login()" />
-        <a href="#regModal" data-toggle="modal" id="regButton"><button class="btn">Register</button></a>
+        <input type="submit" name="submit" class="btn btn-primary" value="Sign in" data-ng-click="login()" />
       </form>
     </div>
-    <button class="btn btn-mini" id="forgotPassword"><i class="icon-refresh"></i> Forgot your password?</button>
+    <a href="#regModal" data-toggle="modal" id="regButton"><button class="btn">Create an account</button></a>
+    <button class="btn" id="forgotPassword"><i class="icon-refresh"></i> Forgot your password?</button>
+  </div>
+
+  <div class="row">
+    <div class="span12">
+      <div class="alert alert-{{message.type}}" data-ng-repeat="message in messages">
+        <strong>{{message.type | inflector:humanize}}!</strong>
+        {{message.text}}
+      </div>
+    </div>
   </div>
 
   <!-- register modal -->
