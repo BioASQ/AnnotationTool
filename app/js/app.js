@@ -36,7 +36,7 @@ angular.module('bioasq-at', dependencies)
 ])
 .config(['$routeProvider', '$locationProvider', 'Routes', function ($route, $location, Routes) {
     angular.forEach(Routes, function (route) {
-        $route.when('/' + route.name + (route.path ? '/' + route.path : ''), {
+        $route.when('/' + route.name + (route.path ? '/' + route.path + '?' : ''), {
             templateUrl: 'views/' + route.name + '.html',
             controller:  route.controllerName
         });
