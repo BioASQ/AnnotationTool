@@ -1,21 +1,33 @@
 <div data-ng-include="'views/partials/navigation.html'"></div>
-<div class="container">
+
+<div class="container" data-ng-if="!question">
+  <div class="alert alert-error">
+    <strong>Error!</strong> No question selected.
+  </div>
+</div>
+
+<div class="container" data-ng-show="question">
   <div class="row">
-    <h1 class="span" style="color:#999">{{question.body}}</h1>
+    <h2 class="span" style="color:#999">{{question.body}}</h2>
     <hr class="span12">
   </div>
   <div class="row">
     <ul class="inline pull-right">
       <li data-ng-if="question.finalized">
-        <span class="is-finalized">Question finalized <i class="icon-ok"></i></span>
+        <span class="is-finalized">Question finalized &#x2713;</span>
       </li>
       <li>
-        <button class="btn" style="width:12em" data-ng-click="question.finalized=!question.finalized">
+        <button class="btn" style="width:11em"
+                data-ng-click="setFinalized(!question.finalized)">
           <span data-ng-if="question.finalized">Unfinalize Question</span>
-          <span data-ng-if="!question.finalized">Finalize Question</span>
+          <span data-ng-if="!question.finalized">&#x2713; Finalize Question</span>
         </button>
       </li>
-      <li><button class="btn btn-success">Save Question</button></li>
+      <li>
+        <button data-ng-disabled="question.finalized"
+                class="btn btn-success"
+                data-ng-click="saveQuestion()">Save Question</button>
+      </li>
     </ul>
   </div>
 
@@ -23,8 +35,8 @@
 
   <div class="row">
     <div class="span12">
-      <label>Verbal answer</label>
-      <textarea class="span12" rows="6" data-ng-model="question.answer.ideal"></textarea>
+      <h3>Verbal answer</h3>
+      <textarea data-ng-disabled="question.finalized" class="span12" rows="6" data-ng-model="question.answer.ideal"></textarea>
     </div>
   </div>
 
@@ -32,45 +44,49 @@
 
   <div class="row" data-ng-if="question.type!='summary'">
     <div class="span12">
-      <label>Exact answer</label>
-      <span data-ng-switch="question.type">
-        <span data-ng-switch-when="yesno">
-          <input type="radio" data-ng-model="question.answer.exact">
-        </span>
-        <span data-ng-switch-when="factoid">
-          <ul class="inline">
+      <h3>Exact answer</h3>
+      <div data-ng-switch="question.type">
+        <div data-ng-switch-when="yesno">
+          <label>
+            <input data-ng-disabled="question.finalized" type="radio" data-ng-model="question.answer.exact" value="yes" style="margin:-5px 8px 0 0"/>
+            Yes
+          </label>
+          <label>
+            <input data-ng-disabled="question.finalized" type="radio" data-ng-model="question.answer.exact" value="no" style="margin:-5px 8px 0 0"/>
+            No
+          </label>
+        </div>
+        <div data-ng-switch-when="factoid">
+          <ul class="inline" style="display:inline-block">
             <li data-ng-repeat="e in question.answer.exact track by $index">
-              <input type="text" data-ng-model="question.answer.exact[$index]">
+              <input data-ng-disabled="question.finalized" type="text" data-ng-model="question.answer.exact[$index]">
             </li>
-            <a title="Add a synonym" class="btn"
-               data-ng-disabled="!canAddSynonym()"
-               data-ng-click="addSynonym()">
-              <i class="icon-chevron-right"></i>
-            </a>
           </ul>
-        </span>
-        <span data-ng-switch-when="list">
+          <button data-ng-disabled="question.finalized || !canAddSynonym()" title="Add a synonym" class="btn"
+              data-ng-click="addSynonym()">
+            <i class="icon-chevron-right"></i>
+          </button>
+        </div>
+        <div data-ng-switch-when="list">
           <ul>
             <li data-ng-repeat="e in question.answer.exact">
-              <ul class="inline" data-ng-init="parentIndex=$index">
+              <ul style="display:inline-block" class="inline" data-ng-init="parentIndex=$index">
                 <li data-ng-repeat="ee in e track by parentIndex-$index">
-                  <input type="text" data-ng-model="question.answer.exact[parentIndex][$index]">
+                  <input data-ng-disabled="question.finalized" type="text" data-ng-model="question.answer.exact[parentIndex][$index]">
                 </li>
-                <a title="Add a synonym" class="btn"
-                   data-ng-disabled="!canAddSynonym(parentIndex)"
-                   data-ng-click="addSynonym(parentIndex)">
-                  <i class="icon-chevron-right"></i>
-                </a>
               </ul>
+              <button data-ng-disabled="question.finalized || !canAddSynonym(parentIndex)" title="Add a synonym" class="btn"
+                  data-ng-click="addSynonym(parentIndex)">
+                <i class="icon-chevron-right"></i>
+              </button>
             </li>
           </ul>
-          <a title="Add a new list entry" class="btn"
-            data-ng-disabled="!canAddEntry()"
+          <button data-ng-disabled="question.finalized || !canAddEntry()" title="Add a new list entry" class="btn"
              data-ng-click="addEntry()">
             <i class="icon-chevron-down"></i>
-          </a>
-        </span>
-      </span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -78,47 +94,120 @@
 
   <div class="row">
     <div class="span12">
+      <h3>Annotations</h3>
       <div data-tabset>
-        <div data-tab data-heading="Concepts ({{question.answer.concepts.length}})">
+        <div data-tab data-heading="Concepts ({{question.answer.concepts.length || 0}})">
           <div data-ng-if="!question.answer.concepts.length">No concepts selected.</div>
-          <ol><li data-ng-repeat="concept in question.answer.concepts">{{concept.title}}</li></ol>
+          <table class="table table-bordered table-hover" data-ng-if="question.answer.concepts.length">
+            <tr data-ng-repeat="concept in question.answer.concepts">
+              <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+              <td>{{concept.title}}</td>
+              <td style="width:20px">
+                <a class="btn btn-mini"
+                   href="{{concept.uri}}"
+                   title="Go to concept on the Web">
+                  <i class=" icon-share-alt"></i>
+                </a>
+              </td>
+              <td style="width:20px">
+                <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                        title="Delete concept"
+                        data-ng-click="deleteConcept({{$index}})">
+                  <i class="icon-remove"></i>
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
-        <div data-tab data-heading="Documents ({{question.answer.documents.length}})">
+        <div data-tab data-heading="Documents ({{question.answer.documents.length || 0}})"
+             data-active="selection.documents">
           <div data-ng-if="!question.answer.documents.length">No documents selected.</div>
           <div class="row">
             <div class="span5">
-              <ol>
-                <li data-ng-repeat="document in question.answer.documents">
-                  <a data-ng-class="{ selected: (selection.document.uri === document.uri) }"
-                    data-ng-click="selection.document=document">{{document.title}}</a>
-                </li>
-              </ol>
+              <table class="table table-bordered" data-ng-if="question.answer.documents.length">
+                <tr data-ng-repeat="document in question.answer.documents"
+                    data-ng-class="{ selected: (selection.document.uri === document.uri) }"
+                    data-ng-click="selection.document=document"
+                    style="cursor:pointer">
+                  <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+                  <td>{{document.title}}</td>
+                  <td style="width:20px">
+                    <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                            title="Delete document"
+                            data-ng-click="deleteDocument({{$index}})">
+                      <i class="icon-remove"></i>
+                    </button>
+                  </td>
+                </tr>
+              </table>
             </div>
-            <div data-ng-controller="DocumentCtrl" class="span7">
-              <h4 style="margin-top: 0" data-section-name="title">{{title}}</h4>
-              <p class="abstract" data-section-name="abstract"
-                 data-highlight="{{snippets(document, 'abstract')}}"
-                 data-highlight-text="{{abstract}}"></p>
+            <div id="viewer"
+                 data-ng-controller="DocumentCtrl"
+                 class="span7"
+                 data-ng-mousedown="startAnnotation()"
+                 data-ng-mouseup="endAnnotation()">
+              <button class="btn btn-info"
+                      id="annotate-button"
+                      data-ng-mousedown="setKeepSelection(true)"
+                      data-ng-click="createSnippet($event)"
+                      style="position:absolute;display:none">
+                Annotate with selected snippet
+              </button>
+              <h4 class="section"
+                  data-section-name="title"
+                  data-ng-bind-html="title"
+                  style="margin-top:0"></h4>
+              <p class="section abstract"
+                 data-section-name="abstract"
+                 data-ng-bind-html="abstract"></p>
               <p data-ng-repeat="section in sections"
                  class="section"
-                 data-section-name="sections.{{$index}}">{{section}}</p>
+                 data-section-name="sections.{{$index}}"
+                 data-ng-bind-html="section"></p>
             </div>
           </div>
         </div>
-        <div data-tab data-heading="Statement ({{question.answer.statements.length}})">
+        <div data-tab data-heading="Statements ({{question.answer.statements.length || 0}})">
           <div data-ng-if="!question.answer.statements.length">No statements selected.</div>
-          <ol><li data-ng-repeat="statement in question.answer.statements">{{statement.title}}</li></ol>
+          <table class="table table-bordered table-hover" data-ng-if="question.answer.statements.length">
+            <tr data-ng-repeat="statement in question.answer.statements">
+              <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+              <td>{{statement.title}}</td>
+              <td style="width:20px">
+                <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                        title="Delete statement"
+                        data-ng-click="deleteStatement({{$index}})">
+                  <i class="icon-remove"></i>
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
-        <div data-tab data-heading="Snippets ({{question.answer.snippets.length}})">
+        <div data-tab data-heading="Snippets ({{question.answer.snippets.length || 0}})">
           <div data-ng-if="!question.answer.snippets.length">No snippets selected.</div>
-          <ol>
-            <li data-ng-repeat="snippet in question.answer.snippets">
-              <a data-ng-click="showSnippet(snippet)">{{snippet.text}}</a>
-            </li>
-          </ol>
+          <table class="table table-bordered table-hover" data-ng-if="question.answer.snippets.length">
+            <tr data-ng-repeat="snippet in question.answer.snippets">
+              <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+              <td>{{snippet.text}}</td>
+              <td style="width:20px">
+                <button class="btn btn-mini"
+                        title="Show containing document"
+                        data-ng-click="selectDocument('{{snippet.document}}')">
+                  <i class=" icon-share-alt"></i>
+                </button>
+              </td>
+              <td style="width:20px">
+                <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                        title="Delete snippet"
+                        data-ng-click="deleteSnippet({{snippet.localID}})">
+                  <i class="icon-remove"></i>
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
-    </span>
+    </div>
   </div>
 
 </div> <!-- container -->

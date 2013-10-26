@@ -5,6 +5,7 @@ var dependencies = [
     'bioasq-at.controllers.question',
     'bioasq-at.controllers.search',
     'bioasq-at.controllers.answer',
+    'bioasq-at.controllers.document',
     'bioasq-at.controllers.login',
     'bioasq-at.services.question',
     'bioasq-at.filters'

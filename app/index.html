@@ -7,18 +7,26 @@
   <title>BioASQ Annotation Tool</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/app.css">
+  <script src="lib/jquery-1.9.1.min.js"></script>
 </head>
 <body data-ng-app="bioasq-at">
   <div data-ng-view></div>
 
   <!-- dependencies  -->
+  <script src="lib/underscore-min.js"></script>
+  <script src="lib/spin.min.js"></script>
+
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular/angular-route.min.js"></script>
 
   <script src="lib/angular-ui/angular-ui-0.4.0.min.js"></script>
   <script src="lib/angular-ui/ui-bootstrap-tpls-0.6.0.min.js"></script>
 
-  <script src="lib/underscore-min.js"></script>
+  <!-- rangy -->
+  <script src="lib/rangy/rangy-core.js"></script>
+  <script src="lib/rangy/rangy-textrange.js"></script>
+  <script src="lib/rangy/rangy-cssclassapplier.js"></script>
+  <script src="lib/rangy/rangy-highlighter.js"></script>
 
   <!-- application -->
   <script src="js/app.js"></script>
@@ -27,6 +35,7 @@
   <script src="js/controllers/question.js"></script>
   <script src="js/controllers/search.js"></script>
   <script src="js/controllers/answer.js"></script>
+  <script src="js/controllers/document.js"></script>
   <script src="js/controllers/login.js"></script>
 
   <!-- services -->
@@ -34,5 +43,9 @@
   <script src="js/services/search.js"></script>
 
   <script src="js/filters.js"></script>
+
+  <!-- legacy code -->
+  <script src="lib/handlebars.min.js"></script>
+  <script src="js/legacy.js"></script>
 </body>
 </html>
