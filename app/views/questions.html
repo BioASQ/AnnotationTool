@@ -25,45 +25,61 @@
 
   <div class="row">
     <div class="span5">
-      <ol>
-        <li data-ng-repeat="question in questions">
-          <a class="question" data-ng-class="{selected: isSelected($index)}"
-             data-ng-click="selectQuestion($index)">{{question.body}}</a>
-        </li>
-      </ol>
+      <table class="table table-bordered" data-ng-if="questions.length">
+        <tr data-ng-repeat="question in questions"
+            data-ng-class="{selected: isSelected(question)}"
+            data-ng-click="selectQuestion(question)"
+            style="cursor:pointer">
+          <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+          <td>{{question.body}}</td>
+          <td style="width:20px">
+            <span data-ng-if="question.finalized" title="Question is finalized">&#x2713;</span>
+          </td>
+        </tr>
+      </table>
     </div>
 
    <div class="span7" data-ng-if="question">
       <form>
         <label>Question ID</label>
         <input type="text" disabled="true" data-ng-model="question._id"></input>
-        <label>Question text</label>
+        <label style="margin-top:.9em">Question text</label>
         <textarea placeholder="Question &hellip;" rows="5" class="span7"
                   data-ng-disabled="!$parent.editing"
                   data-ng-model="question.body"
                   required></textarea>
         <label>Question type</label>
         <select data-ng-model="question.type" data-ng-disabled="!editing" required>
-          <option value="decisive">Yes/No</option>
+          <option value="yesno">Yes/No</option>
           <option value="factoid">Factoid</option>
           <option value="list">List</option>
           <option value="summary">Summary</option>
         </select>
           <div class="pull-right">
-            <button data-ng-if="mode=='annotation'" class="btn" data-ng-show="!$parent.editing" data-ng-click="deleteQuestion()">
-              <i class="icon-trash"></i>
-              Delete
-            </button>
-            <button class="btn" data-ng-show="!$parent.editing" data-ng-click="editQuestion()">
-              <i class="icon-edit"></i>
-              Edit
-            </button>
-            <button class="btn" data-ng-show="$parent.editing" data-ng-click="cancelEditing()">
-              Cancel
-            </button>
-            <button class="btn btn-primary" data-ng-show="$parent.editing" data-ng-click="saveQuestion()">
-              Save
-            </button>
+            <ul class="inline">
+              <li data-ng-if="mode=='annotation'" data-ng-show="!$parent.editing">
+                <button class="btn" data-ng-click="deleteQuestion(question)">
+                  <i class="icon-trash"></i>
+                  Delete
+                </button>
+              </li>
+              <li data-ng-show="!$parent.editing">
+                <button class="btn" data-ng-click="editQuestion(question)">
+                  <i class="icon-edit"></i>
+                  Edit
+                </button>
+              </li>
+              <li data-ng-show="$parent.editing">
+                <button class="btn" data-ng-click="cancelEditing()">
+                  Cancel
+                </button>
+              </li>
+              <li data-ng-show="$parent.editing">
+                <button class="btn btn-success" data-ng-click="saveQuestion()">
+                  Save
+                </button>
+              </li>
+            </ul>
           </div>
       </form>
     </div>
