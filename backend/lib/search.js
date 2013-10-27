@@ -47,11 +47,11 @@ Search.prototype.find = function (/* String */ keywords, cb) {
     var self = this;
     step(
         function () {
-            self.doid.find(keywords, this.parallel()),
-            self.go.find(keywords, this.parallel()),
-            self.jochem.find(keywords, this.parallel()),
-            self.mesh.find(keywords, this.parallel()),
-            self.uniprot.find(keywords, this.parallel())
+            self.doid.find(keywords, this.parallel());
+            self.go.find(keywords, this.parallel());
+            self.jochem.find(keywords, this.parallel());
+            self.mesh.find(keywords, this.parallel());
+            self.uniprot.find(keywords, this.parallel());
         },
         function (err/* variadic arguments */) {
             if (err) { return cb(err); }
