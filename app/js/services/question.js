@@ -59,13 +59,13 @@ angular.module('bioasq-at.services.question', [])
             return (_selectedQuestion && (_selectedQuestion.id === question.id));
         },
         addAnnotation: function (annotation) {
-            if (!_selectedQuestion) { throw RangeError('No quesion selected'); }
+            if (!_selectedQuestion) { throw RangeError('No question selected'); }
             var key = keyForType(annotation.type);
             ensureSection(key);
             _selectedQuestion[key].push(annotation);
         },
         removeAnnotation: function (annotation) {
-            if (!_selectedQuestion) { throw RangeError('No quesion selected'); }
+            if (!_selectedQuestion) { throw RangeError('No question selected'); }
             var key = keyForType(annotation.type);
             ensureSection(key);
             var index = indexOf(annotation);
@@ -74,7 +74,7 @@ angular.module('bioasq-at.services.question', [])
             }
         },
         hasAnnotation: function (annotation) {
-            if (!_selectedQuestion) { throw RangeError('No quesion selected'); }
+            if (!_selectedQuestion) { throw RangeError('No question selected'); }
             var key = keyForType(annotation.type);
             ensureSection(key);
             return _.some(_selectedQuestion[key], function (a) {

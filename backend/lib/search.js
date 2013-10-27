@@ -26,10 +26,11 @@ Search.prototype._merge = function (sectionName/* variadic arguments */) {
             var current = arguments[i][sectionName][j];
             if ('concept' in current) {
                 mergedResult.push({
-                    'title':  current.concept.label,
-                    'uri':    current.concept.uri,
-                    'source': sources[i - 1],
-                    'score':  current.score
+                    title:  current.concept.label,
+                    uri:    current.concept.uri,
+                    source: sources[i - 1],
+                    score:  current.score,
+                    match:  current.matchedLabel
                 });
             }
         }

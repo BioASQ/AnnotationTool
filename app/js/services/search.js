@@ -50,7 +50,8 @@ angular.module('bioasq-at.services.search', [])
                         concepts: filtered.slice(index, index + pageSize)
                     },
                     size: filtered.length,
-                    sources: conceptResponse.sources
+                    sources: conceptResponse.sources,
+                    total: conceptResponse.results.concepts.length
                 });
             } else {
                 $http.post('/backend/concepts', { query: query })
@@ -77,7 +78,8 @@ angular.module('bioasq-at.services.search', [])
                             concepts: filtered.slice(0, pageSize)
                         },
                         size: filtered.length,
-                        sources: conceptResponse.sources
+                        sources: conceptResponse.sources,
+                        total: conceptResponse.results.concepts.length
                     });
                 });
             }

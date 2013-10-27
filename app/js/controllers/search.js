@@ -8,24 +8,26 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         size:       itemsPerPage
     };
     var conceptSources = {
-        'Disease Ontology': true,
-        'Gene Ontology':    true,
-        'Jochem':           true,
         'MeSH':             true,
-        'UniProt':          true
+        'Disease Ontology': false,
+        'Gene Ontology':    false,
+        'Jochem':           false,
+        'UniProt':          false
     };
 
     $scope.question = Questions.selectedQuestion();
+    if (!$scope.question) { $scope.question = {}; }
+    Questions.select({});
 
     $scope.$watch('pages.concepts.current', function (newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if (oldValue && newValue !== oldValue) {
             delete $scope.concepts;
             fetchConceptsIfNeeded($scope.terms, $scope.pages.concepts.current - 1, itemsPerPage);
         }
     });
 
     $scope.$watch('pages.documents.current', function (newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if (oldValue && newValue !== oldValue) {
             delete $scope.documents;
             fetchDocumentsIfNeeded($scope.terms, $scope.pages.documents.current - 1, itemsPerPage);
         }
@@ -36,9 +38,10 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
             var sources = _.filter(_.keys(conceptSources), function (source) {
                 return ($scope.pages.conceptSources[source] === true);
             });
-            Search.concepts(terms, sources, true, page, itemsPerPage)
+            Search.concepts(terms, sources, false, page, itemsPerPage)
             .then(function (response) {
                 $scope.pages.concepts.total = response.size;
+                $scope.pages.concepts.all   = response.total;
                 $scope.concepts = response.results.concepts;
                 $scope.sources = response.sources;
             });
@@ -97,6 +100,16 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         } else {
             $scope.pages.conceptSources[source] = !$scope.pages.conceptSources[source];
         }
+    };
+
+    $scope.setConceptSource = function (name) {
+        _.forEach($scope.pages.conceptSources, function (enabled, sourceName) {
+            $scope.pages.conceptSources[sourceName] = (sourceName === name);
+        });
+
+        $scope.pages.concepts.current = 1;
+        delete $scope.concepts;
+        fetchConceptsIfNeeded($scope.terms, 0, itemsPerPage);
     };
 
     $scope.toggleSelection = function (annotation) {

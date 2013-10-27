@@ -1,10 +1,11 @@
 <div data-ng-include="'views/partials/navigation.html'"></div>
-<div class="container" data-ui-if="!question">
+<div class="container" data-ng-if="!question">
   <div class="alert alert-error">
     <strong>Error!</strong> No question selected.
   </div>
 </div>
-<div class="container" data-ui-if="question">
+<div class="container" data-ng-show="question">
+<!-- <div class="container"> -->
   <div class="row">
     <h2 class="span" style="color:#999">{{question.body}}</h2>
     <hr class="span12">
@@ -24,13 +25,13 @@
   <div class="row">&nbsp;</div>
 
   <!-- concept search results -->
-  <div class="row results-container">
-    <div class="span12 search-source">
-      <a href="" class="span12 result-header" data-ng-click="conceptsShown=!conceptsShown">
+  <div class="row">
+    <a href="" class="span12" data-ng-click="conceptsShown=!conceptsShown">
+      <div class="search-source">
         Concepts
-        <span data-ng-if="concepts">({{pages.concepts.total}})</span>
-      </a>
-    </div>
+        <span data-ng-if="concepts">({{pages.concepts.all}})</span>
+      </div>
+    </a>
     <div class="span12" data-collapse="!conceptsShown">
       <div data-ng-show="concepts" class="row" style="margin-top:10px;margin-bottom:20px">
         <div class="offset1 span">
@@ -38,19 +39,44 @@
             <button data-ng-repeat="(name, count) in sources"
                     class="btn btn-primary"
                     data-ng-class="{ active: pages.conceptSources['{{name}}'] }"
-                    data-ng-click="toggleConceptSource(name)">{{name}} ({{count}})
+                    data-ng-click="setConceptSource(name)">{{name}} ({{count}})
             </button>
           </div>
         </div>
-        <div class="span2">
-          <button class="btn btn-primary"
-                  data-ng-class="{ active: groupByLabel}"
-                  data-ng-click="groupByLabel = !groupByLabel">Group by Label</button>
-        </div>
+        <!--
+           - <div class="span2">
+           -   <button class="btn btn-primary"
+           -           data-ng-class="{ active: groupByLabel}"
+           -           data-ng-click="groupByLabel = !groupByLabel">Group by Label</button>
+           - </div>
+           -->
       </div>
-      <div data-ng-repeat="result in concepts">
-        <span data-ng-include="'/views/partials/result.html'"></span>
-      </div>
+      <table class="table table-bordered table-hover" data-ng-if="concepts">
+        <tr>
+          <th style="width:50%">Concept name</th>
+          <th style="width:3em">Score</th>
+          <th style="width:50%">Matched label/synonym</th>
+          <th style="width:20px"></th>
+          <th style="width:20px"></th>
+        </tr>
+        <tr data-ng-repeat="concept in concepts">
+          <td>{{concept.title | strip}}</td>
+          <td>{{concept.score | number:3}}</td>
+          <td><span style="color:#999">{{concept.match}}</span></td>
+          <td>
+            <a href="{{concept.uri}}" class="btn btn-mini" target="_blank" title="Show concept on the Web">
+              <i class="icon-share-alt"></i>
+            </a>
+          </td>
+          <td>
+            <button class="btn btn-mini"
+                    data-ng-disabled="!question || question.finalized"
+                    data-ng-click="toggleSelection(concept)">
+              <i data-ng-class="{ 'icon-minus': isSelected(concept), 'icon-plus': !isSelected(concept) }"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
       <div data-ng-if="concepts && pages.concepts.total > pages.size"
            class="pagination" data-pagination
            data-max-size="5"
@@ -63,16 +89,44 @@
 
   <!-- document search results -->
   <div class="row results-container">
-    <div class="span12 search-source">
-      <a class="span12 result-header" data-ng-click="documentsShown=!documentsShown">
+    <a class="span12" data-ng-click="documentsShown=!documentsShown">
+      <div class="search-source">
         Documents
         <span data-ng-if="documents">({{pages.documents.total}})</span>
-      </a>
-    </div>
-    <div class="span12" data-collapse="!documentsShown">
-      <div data-ng-repeat="result in documents">
-        <span data-ng-include="'/views/partials/result.html'"></span>
       </div>
+    </a>
+    <div class="span12" data-collapse="!documentsShown">
+      <table style="margin-top:10px;margin-bottom:20px"
+             class="table table-bordered table-hover"
+             data-ng-if="documents">
+        <tr>
+          <th>Title</th>
+          <th style="width:20px"></th>
+          <th style="width:20px"></th>
+        </tr>
+        <tr data-ng-repeat="document in documents">
+          <td data-ng-click="document.infoShown=!document.infoShown">
+            {{document.title}}
+            <div data-collapse="!document.infoShown">
+              <h4>{{document.title}}</h4>
+              <p class="abstract">{{document.abstract}}</p>
+              <p class="section" data-ng-repeat="section in document.sections">{{section}}</p>
+            </div>
+          </td>
+          <td>
+            <a href="{{document.uri}}" class="btn btn-mini" target="_blank" title="Show document on the Web">
+              <i class="icon-share-alt"></i>
+            </a>
+          </td>
+          <td>
+            <button class="btn btn-mini"
+                    data-ng-disabled="!question || question.finalized"
+                    data-ng-click="toggleSelection(document)">
+              <i data-ng-class="{ 'icon-minus': isSelected(document), 'icon-plus': !isSelected(document) }"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
       <div data-ng-if="documents && pages.documents.total > pages.size"
            class="pagination" data-pagination
            data-max-size="5"
@@ -85,16 +139,31 @@
 
   <!-- statement search results -->
   <div class="row results-container">
-    <div class="span12 search-source">
-      <a class="span12 result-header" data-ng-click="statementsShown=!statementsShown">
+    <a class="span12" data-ng-click="statementsShown=!statementsShown">
+      <div class="search-source">
         Statements
         <span data-ng-if="statements">({{pages.statements.total}})</span>
-      </a>
-    </div>
-    <div class="span12" data-collapse="!statementsShown">
-      <div data-ng-repeat="result in statements">
-        <span data-ng-include="'/views/partials/result.html'"></span>
       </div>
+    </a>
+    <div class="span12" data-collapse="!statementsShown">
+      <table style="margin-top:10px;margin-bottom:20px"
+             class="table table-bordered table-hover"
+             data-ng-if="documents">
+        <tr>
+          <th>Statement</th>
+          <th style="width:20px"></th>
+        </tr>
+        <tr data-ng-repeat="statement in statements">
+          <td>{{statement.title}}</td>
+          <td>
+            <button class="btn btn-mini"
+                    data-ng-disabled="!question || question.finalized"
+                    data-ng-click="toggleSelection(statement)">
+              <i data-ng-class="{ 'icon-minus': isSelected(statement), 'icon-plus': !isSelected(statement) }"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
       <div data-ng-if="statements && pages.statements.total > pages.size"
            class="pagination" data-pagination
            data-max-size="5"
@@ -153,7 +222,7 @@
 
 <script type="text/ng-template" data-id="/views/partials/info.html">
 <div class="row" data-collapse="!result.infoShown">
-  <div class="offset2 span7" data-ng-switch="result.type">
+  <div class="span" data-ng-switch="result.type">
     <div data-ng-switch-when="concept">
       <div>Score: {{result.score}}</div>
       <div>URI: <code>{{result.uri}}</code></div>

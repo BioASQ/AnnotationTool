@@ -2,7 +2,8 @@ angular.module('bioasq-at.filters', []);
 
 // Converts a URI or literal string to an RDF node in
 // Turtle notation.
-angular.module('bioasq-at.filters').filter('rdf', function () {
+angular.module('bioasq-at.filters')
+.filter('rdf', function () {
     return function (term) {
         if (term.search(/^(https?|mailto|tel|urn):/) === 0) {
             return [ '<', term, '>' ].join('');
@@ -12,5 +13,12 @@ angular.module('bioasq-at.filters').filter('rdf', function () {
         // return '"'.concat(term).concat('"');
         // return '"' + term + '"';
         return [ '"', term, '"' ].join('');
+    };
+})
+// Strips white space and quotation marks from beginning
+// and end of string
+.filter('strip', function () {
+    return function (term) {
+        return term.replace(/^["\s]+|["\s]+$/g, '');
     };
 });
