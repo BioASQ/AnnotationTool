@@ -15,7 +15,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         });
     }
 
-    $scope.question = Questions.selectedQuestion();
+    // $scope.question = Questions.selectedQuestion();
 
     $scope.editQuestion = function (question) {
         if (question.finalized) {
@@ -34,14 +34,14 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         for (var i = 0; i < $scope.questions.length; i++) {
             if ($scope.questions[i]._id === question._id) {
                 $scope.question = $scope.questions[i];
-                Questions.select($scope.question);
+                Questions.select(null);
                 $scope.editing = false;
             }
         }
     };
 
     $scope.newQuestion = function () {
-        $scope.questions.push({ version: 2 });
+        $scope.questions.push({ version: 2, creator: $scope.user.id });
         $scope.editing  = true;
         $scope.creating = true;
         $scope.question = $scope.questions[$scope.questions.length - 1];

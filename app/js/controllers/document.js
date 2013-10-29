@@ -1,5 +1,5 @@
 angular.module('bioasq-at.controllers.document', [])
-.controller('DocumentCtrl', function ($scope, $sce, $window) {
+.controller('DocumentCtrl', function ($scope, $sce, $window, Questions) {
 
     initAnnotationState();
 
@@ -15,6 +15,7 @@ angular.module('bioasq-at.controllers.document', [])
     }
 
     $scope.$watch('selection.document', function () {
+        $scope.question.answer.snippets = $scope.question.answer.snippets || [];
         if ($scope.selection.document) {
             $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
             $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');
@@ -43,8 +44,10 @@ angular.module('bioasq-at.controllers.document', [])
     $scope.createSnippet = function () {
         var snippet = snippetForSelection(annotateButton);
 
+        if (!snippet) { return; }
+
         snippet.document = $scope.selection.document.uri;
-        snippet.localID  = $scope.nextSnippetID++;
+        snippet.localID  = Questions.nextSnippetID();
 
         var documentSnippets = _.filter($scope.question.answer.snippets, function (s) {
             return (s.document === snippet.document && 
@@ -55,7 +58,7 @@ angular.module('bioasq-at.controllers.document', [])
             return;
         }
 
-        $scope.question.answer.snippets.push(snippet);
+        Questions.addAnnotation(snippet);
 
         $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
         $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');

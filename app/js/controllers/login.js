@@ -1,5 +1,5 @@
 angular.module('bioasq-at.controllers.login', [])
-.controller('LoginCtrl', function ($scope, $http, $location, $modal) {
+.controller('LoginCtrl', function ($scope, $rootScope, $http, $location, $modal, $cookies) {
     $scope.login = function () {
         $scope.messages = [];
         if (!$scope.email) {
@@ -18,10 +18,16 @@ angular.module('bioasq-at.controllers.login', [])
         }
 
         $http.post('/backend/login', { email: $scope.email, password: $scope.password })
-        .success(function () {
+        .success(function (data) {
+            $rootScope.user = {
+                name: data.username,
+                id:   data.usermail
+            };
             $location.path('questions');
         })
         .error(function (data, status) {
+            delete $rootScope.user;
+
             if (status === 401 || status === 403) {
                 $scope.messages.push({
                     type: 'error',
@@ -33,6 +39,14 @@ angular.module('bioasq-at.controllers.login', [])
                     text: 'Could not sign in (' + status + ')'
                 });
             }
+        });
+    };
+
+    $scope.logout = function () {
+        delete $rootScope.user;
+        $http.get('/backend/logout')
+        .then(function () {
+            $location.path('/');
         });
     };
 

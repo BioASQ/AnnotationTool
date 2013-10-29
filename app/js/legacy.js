@@ -151,25 +151,24 @@ var viewerMouseUp = function ($annotateButton) {
     var range;
     try {
         range = rangy.getSelection().getRangeAt(0);
+        if (range.startOffset === range.endOffset) {
+            $annotateButton.fadeOut(500);
+            highlighter.removeAllHighlights();
+            return false;
+        }
+
+        var hl  = highlighter.highlightSelection('temp-highlight'),
+            jhl = $('.temp-highlight');
+
+        var tempOffset = jhl.offset(),
+            tempWidth  = jhl.width(),
+            tempHeight = jhl.height();
+        $annotateButton.css({
+            top: tempOffset.top + tempHeight + 10,
+            left: $viewer.position().left + 20
+        });
+        $annotateButton.fadeIn(500);
     } catch (e) { return false; }
-
-    if (range.startOffset === range.endOffset) {
-        $annotateButton.fadeOut(500);
-        highlighter.removeAllHighlights();
-        return false;
-    }
-
-    var hl  = highlighter.highlightSelection('temp-highlight'),
-        jhl = $('.temp-highlight');
-
-    var tempOffset = jhl.offset(),
-        tempWidth  = jhl.width(),
-        tempHeight = jhl.height();
-    $annotateButton.css({
-        top: tempOffset.top + tempHeight + 10,
-        left: $viewer.position().left + 20
-    });
-    $annotateButton.fadeIn(500);
 
     return false;
 };

@@ -1,9 +1,7 @@
 angular.module('bioasq-at.controllers.answer', [])
 .controller('AnswerCtrl', function ($scope, Questions, $routeParams) {
-    var id = $routeParams.id;
     $scope.question = Questions.selectedQuestion();
     $scope.selection = {};
-    $scope.nextSnippetID = 0;
 
     function initAnswerIfNeeded () {
         $scope.question.answer = $scope.question.answer || {};
@@ -20,17 +18,14 @@ angular.module('bioasq-at.controllers.answer', [])
                 break;
         }
     }
-    
-    if (id) {
-        Questions.load(id).then(function (response) {
-            $scope.question = $scope.question || {};
-            initAnswerIfNeeded();
-            angular.forEach(response.data, function (value, key) {
-                $scope.question[key] = value;
-            });
 
-            angular.forEach($scope.question.answer.snippets, function (s) {
-                s.localID = $scope.nextSnippetID++;
+    if (!$scope.selectedQuestion && $routeParams.id) {
+        $scope.question = {};
+        Questions.load($routeParams.id).then(function (question) {
+            Questions.select(question);
+            // trigger change on all question keys
+            angular.forEach(question, function (value, key) {
+                $scope.question[key] = value;
             });
         });
     }

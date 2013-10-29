@@ -4,7 +4,8 @@
     <strong>Error!</strong> No question selected.
   </div>
 </div>
-<div class="container" data-ng-show="question">
+<div class="container" data-ng-show="question"
+     data-ng-init="spinnerConfig={lines:13,length:4,width:2,radius:4,top:17,left:9}">
 <!-- <div class="container"> -->
   <div class="row">
     <h2 class="span" style="color:#999">{{question.body}}</h2>
@@ -27,6 +28,7 @@
   <!-- concept search results -->
   <div class="row">
     <a href="" class="span12" data-ng-click="conceptsShown=!conceptsShown">
+      <span data-spin="spinnerConfig" spin-if="conceptsPending"></span>
       <div class="search-source">
         Concepts
         <span data-ng-if="concepts">({{pages.concepts.all}})</span>
@@ -53,16 +55,16 @@
       </div>
       <table class="table table-bordered table-hover" data-ng-if="concepts">
         <tr>
-          <th style="width:50%">Concept name</th>
-          <th style="width:3em">Score</th>
-          <th style="width:50%">Matched label/synonym</th>
+          <th style="width:50%">Matched label</th>
+          <th style="width:3.5em">Score</th>
+          <th style="width:50%">Canonical label</th>
           <th style="width:20px"></th>
           <th style="width:20px"></th>
         </tr>
         <tr data-ng-repeat="concept in concepts">
+          <td data-ng-bind-html="concept.match | highlight:concept.ranges"></td>
+          <td>{{concept.score | number:4}}</td>
           <td>{{concept.title | strip}}</td>
-          <td>{{concept.score | number:3}}</td>
-          <td><span style="color:#999">{{concept.match}}</span></td>
           <td>
             <a href="{{concept.uri}}" class="btn btn-mini" target="_blank" title="Show concept on the Web">
               <i class="icon-share-alt"></i>
@@ -90,6 +92,7 @@
   <!-- document search results -->
   <div class="row results-container">
     <a class="span12" data-ng-click="documentsShown=!documentsShown">
+      <span data-spin="spinnerConfig" spin-if="documentsPending"></span>
       <div class="search-source">
         Documents
         <span data-ng-if="documents">({{pages.documents.total}})</span>
@@ -101,6 +104,7 @@
              data-ng-if="documents">
         <tr>
           <th>Title</th>
+          <!-- <th style="width:3.5em">Score</th> -->
           <th style="width:20px"></th>
           <th style="width:20px"></th>
         </tr>
@@ -113,6 +117,7 @@
               <p class="section" data-ng-repeat="section in document.sections">{{section}}</p>
             </div>
           </td>
+          <!-- <td>{{document.score | number:4}}</td> -->
           <td>
             <a href="{{document.uri}}" class="btn btn-mini" target="_blank" title="Show document on the Web">
               <i class="icon-share-alt"></i>
@@ -140,25 +145,39 @@
   <!-- statement search results -->
   <div class="row results-container">
     <a class="span12" data-ng-click="statementsShown=!statementsShown">
+      <span data-spin="spinnerConfig" spin-if="statementsPending"></span>
       <div class="search-source">
         Statements
         <span data-ng-if="statements">({{pages.statements.total}})</span>
+        <span data-ng-if="pages.statements.message">&mdash; {{pages.statements.message}}</span>
       </div>
     </a>
     <div class="span12" data-collapse="!statementsShown">
       <table style="margin-top:10px;margin-bottom:20px"
              class="table table-bordered table-hover"
-             data-ng-if="documents">
+             data-ng-if="statements">
         <tr>
           <th>Statement</th>
+          <!-- <th style="width:3.5em">Score</th> -->
           <th style="width:20px"></th>
         </tr>
         <tr data-ng-repeat="statement in statements">
-          <td>{{statement.title}}</td>
+          <td data-ng-click="statement.infoShown=!statement.infoShown">
+            {{statement.subjPhrase}} {{statement.predPhrase}} {{statement.objPhrase}}
+            <div data-collapse="!statement.infoShown">
+              <p>
+              <div class="triple" data-ng-repeat="triple in statement.triples">
+                {{triple.subj | rdf}} {{triple.pred | rdf}} {{triple.obj | rdf}} .
+              </div>
+              </p>
+            </div>
+          </td>
+          <!-- <td>{{statement.score | number:4}}</td> -->
           <td>
             <button class="btn btn-mini"
                     data-ng-disabled="!question || question.finalized"
-                    data-ng-click="toggleSelection(statement)">
+                    data-ng-click="toggleSelection(statement)"
+                    title="Add {{statement.triples.length || 0}} triples">
               <i data-ng-class="{ 'icon-minus': isSelected(statement), 'icon-plus': !isSelected(statement) }"></i>
             </button>
           </td>
@@ -174,67 +193,3 @@
     </div>
   </div>
 </div>
-
-<script type="text/ng-template" data-id="/views/partials/result.html">
-  <div data-ng-if="$first && result.isChild" class="row"><hr class="small offset1 span10"></div>
-  <div class="row" data-ng-init="result.infoShown=false">
-    <div class="offset1 span8">
-      <span data-ng-if="result.type=='concept-group'" data-ng-init="result.open=false">
-        <a data-ng-click="result.open = !result.open">
-          <i data-ng-if="result.open" class="icon-chevron-down"></i>
-          <i data-ng-if="!result.open" class="icon-chevron-right"></i>
-          {{result.title}}
-          ({{result.source}})
-          [{{result.items.length}}]
-        </a>
-      </span>
-      <span class="{{result.type}}" data-ng-if="result.type!='concept-group'">
-        {{result.title}}
-        <span data-ng-if="result.type=='concept'">
-          ({{result.source}})
-        </span>
-        <a class="more-info" data-ng-click="result.infoShown=!result.infoShown">
-          <i class="icon-info-sign"></i>
-        </a>
-      </span>
-    </div>
-    <div class="span2">
-      <div data-ng-if="result.type!='concept-group'" class="pull-right">
-        <a href="{{result.uri}}" target="_blank"><i class="icon-file"></i></a>
-        <a data-ng-if="question && !question.finalized" ng-click="toggleSelection(result)">
-          <i ng-class="{ 'icon-minus': isSelected(result), 'icon-plus': !isSelected(result) }"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div data-ng-include="'/views/partials/info.html'"></div>
-
-  <span data-ng-if="result.type=='concept-group'">
-    <span class="concept-group" data-ng-show="result.open">
-      <div data-ng-repeat="result in result.items">
-        <span data-ng-include="'/views/partials/result.html'"></span>
-      </div>
-    </span>
-  </span>
-
-  <div data-ng-if="!$last" class="row"><hr class="small offset1 span10"></div>
-</script>
-
-<script type="text/ng-template" data-id="/views/partials/info.html">
-<div class="row" data-collapse="!result.infoShown">
-  <div class="span" data-ng-switch="result.type">
-    <div data-ng-switch-when="concept">
-      <div>Score: {{result.score}}</div>
-      <div>URI: <code>{{result.uri}}</code></div>
-    </div>
-    <div data-ng-switch-when="document" class="document">
-      <h4>{{result.title}}</h4>
-      <p class="abstract">{{result.abstract}}</p>
-      <p class="section" data-ng-repeat="section in result.sections">{{section}}</p>
-    </div>
-    <div data-ng-switch-when="statement">
-      {{result.s | rdf}} {{result.p | rdf}} {{result.o | rdf}} .
-    </div>
-  </div>
-</div>
-</script>

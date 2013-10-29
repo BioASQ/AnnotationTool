@@ -1,7 +1,9 @@
 var dependencies = [
     'ngRoute',
+    'ngCookies',
     'ui',
     'ui.bootstrap',
+    'spin.js',
     'bioasq-at.controllers.question',
     'bioasq-at.controllers.search',
     'bioasq-at.controllers.answer',
@@ -13,6 +15,7 @@ var dependencies = [
 ];
 
 angular.module('bioasq-at', dependencies)
+.value('$anchorScroll', angular.noop)
 .constant('Routes', [
     {   name:           'questions',
         controllerName: 'QuestionCtrl',
@@ -65,9 +68,18 @@ angular.module('bioasq-at', dependencies)
         };
     }]);
 }])
-.run(['$rootScope', 'Routes', function ($scope, Routes) {
+.run(['$rootScope', '$cookies', 'Routes', function ($scope, $cookies, Routes) {
     $scope.mode = 'annotation';
     // $scope.mode = 'assessment';
+
+    $scope.$watch('user', function (newValue, oldValue) {
+        if (!newValue || !oldValue || newValue.id !== oldValue.id) {
+            $cookies.user = angular.toJson(newValue);
+        }
+    });
+    if ($cookies.user) {
+        $scope.user = angular.fromJson($cookies.user);
+    }
 
     $scope.routes = [];
     angular.forEach(Routes, function (r) {

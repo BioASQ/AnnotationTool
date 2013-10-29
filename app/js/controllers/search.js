@@ -1,5 +1,5 @@
 angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
-.controller('SearchCtrl', function ($scope, Questions, Search) {
+.controller('SearchCtrl', function ($scope, Questions, $routeParams, Search) {
     var itemsPerPage = 10;
     var pageSettings = {
         concepts:   { total: 0, current: 1 },
@@ -15,9 +15,16 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         'UniProt':          false
     };
 
-    $scope.question = Questions.selectedQuestion();
-    if (!$scope.question) { $scope.question = {}; }
-    Questions.select({});
+    if (!$scope.selectedQuestion && $routeParams.id) {
+        $scope.question = {};
+        Questions.load($routeParams.id).then(function (question) {
+            Questions.select(question);
+            // trigger change on all question keys
+            angular.forEach(question, function (value, key) {
+                $scope.question[key] = value;
+            });
+        });
+    }
 
     $scope.$watch('pages.concepts.current', function (newValue, oldValue) {
         if (oldValue && newValue !== oldValue) {
@@ -35,6 +42,7 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
 
     function fetchConceptsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.concepts) {
+            $scope.conceptsPending = true;
             var sources = _.filter(_.keys(conceptSources), function (source) {
                 return ($scope.pages.conceptSources[source] === true);
             });
@@ -42,28 +50,38 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
             .then(function (response) {
                 $scope.pages.concepts.total = response.size;
                 $scope.pages.concepts.all   = response.total;
-                $scope.concepts = response.results.concepts;
+                $scope.concepts = response.concepts;
                 $scope.sources = response.sources;
+                $scope.conceptsPending = false;
             });
         }
     }
 
     function fetchDocumentsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.documents) {
+            $scope.documentsPending = true;
             Search.documents(terms, page, itemsPerPage)
             .then(function (response) {
-                $scope.pages.documents.total = response.size;
-                $scope.documents = response.results.documents;
+                $scope.pages.documents.total = response.size || response.documents.length;
+                $scope.documents = response.documents;
+                $scope.documentsPending = false;
             });
         }
     }
 
     function fetchStatementsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.statements) {
+            $scope.statementsPending = true;
             Search.statements(terms, page, itemsPerPage)
             .then(function (response) {
-                $scope.pages.statements.total = response.size;
-                $scope.statements = response.results.statements;
+                $scope.pages.statements.total = response.size || response.statements.length;
+                $scope.statements = response.statements;
+                $scope.statementsPending = false;
+            }, function (reason) {
+                $scope.pages.statements.total = 0;
+                $scope.pages.statements.message = 'failed (' + reason + ')';
+                $scope.statements = [];
+                $scope.statementsPending = false;
             });
         }
     }

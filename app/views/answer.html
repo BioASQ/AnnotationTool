@@ -173,7 +173,16 @@
           <table class="table table-bordered table-hover" data-ng-if="question.answer.statements.length">
             <tr data-ng-repeat="statement in question.answer.statements">
               <td style="width:2em;text-align:right">{{$index + 1}}.</td>
-              <td>{{statement.title}}</td>
+              <td data-ng-click="statement.infoShown=!statement.infoShown">
+                {{statement.subjPhrase}} {{statement.predPhrase}} {{statement.objPhrase}}
+                <div data-collapse="!statement.infoShown">
+                  <p>
+                  <div class="triple" data-ng-repeat="triple in statement.triples">
+                    {{triple.subj | rdf}} {{triple.pred | rdf}} {{triple.obj | rdf}} .
+                  </div>
+                  </p>
+                </div>
+              </td>
               <td style="width:20px">
                 <button data-ng-disabled="question.finalized" class="btn btn-mini"
                         title="Delete statement"

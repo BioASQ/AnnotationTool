@@ -1,6 +1,6 @@
 angular.module('bioasq-at.controllers.user', [])
 .controller('UserCtrl', function ($scope, $window, $http) {
-    $scope.user = {};
+    $scope.user = $scope.user || {};
     $scope.messages = [];
 
     $scope.cancel = function () {
@@ -15,6 +15,7 @@ angular.module('bioasq-at.controllers.user', [])
                 type: 'error',
                 text: 'Passwords do not match!'
             });
+            return;
         }
         if (!$scope.user.password1) {
             $scope.messages.push({
@@ -28,6 +29,7 @@ angular.module('bioasq-at.controllers.user', [])
                 type: 'error',
                 text: 'Old password required!'
             });
+            return;
         }
         var regExp = new RegExp('^.*(?=.{8,})(?=.*[\\d])(?=.*[\\W]).*$', 'g');
         if (regExp.test($scope.user.password1) === false) {
