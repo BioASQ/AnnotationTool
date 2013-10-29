@@ -8,11 +8,11 @@ var journey = require('journey'),
     step = require('step'),
     Search = require('./search').Search,
     TIDocuments = require('./tidocuments').TIDocuments,
-    TITriples = require('./titriples2').TITriples,
+    TITriples = require('./titriples').TITriples,
     Verbalizer = require('./verbalizer').Verbalizer,
-    config = require(require('path').join(__dirname, '..', '..', 'config')).defaults,
-    logger = require('./logging.js').logger,
-    path = require('path');
+    path = require('path'),
+    config = require(path.join(__dirname, '..', '..', 'config')).defaults,
+    logger = require('./logging.js').logger;
 
 var conceptSearch = new Search(),
     documentSearch = new TIDocuments(config.search.documents),
@@ -164,6 +164,14 @@ exports.createRouter = function (model, authentication) {
                     };
                     logger('info', 'received concept search request', logData);
 
+                    if (config.search.debug === true) {
+                        var fs = require('fs');
+                        var cannedResponsePath = path.join(__dirname, '..', 'test', 'response.json');
+                        var cannedResponse = fs.readFileSync(cannedResponsePath);
+                        res.send(200, {}, { concepts: JSON.parse(cannedResponse).concepts });
+                        return;
+                    }
+
                     conceptSearch.find(keywords.query, function (err, conceptResult) {
                         if (err) {
                             logData.error = err;
@@ -171,7 +179,7 @@ exports.createRouter = function (model, authentication) {
                             res.send(502);
                         } else {
                             logger('info', 'search for concepts', logData);
-                            res.send(200, {}, { 'results': { 'concepts': conceptResult } });
+                            res.send(200, {}, { concepts: conceptResult });
                         }
                     });
                 });
@@ -193,6 +201,18 @@ exports.createRouter = function (model, authentication) {
                     };
                     logger('info', 'received document search request', logData);
 
+                    if (config.search.debug === true) {
+                        var fs = require('fs');
+                        var cannedResponsePath = path.join(__dirname, '..', 'test', 'response.json');
+                        var cannedResponse = fs.readFileSync(cannedResponsePath);
+                        res.send(200, {}, {
+                            documents: JSON.parse(cannedResponse).documents,
+                            page: 0,
+                            size: 10
+                        });
+                        return;
+                    }
+
                     documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, size) {
                         if (err) {
                             logData.error = err;
@@ -200,7 +220,7 @@ exports.createRouter = function (model, authentication) {
                             res.send(502);
                         } else {
                             logger('info', 'search for documents', logData);
-                            res.send(200, {}, { 'results': { 'documents': documentResult }, size: size, page: page });
+                            res.send(200, {}, { documents: documentResult, size: size, page: page });
                         }
                     });
                 });
@@ -222,46 +242,33 @@ exports.createRouter = function (model, authentication) {
                     };
                     logger('info', 'received statement search request', logData);
 
-                    tripleSearch.find(keywords.query, page, itemsPerPage, function (err, triplesResult) {
+                    if (config.search.debug === true) {
+                        var fs = require('fs');
+                        var cannedResponsePath = path.join(__dirname, '..', 'test', 'response.json');
+                        var cannedResponse = fs.readFileSync(cannedResponsePath);
+                        setTimeout(function () {
+                            res.send(200, {}, {
+                                statements: JSON.parse(cannedResponse).statements,
+                                page: 0,
+                                size: 10
+                            });
+                        }, 300000);
+                        return;
+                    }
+
+                    tripleSearch.find(keywords.query, page, itemsPerPage, function (err, response) {
                         if (err) {
                             logData.error = err;
                             logger('error', 'search for statements failed', logData);
                             return res.send(502);
                         }
 
-                        if (triplesResult.statements.length) {
-                            var verbalizerInput = triplesResult.statements.map(function (statement) {
-                                return {
-                                    s: statement.s_l,
-                                    p: statement.p_l,
-                                    o: statement.o_l
-                                };
-                            });
-                            verbalizer.verbalize(verbalizerInput, function (err, results) {
-                                if (err) {
-                                    logData.error = err;
-                                    logger('error', 'verbalization failed', logData);
-                                    return res.send(502);
-                                }
-                                try {
-                                    JSON.parse(results).forEach(function (verbalization, index) {
-                                        triplesResult.statements[index].title = verbalization;
-                                    });
-                                } catch (exc) {
-                                    logData.error = exc;
-                                    logger('error', 'parsing verbalization result failed', logData);
-                                    return res.send(500);
-                                }
-                                logger('info', 'search for statements', logData);
-                                res.send(200, {}, {
-                                    results: { statements: triplesResult.statements },
-                                    size:    triplesResult.size,
-                                    page:    page
-                                });
-                            });
+                        if (response.statements.length) {
+                            logger('info', 'search for statements', logData);
+                            res.send(200, {}, response);
                         } else {
                             logger('info', 'search for statements', logData);
-                            res.send(200, {}, { results: { statements: [] }, size: 0, page: 0 });
+                            res.send(200, {}, { statements: [], size: 0, page: 0 });
                         }
                     });
                 });

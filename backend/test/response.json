@@ -1,0 +1,1514 @@
+{
+    "concepts": [
+        {
+            "title": "diabetes mellitus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9351",
+            "source": "Disease Ontology",
+            "score": 1,
+            "match": "Diabetes",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "\"Carbutamide\"",
+            "uri": "http://www.biosemantics.org/jochem#4249014",
+            "source": "Jochem",
+            "score": 1,
+            "match": "Diabetal",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Carbutamide",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D002271",
+            "source": "MeSH",
+            "score": 1,
+            "match": "Diabetal",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Hypophosphatemia, Familial",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D007015",
+            "source": "MeSH",
+            "score": 0.5659524849636969,
+            "match": "Phosphate Diabetes",
+            "ranges": [
+                {
+                    "begin": 10,
+                    "end": 18
+                }
+            ]
+        },
+        {
+            "title": "renal glycosuria",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9432",
+            "source": "Disease Ontology",
+            "score": 0.5570386496709212,
+            "match": "renal diabetes",
+            "ranges": [
+                {
+                    "begin": 6,
+                    "end": 14
+                }
+            ]
+        },
+        {
+            "title": "Islet amyloid polypeptide",
+            "uri": "http://www.uniprot.org/uniprot/IAPP_MOUSE",
+            "source": "UniProt",
+            "score": 0.5386603448610061,
+            "match": "Diabetes-associated peptide",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Islet amyloid polypeptide",
+            "uri": "http://www.uniprot.org/uniprot/IAPP_HUMAN",
+            "source": "UniProt",
+            "score": 0.5386603448610061,
+            "match": "Diabetes-associated peptide",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Islet amyloid polypeptide",
+            "uri": "http://www.uniprot.org/uniprot/IAPP_RAT",
+            "source": "UniProt",
+            "score": 0.5386603448610061,
+            "match": "Diabetes-associated peptide",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Neuropathies",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003929",
+            "source": "MeSH",
+            "score": 0.5276569763015853,
+            "match": "Diabetic Neuropathies",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Pregnancy in Diabetics",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D011254",
+            "source": "MeSH",
+            "score": 0.5228534428547266,
+            "match": "Pregnancy in Diabetics",
+            "ranges": [
+                {
+                    "begin": 13,
+                    "end": 22
+                }
+            ]
+        },
+        {
+            "title": "diabetic neuropathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9743",
+            "source": "Disease Ontology",
+            "score": 0.5228439658557785,
+            "match": "diabetic neuropathy",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "GTP-binding protein RAD",
+            "uri": "http://www.uniprot.org/uniprot/RAD_HUMAN",
+            "source": "UniProt",
+            "score": 0.4963262283043803,
+            "match": "Ras associated with diabetes",
+            "ranges": [
+                {
+                    "begin": 20,
+                    "end": 28
+                }
+            ]
+        },
+        {
+            "title": "GTP-binding protein RAD",
+            "uri": "http://www.uniprot.org/uniprot/RAD_RAT",
+            "source": "UniProt",
+            "score": 0.4963262283043803,
+            "match": "Ras associated with diabetes",
+            "ranges": [
+                {
+                    "begin": 20,
+                    "end": 28
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Foot",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D017719",
+            "source": "MeSH",
+            "score": 0.49626659240267584,
+            "match": "Diabetic Foot",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "\"Chlorpropamide\"",
+            "uri": "http://www.biosemantics.org/jochem#4249059",
+            "source": "Jochem",
+            "score": 0.4949467431611544,
+            "match": "Diabet-pages",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 6
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Complications",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D048909",
+            "source": "MeSH",
+            "score": 0.4892069746302923,
+            "match": "Diabetes Complications",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Diet",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003927",
+            "source": "MeSH",
+            "score": 0.4892069746302923,
+            "match": "Diabetic Diet",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Mellitus, Type 1",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003922",
+            "source": "MeSH",
+            "score": 0.4825399618002935,
+            "match": "Diabetes, Autoimmune",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Cardiomyopathies",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D058065",
+            "source": "MeSH",
+            "score": 0.4745383427784566,
+            "match": "Diabetic Cardiomyopathies",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetic polyneuropathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:12785",
+            "source": "Disease Ontology",
+            "score": 0.473306516896468,
+            "match": "diabetic polyneuropathy",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes, Gestational",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D016640",
+            "source": "MeSH",
+            "score": 0.4698221299854696,
+            "match": "Diabetes, Gestational",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetic angiopathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:11713",
+            "source": "Disease Ontology",
+            "score": 0.4683594992252528,
+            "match": "Diabetic vascular disorder",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "gestational diabetes",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:11714",
+            "source": "Disease Ontology",
+            "score": 0.46709683357606735,
+            "match": "gestational diabetes",
+            "ranges": [
+                {
+                    "begin": 12,
+                    "end": 20
+                }
+            ]
+        },
+        {
+            "title": "diabetic cataract",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:13328",
+            "source": "Disease Ontology",
+            "score": 0.46709683357606735,
+            "match": "diabetic cataract",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Mellitus",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003920",
+            "source": "MeSH",
+            "score": 0.4644337187805649,
+            "match": "Diabetes Mellitus",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Coma",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003926",
+            "source": "MeSH",
+            "score": 0.4644337187805649,
+            "match": "Diabetic Coma",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Nephropathies",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003928",
+            "source": "MeSH",
+            "score": 0.4614144578355673,
+            "match": "Diabetic Nephropathies",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Ketoacidosis",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D016883",
+            "source": "MeSH",
+            "score": 0.4614144578355673,
+            "match": "Diabetic Acidosis",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetic retinopathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:8947",
+            "source": "Disease Ontology",
+            "score": 0.45995944913528997,
+            "match": "diabetic retinopathy",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Retinopathy",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003930",
+            "source": "MeSH",
+            "score": 0.45449689867049714,
+            "match": "Diabetic Retinopathy",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetic Angiopathies",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003925",
+            "source": "MeSH",
+            "score": 0.4405843212874247,
+            "match": "Diabetic Angiopathies",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Insipidus",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003919",
+            "source": "MeSH",
+            "score": 0.4405843212874247,
+            "match": "Diabetes Insipidus",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetes insipidus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9409",
+            "source": "Disease Ontology",
+            "score": 0.43470630011931866,
+            "match": "diabetes insipidus",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Mellitus, Experimental",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003921",
+            "source": "MeSH",
+            "score": 0.42639820551844565,
+            "match": "Diabetes, Alloxan",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Hemochromatosis",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D006432",
+            "source": "MeSH",
+            "score": 0.42639820551844565,
+            "match": "Diabetes, Bronze",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Mellitus, Lipoatrophic",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003923",
+            "source": "MeSH",
+            "score": 0.42639820551844565,
+            "match": "Lipoatrophic Diabetes",
+            "ranges": [
+                {
+                    "begin": 13,
+                    "end": 21
+                }
+            ]
+        },
+        {
+            "title": "\"amylin\"",
+            "uri": "http://www.biosemantics.org/jochem#4260252",
+            "source": "Jochem",
+            "score": 0.4201162618151585,
+            "match": "Diabetes-associated peptide",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "hemochromatosis",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:2352",
+            "source": "Disease Ontology",
+            "score": 0.41780138163046016,
+            "match": "Bronzed diabetes",
+            "ranges": [
+                {
+                    "begin": 8,
+                    "end": 16
+                }
+            ]
+        },
+        {
+            "title": "Tumor protein p53-inducible nuclear protein 2",
+            "uri": "http://www.uniprot.org/uniprot/T53I2_MOUSE",
+            "source": "UniProt",
+            "score": 0.40803553290998834,
+            "match": "Diabetes and obesity-regulated protein",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetic ketoacidosis",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:1837",
+            "source": "Disease Ontology",
+            "score": 0.4052911575523258,
+            "match": "diabetic ketoacidosis",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "lipoatrophic diabetes",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:11712",
+            "source": "Disease Ontology",
+            "score": 0.4052911575523258,
+            "match": "lipoatrophic diabetes",
+            "ranges": [
+                {
+                    "begin": 13,
+                    "end": 21
+                }
+            ]
+        },
+        {
+            "title": "Astrocytic phosphoprotein PEA-15",
+            "uri": "http://www.uniprot.org/uniprot/PEA15_HUMAN",
+            "source": "UniProt",
+            "score": 0.39773524987704717,
+            "match": "Phosphoprotein enriched in diabetes",
+            "ranges": [
+                {
+                    "begin": 27,
+                    "end": 35
+                }
+            ]
+        },
+        {
+            "title": "Ankyrin repeat domain-containing protein 23",
+            "uri": "http://www.uniprot.org/uniprot/ANR23_MOUSE",
+            "source": "UniProt",
+            "score": 0.3784712533204704,
+            "match": "Diabetes-related ankyrin repeat protein",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Ankyrin repeat domain-containing protein 23",
+            "uri": "http://www.uniprot.org/uniprot/ANR23_HUMAN",
+            "source": "UniProt",
+            "score": 0.3784712533204704,
+            "match": "Diabetes-related ankyrin repeat protein",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "\"Guaifenesin\"",
+            "uri": "http://www.biosemantics.org/jochem#4249378",
+            "source": "Jochem",
+            "score": 0.35260435230285586,
+            "match": "Diabetic Tussin EX",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Tumor protein p53-inducible nuclear protein 2",
+            "uri": "http://www.uniprot.org/uniprot/T53I2_RAT",
+            "source": "UniProt",
+            "score": 0.3440327277466951,
+            "match": "Diabetes and obesity-regulated gene",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Tumor protein p53-inducible nuclear protein 2",
+            "uri": "http://www.uniprot.org/uniprot/T53I2_HUMAN",
+            "source": "UniProt",
+            "score": 0.3440327277466951,
+            "match": "Diabetes and obesity-regulated gene",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetic autonomic neuropathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:11503",
+            "source": "Disease Ontology",
+            "score": 0.3239683576402997,
+            "match": "diabetic autonomic neuropathy",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Mellitus, Type 2",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D003924",
+            "source": "MeSH",
+            "score": 0.3233025835240233,
+            "match": "Maturity-Onset Diabetes",
+            "ranges": [
+                {
+                    "begin": 15,
+                    "end": 23
+                }
+            ]
+        },
+        {
+            "title": "neurohypophyseal diabetes insipidus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:12388",
+            "source": "Disease Ontology",
+            "score": 0.32078449984145657,
+            "match": "central diabetes insipidus",
+            "ranges": [
+                {
+                    "begin": 8,
+                    "end": 16
+                }
+            ]
+        },
+        {
+            "title": "maturity-onset diabetes of the young",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:0050524",
+            "source": "Disease Ontology",
+            "score": 0.32073161711978787,
+            "match": "MASON-TYPE DIABETES",
+            "ranges": [
+                {
+                    "begin": 11,
+                    "end": 19
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Insipidus, Neurogenic",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D020790",
+            "source": "MeSH",
+            "score": 0.3197203567790444,
+            "match": "Diabetes Insipidus, Central",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "diabetic macular edema",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9191",
+            "source": "Disease Ontology",
+            "score": 0.31671865748994626,
+            "match": "diabetic macular edema",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Lipodystrophy, Congenital Generalized",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D052497",
+            "source": "MeSH",
+            "score": 0.31126810004607036,
+            "match": "Diabete, Congenital Lipoatrophic",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 7
+                }
+            ]
+        },
+        {
+            "title": "neonatal diabetes mellitus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:11717",
+            "source": "Disease Ontology",
+            "score": 0.3109798878269571,
+            "match": "neonatal diabetes mellitus",
+            "ranges": [
+                {
+                    "begin": 9,
+                    "end": 17
+                }
+            ]
+        },
+        {
+            "title": "diabetic peripheral angiopathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:10182",
+            "source": "Disease Ontology",
+            "score": 0.31037486758494026,
+            "match": "diabetic peripheral angiopathy",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "proliferative diabetic retinopathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:13207",
+            "source": "Disease Ontology",
+            "score": 0.3042379937030089,
+            "match": "proliferative diabetic retinopathy",
+            "ranges": [
+                {
+                    "begin": 14,
+                    "end": 22
+                }
+            ]
+        },
+        {
+            "title": "Mice, Inbred NOD",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D016688",
+            "source": "MeSH",
+            "score": 0.29790336610409857,
+            "match": "Nonobese Diabetic Mouse",
+            "ranges": [
+                {
+                    "begin": 9,
+                    "end": 17
+                }
+            ]
+        },
+        {
+            "title": "Fanconi Syndrome",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D005198",
+            "source": "MeSH",
+            "score": 0.29144626292263026,
+            "match": "Diabete, Pseudo-Phlorizin",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 7
+                }
+            ]
+        },
+        {
+            "title": "nephrogenic diabetes insipidus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:12387",
+            "source": "Disease Ontology",
+            "score": 0.2825258968206976,
+            "match": "nephrogenic diabetes insipidus",
+            "ranges": [
+                {
+                    "begin": 12,
+                    "end": 20
+                }
+            ]
+        },
+        {
+            "title": "Transcription factor SOX-13",
+            "uri": "http://www.uniprot.org/uniprot/SOX13_HUMAN",
+            "source": "UniProt",
+            "score": 0.27823154452251014,
+            "match": "Type 1 diabetes autoantigen ICA12",
+            "ranges": [
+                {
+                    "begin": 7,
+                    "end": 15
+                }
+            ]
+        },
+        {
+            "title": "Diabetes Insipidus, Nephrogenic",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D018500",
+            "source": "MeSH",
+            "score": 0.27662986245845267,
+            "match": "Diabetes Insipidus, Nephrogenic",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Up-regulated during skeletal muscle growth protein 5",
+            "uri": "http://www.uniprot.org/uniprot/USMG5_HUMAN",
+            "source": "UniProt",
+            "score": 0.2764402723793178,
+            "match": "Diabetes-associated protein in insulin-sensitive tissues",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Up-regulated during skeletal muscle growth protein 5",
+            "uri": "http://www.uniprot.org/uniprot/USMG5_MOUSE",
+            "source": "UniProt",
+            "score": 0.2764402723793178,
+            "match": "Diabetes-associated protein in insulin-sensitive tissues",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Up-regulated during skeletal muscle growth protein 5",
+            "uri": "http://www.uniprot.org/uniprot/USMG5_RAT",
+            "source": "UniProt",
+            "score": 0.2764402723793178,
+            "match": "Diabetes-associated protein in insulin-sensitive tissues",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Up-regulated during skeletal muscle growth protein 5",
+            "uri": "http://www.uniprot.org/uniprot/USMG5_BOVIN",
+            "source": "UniProt",
+            "score": 0.2764402723793178,
+            "match": "Diabetes-associated protein in insulin-sensitive tissues",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "background diabetic retinopathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:13208",
+            "source": "Disease Ontology",
+            "score": 0.27461462186001906,
+            "match": "background diabetic retinopathy",
+            "ranges": [
+                {
+                    "begin": 11,
+                    "end": 19
+                }
+            ]
+        },
+        {
+            "title": "Cholinephosphotransferase 1",
+            "uri": "http://www.uniprot.org/uniprot/CHPT1_MOUSE",
+            "source": "UniProt",
+            "score": 0.26655874252913636,
+            "match": "Diabetic nephropathy-associated gene transcript 1",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "type 1 diabetes mellitus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9744",
+            "source": "Disease Ontology",
+            "score": 0.2606246611761797,
+            "match": "type 1 diabetes mellitus",
+            "ranges": [
+                {
+                    "begin": 7,
+                    "end": 15
+                }
+            ]
+        },
+        {
+            "title": "type 2 diabetes mellitus",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:9352",
+            "source": "Disease Ontology",
+            "score": 0.2563468923526193,
+            "match": "type 2 diabetes mellitus",
+            "ranges": [
+                {
+                    "begin": 7,
+                    "end": 15
+                }
+            ]
+        },
+        {
+            "title": "severe nonproliferative diabetic retinopathy",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:8946",
+            "source": "Disease Ontology",
+            "score": 0.21089521849244833,
+            "match": "severe nonproliferative diabetic retinopathy",
+            "ranges": [
+                {
+                    "begin": 24,
+                    "end": 32
+                }
+            ]
+        },
+        {
+            "title": "Polyendocrinopathies, Autoimmune",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D016884",
+            "source": "MeSH",
+            "score": 0.19000174872090378,
+            "match": "Diabetes Mellitus, Addison's Disease, Myxedema",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "National Institute of Diabetes and Digestive and Kidney Diseases (U.S.)",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D054586",
+            "source": "MeSH",
+            "score": 0.18417497154845078,
+            "match": "National Institute of Diabetes and Digestive and Kidney Diseases",
+            "ranges": [
+                {
+                    "begin": 22,
+                    "end": 30
+                }
+            ]
+        },
+        {
+            "title": "Wolfram Syndrome",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D014929",
+            "source": "MeSH",
+            "score": 0.15430042841997102,
+            "match": "Diabetes Insipidus and Mellitus with Optic Atrophy and Deafness",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Wolfram syndrome",
+            "uri": "http://www.disease-ontology.org/api/metadata/DOID:10632",
+            "source": "Disease Ontology",
+            "score": 0.14826654733320607,
+            "match": "Diabetes mellitus AND insipidus with optic atrophy AND deafness (disorder)",
+            "ranges": [
+                {
+                    "begin": 0,
+                    "end": 8
+                }
+            ]
+        },
+        {
+            "title": "Donohue Syndrome",
+            "uri": "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?field=uid&exact=Find+Exact+Term&term=D056731",
+            "source": "MeSH",
+            "score": 0.11791685213513033,
+            "match": "Pineal Hyperplasia, Insulin-Resistant Diabetes Mellitus, And Somatic Abnormalities",
+            "ranges": [
+                {
+                    "begin": 38,
+                    "end": 46
+                }
+            ]
+        }
+    ],
+    "documents": [
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23482536",
+            "title": "Differential diagnosis of leg ulcers.",
+            "abstract": "Leg and foot ulcers are symptoms of very different diseases. The aim of this paper is to demonstrate the differential diagnosis of leg ulcers. The majority of leg ulcers occur in the lower leg or foot. In non-venous ulcers the localization in the foot area is more frequent. The most frequent underlying disease is chronic venous disease. In 354 leg ulcers, Koerber found 75.25% venous leg ulcers, 3.66% arterial leg ulcers, 14.66% ulcers of mixed venous and arterial origin and 13.5% vasculitic ulcers. In the Swedish population of Skaraborg, Nelzen found a venous origin in 54% of the ulcer patients. Each leg ulcer needs a clinical and anamnestic evaluation. Duplex ultrasound is the basic diagnostic tool to exclude vascular anomalies especially chronic venous and arterial occlusive disease. Skin biopsies help to find a correct diagnosis in unclear or non-healing cases. In conclusion, chronic venous disease is the most frequent cause of leg ulcerations. Because 25% of the population have varicose veins or other chronic venous disease the coincidence of pathological venous findings and ulceration is very frequent even in non-venous ulcerations. Leg ulcers without the symptoms of chronic venous disease should be considered as non-venous.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23455356",
+            "title": "RET gene abnormalities and thyroid disease: who should be screened and when.",
+            "abstract": "Mutations in the RET proto-oncogene have been implicated in the pathogenesis of several forms of medullary thyroid cancer (MTC). Multiple endocrine neoplasia type 2 (MEN-2) is an autosomal dominant syndrome caused by germline activating mutations of the RET proto-oncogene and has been categorized into three distinct clinical forms. MEN-2A is associated with MTC, bilateral pheochromocytoma, and primary hyperparathyroidism. MEN-2B is associated with MTC, bilateral pheochromocytoma, and mucosal neuromas. The rarest clinical form of MEN-2 is familial MTC (FMTC), which is also associated with MTC, but other endocrinopathies are characteristically not present. Each clinical form of MEN-2 results from a specific RET gene mutation, with a strong correlation of phenotype expression with regard to the onset and course of MTC and the presence of other endocrine tumors and a corresponding genotype. Recommendations for screening of RET mutations are necessary as their presence or absence will influence interventional strategies such as the timing of a prophylactic thyroidectomy and extent of surgery. Timing of screenings and development of interventional strategies are extremely important in caring for patients with certain RET mutations as evidence of metastatic MTC has been documented as early as 6 years of age. Interventional strategies should consider the risks of complications of these interventions based on certain characteristics of each individual case such as age of the patient, course of disease in affected family members, and the invasiveness of any proposed surgical procedure.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23484194",
+            "title": "Efficiency of noopept in streptozotocin-induced diabetes in rats.",
+            "abstract": "We studied the effects of new nootropic and neuroprotective drug Noopept (N-phenylacetyl-L-prolylglycine ethyl ester) in various dosage regimens on the dynamics of glycemia, body weight, and pain sensitivity in rats receiving diabetogenic toxin streptozotocin. In experimental diabetic rats, Noopept alleviated glycemia and weight loss and normalized enhanced pain sensitivity. The normalizing effect of Noopept was most pronounced when it was administered as a preventive agent prior to injection of the toxin. Both preventive and therapeutic administration of Noopept (delayed injections included) significantly weakened the examined metabolic effects of diabetogenic toxin. Possible mechanisms of the antidiabetic action of Noopept are analyzed.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23484152",
+            "title": "Abnormal cell responses and role of TNF-α in impaired diabetic wound healing.",
+            "abstract": "Impaired diabetic wound healing constitutes a major health problem. The impaired healing is caused by complex factors such as abnormal keratinocyte and fibroblast migration, proliferation, differentiation, and apoptosis, abnormal macrophage polarization, impaired recruitment of mesenchymal stem cells (MSCs) and endothelial progenitor cells (EPCs), and decreased vascularization. Diabetes-enhanced and prolonged expression of TNF- �� also contributes to impaired healing. In this paper, we discuss the abnormal cell responses in diabetic wound healing and the contribution of TNF- α .",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23484147",
+            "title": "Low circulating protein C levels are associated with lower leg ulcers in patients with diabetes.",
+            "abstract": "Activated protein C (APC) promotes angiogenesis and reepithelialisation and accelerates healing of diabetic ulcers. The aim of this study was to determine the relationship between the incidence of lower leg ulcers and plasma levels of APC's precursor, protein C (PC), in diabetic patients. Patients with diabetes who had a lower leg ulcer(s) for >6 months (n = 36) were compared with age-, type of diabetes-, and sex-matched subjects with diabetes but without an ulcer (n = 36, controls). Total PC was assessed using a routine PC colorimetric assay. There was a significantly (P < 0.001) lower level of plasma PC in patients with ulcers (103.3 ± 22.7, mean ± SD) compared with control (127.1 ± 34.0) subjects, when corrected for age and matched for gender and type of diabetes. Ulcer type (neuropathic, ischaemic, or mixed) was not a significant covariate for plasma PC levels (P = 0.35). There was no correlation between PC levels and gender, type of diabetes, HbA1c, or C-reactive protein in either group. In summary, decreased circulating PC levels are associated with, and may predispose to, lower leg ulceration in patients with diabetes.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23484124",
+            "title": "High insulin and leptin increase resistin and inflammatory cytokine production from human mononuclear cells.",
+            "abstract": "Resistin and the proinflammatory cytokines, such as TNF- α , IL-6, and IL-1 β , produced by adipocytes, and macrophages, are considered to be important modulators of chronic inflammation contributing to the development of obesity and atherosclerosis. Human monocyte-enriched mononuclear cells, from ten healthy individuals, were exposed to high concentrations of insulin, leptin, and glucose (alone or in combination) for 24 hours in vitro. Resistin, TNF- α , IL-6, and IL-1 β production was examined and compared to that in untreated cells. High insulin and leptin concentrations significantly upregulated resistin and the cytokines. The subsequent addition of high glucose significantly upregulated resistin and TNF- α mRNA and protein secretion, while it did not have any effect on IL-6 or IL-1 β production. By comparison, exposure to dexamethasone reduced TNF- α , IL-6, and IL-1 β production, while at this time point it increased resistin protein secretion. These data suggest that the expression of resistin, TNF- α , IL-6, and IL-1 β from human mononuclear cells, might be enhanced by the hyperinsulinemia and hyperleptinemia and possibly by the hyperglycemia in metabolic diseases as obesity, type 2 diabetes, and atherosclerosis. Therefore, the above increased production may contribute to detrimental effects of their increased adipocyte-derived circulating levels on systemic inflammation, insulin sensitivity, and endothelial function of these patients.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23484099",
+            "title": "Glucose toxic effects on granulation tissue productive cells: the diabetics' impaired healing.",
+            "abstract": "Type 2 diabetes mellitus is a metabolic noncommunicable disease with an expanding pandemic magnitude. Diabetes predisposes to lower extremities ulceration and impairs the healing process leading to wound chronification. Diabetes also dismantles innate immunity favoring wound infection. Amputation is therefore acknowledged as one of the disease's complications. Hyperglycemia is the proximal detonator of systemic and local toxic effectors including proinflammation, acute-phase proteins elevation, and spillover of reactive oxygen and nitrogen species. Insulin axis deficiency weakens wounds' anabolism and predisposes to inflammation. The systemic accumulation of advanced glycation end-products irreversibly impairs the entire physiology from cells-to-organs. These factors in concert hamper fibroblasts and endothelial cells proliferation, migration, homing, secretion, and organization of a productive granulation tissue. Diabetic wound bed may turn chronically inflammed, procatabolic, and an additional source of circulating pro-inflammatory cytokines, establishing a self-perpetuating loop. Diabetic fibroblasts and endothelial cells may bear mitochondrial damages becoming prone to apoptosis, which impairs granulation tissue cellularity and perfusion. Endothelial progenitor cells recruitment and tubulogenesis are also impaired. Failure of wound reepithelialization remains a clinical challenge while it appears to be biologically multifactorial. Ulcer prevention by primary care surveillance, education, and attention programs is of outmost importance to reduce worldwide amputation figures.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23483954",
+            "title": "Reduction in adiposity, β-cell function, insulin sensitivity, and cardiovascular risk factors: a prospective study among Japanese with obesity.",
+            "abstract": "BACKGROUND: A reduction in adiposity may be associated with an improvement in insulin sensitivity and β-cell function as well as cardiovascular disease (CVD) risk factors; however, few studies have investigated these associations in a longitudinal setting. METHODS: To investigate these associations over a 1-year period, we conducted an observational analysis of 196 Japanese subjects with obesity in the Saku Control Obesity Program. We investigated the relations between changes in adiposity (body mass index [BMI], waist circumference, subcutaneous fat area [SFAT], and visceral fat area [VFAT]) and changes in HbA1c, fasting plasma glucose (FPG), insulin sensitivity index (ISI), the homeostasis model assessment β cell function (HOMA-β), lipids, and blood pressure. RESULTS: All adiposity changes were positively associated with HbA1c and FPG changes. Reductions in BMI and VFAT were associated with HOMA-β reduction. Reductions in all adiposity measures were associated with an improvement in the ISI. Changes in most adiposity measures were positively associated with changes in blood pressure and lipid levels, except for LDL. CONCLUSIONS: The present findings provide additional supportive evidence indicating that a reduction in adiposity may lead to an improvement in insulin sensitivity and the reduction of CVD risk factors in obese individuals.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23483953",
+            "title": "Familial longevity is marked by better cognitive performance at middle age: the Leiden Longevity Study.",
+            "abstract": "BACKGROUND: Decline in cognitive performance is a highly prevalent health condition in elderly. We studied whether offspring of nonagenarian siblings with a familial history of longevity, perform better on cognitive tests compared to their partners as controls. This is relevant since it could provide insights into determinants underlying decline in cognitive performance. METHODS: Cross-sectional analysis within the longitudinal cohort of the Leiden Longevity Study consisting of middle-aged offspring of nonagenarian siblings together with their partners (n = 500, mean age (SD) 66.3 (6.1) and 65.7 (7.2) years, respectively) as controls. Memory function, attention and processing speed were tested using the 15-Picture Learning Test, Stroop test and Digit Symbol Substitution Test. Data were analyzed with regression adjusted for age, gender, years of education and additionally for diabetes mellitus, cardiovascular diseases, alcohol use, smoking, inflammatory markers and apolipoprotein E genotype. Robust standard errors were used to account for familial relationships among the offspring. RESULTS: Cognitive performance was worse at higher calendar age (p<0.001, all except Stroop test part 1). The offspring performed better compared to their partners on trial 3 (p = 0.005), the immediate (p = 0.016) and delayed (p = 0.004) recall of the 15-Picture Learning Test as well as on the interference and combined interference score of the Stroop test (p = 0.014 and p = 0.036, respectively) in the fully adjusted model. The difference between offspring and partners was estimated to be more than three years according to the observed difference in calendar age. CONCLUSIONS: Offspring of nonagenarian siblings with a familial history of longevity have better cognitive performance compared to the group of their partners of comparable age. This effect is independent of age-related diseases and known possible confounders. Possible explanations might be differences in subclinical vascular pathology between both groups.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23483942",
+            "title": "Level of unawareness and management of diabetes, hypertension, and dyslipidemia among adults in Luxembourg: findings from ORISCAV-LUX study.",
+            "abstract": "BACKGROUND: In the absence of evidence-based information, assessment of population awareness and management of diabetes, hypertension and dyslipidemia (treatable and preventable cardiovascular risk factors) are important to halt coronary and cerebrovascular diseases and to improve public health. METHODS: The analysis was based on a nationally representative sample of 1432 adult subjects, recruited for the ORISCAV-LUX survey (2007-2008). Descriptive and multivariable logistic regression analyses were performed. The 10-year Framingham risk score was calculated for each participant who classified at low, intermediate and high risk. RESULTS: Among the diagnosed cases, 32%, 60%, and 85% were respectively unaware of their diabetes, hypertension and dyslipidemia. Increasing age and BMI were the strongest protective factors against unawareness of hypertension and dyslipidemia. Having a family history decreased the risk of unawareness of hypertension (OR = 0.57; 95% CI 0.36, 0.92; P = 0.021), whereas, not having a family doctor increased double-fold the odd of being unaware of hypertension (P = 0.048). Poor health perception reduced significantly the risk of unawareness of dyslipidemia (OR = 0.27; 95% CI 0.11, 0.68). Concerning the management, diabetes was markedly better treated than hypertension and dyslipidemia. Among diabetic subjects (constituting 4% of the population), 3% were treated vs. 1% not treated. In contrast, 22% of the hypertensive participants (35% of the population) were not treated vs. 13% treated. Concerning dyslipidemia, only 9% of those with lipid disorder (70% of the population) were under medication vs. 61% not treated. For the treated cases of these pathologies, almost only one-third was under control. Framingham risk of developing CHD within 10 years was moderate to high among 62%, 27%, and 17% of the unaware/untreated diabetic, hypertensive, and dyslipidemic participants, respectively. CONCLUSIONS: The considerable lack of awareness and insufficient management underscore the urgent need for intensive efforts to reduce the gap in prevention strategies, and control of cases according to explicit clinical guidelines.",
+            "sections": null
+        }
+    ],
+    "statements": [
+        {
+            "objPhrase": "Diabetes",
+            "predPhrase": "is referenced in",
+            "score": 0.083333336,
+            "subjPhrase": "Glucagon",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/citations/8482423",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.99527925,
+                    "subj": "http://purl.uniprot.org/uniprot/P01275"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.9858377,
+                    "subj": "http://purl.uniprot.org/pubmed/8482423"
+                },
+                {
+                    "obj": "Glucagon",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.001977938,
+                    "subj": "http://linkedlifedata.com/resource/#_5030313237350023"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/medline/93246081",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0048766383,
+                    "subj": "http://purl.uniprot.org/pubmed/8482423"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/8482423",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0048764898,
+                    "subj": "http://purl.uniprot.org/pubmed/8482423"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/8482423",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0044874805,
+                    "subj": "http://purl.uniprot.org/citations/8482423"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/citations/3956884",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.993738,
+                    "subj": "http://purl.uniprot.org/uniprot/P05110"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.981214,
+                    "subj": "http://purl.uniprot.org/pubmed/3956884"
+                },
+                {
+                    "obj": "Glucagon",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.001977938,
+                    "subj": "http://linkedlifedata.com/resource/#_50303531313000C"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/medline/86165412",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004814275,
+                    "subj": "http://purl.uniprot.org/pubmed/3956884"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/3956884",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0044885073,
+                    "subj": "http://purl.uniprot.org/citations/3956884"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/3956884",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004818932,
+                    "subj": "http://purl.uniprot.org/pubmed/3956884"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Diabetes",
+            "predPhrase": "is referenced in",
+            "score": 0.083333336,
+            "subjPhrase": "Insulin",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/citations/18162506",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.99527925,
+                    "subj": "http://purl.uniprot.org/uniprot/P01308"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.9858377,
+                    "subj": "http://purl.uniprot.org/pubmed/18162506"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/18162506",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0031852557,
+                    "subj": "http://purl.uniprot.org/citations/18162506"
+                },
+                {
+                    "obj": "Insulin",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.0019778367,
+                    "subj": "http://linkedlifedata.com/resource/#_50303133303800AB"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/18162506",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0048719253,
+                    "subj": "http://purl.uniprot.org/pubmed/18162506"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/citations/18192540",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.9979871,
+                    "subj": "http://purl.uniprot.org/uniprot/P01308"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/18192540",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0031849884,
+                    "subj": "http://purl.uniprot.org/citations/18192540"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.9939613,
+                    "subj": "http://purl.uniprot.org/pubmed/18192540"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/18192540",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004748997,
+                    "subj": "http://purl.uniprot.org/pubmed/18192540"
+                },
+                {
+                    "obj": "Insulin",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.0019778367,
+                    "subj": "http://linkedlifedata.com/resource/#_50303133303800AB"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/citations/6365663",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.99584293,
+                    "subj": "http://purl.uniprot.org/uniprot/P01313"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/6365663",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0044868067,
+                    "subj": "http://purl.uniprot.org/citations/6365663"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/medline/84133036",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0047785603,
+                    "subj": "http://purl.uniprot.org/pubmed/6365663"
+                },
+                {
+                    "obj": "Insulin",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.0019785417,
+                    "subj": "http://linkedlifedata.com/resource/#_503031333133009"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/6365663",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004775539,
+                    "subj": "http://purl.uniprot.org/pubmed/6365663"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.9875288,
+                    "subj": "http://purl.uniprot.org/pubmed/6365663"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/citations/9166665",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.993738,
+                    "subj": "http://purl.uniprot.org/uniprot/Q62587"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.981214,
+                    "subj": "http://purl.uniprot.org/pubmed/9166665"
+                },
+                {
+                    "obj": "Insulin",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.001960024,
+                    "subj": "http://linkedlifedata.com/resource/#_513632353837008"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/9166665",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004818785,
+                    "subj": "http://purl.uniprot.org/pubmed/9166665"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/9166665",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0044874805,
+                    "subj": "http://purl.uniprot.org/citations/9166665"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/medline/97309250",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004818932,
+                    "subj": "http://purl.uniprot.org/pubmed/9166665"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Diabetes",
+            "predPhrase": "is referenced in",
+            "score": 0.083333336,
+            "subjPhrase": "Galanin",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/citations/1370155",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.9979871,
+                    "subj": "http://purl.uniprot.org/uniprot/P22466"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.9939613,
+                    "subj": "http://purl.uniprot.org/pubmed/1370155"
+                },
+                {
+                    "obj": "Galanin",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.001960024,
+                    "subj": "http://linkedlifedata.com/resource/#_5032323436360013"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/medline/92090542",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0048155873,
+                    "subj": "http://purl.uniprot.org/pubmed/1370155"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/1370155",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0048749377,
+                    "subj": "http://purl.uniprot.org/pubmed/1370155"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/1370155",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0031932096,
+                    "subj": "http://purl.uniprot.org/citations/1370155"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Diabetes",
+            "predPhrase": "is referenced in",
+            "score": 0.07692308,
+            "subjPhrase": "Syntaxin-4",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/citations/19033398",
+                    "pred": "http://purl.uniprot.org/core/citation",
+                    "score": 0.993738,
+                    "subj": "http://purl.uniprot.org/uniprot/P70452"
+                },
+                {
+                    "obj": "Diabetes",
+                    "pred": "http://purl.uniprot.org/core/name",
+                    "score": 2.981214,
+                    "subj": "http://purl.uniprot.org/pubmed/19033398"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/19033398",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.004814275,
+                    "subj": "http://purl.uniprot.org/pubmed/19033398"
+                },
+                {
+                    "obj": "Syntaxin-4",
+                    "pred": "http://purl.uniprot.org/core/fullName",
+                    "score": 0.0019363454,
+                    "subj": "http://linkedlifedata.com/resource/#_5037303435320025"
+                },
+                {
+                    "obj": "http://purl.uniprot.org/pubmed/19033398",
+                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "score": 0.0031852557,
+                    "subj": "http://purl.uniprot.org/citations/19033398"
+                }
+            ]
+        },
+        {
+            "objPhrase": "DXplain",
+            "predPhrase": "has note",
+            "score": 0.07692308,
+            "subjPhrase": "DIABETIC",
+            "triples": [
+                {
+                    "obj": "DXplain",
+                    "pred": "http://www.w3.org/2004/02/skos/core#note",
+                    "score": 0.9895106,
+                    "subj": "http://linkedlifedata.com/resource/umls/label/A0404593"
+                },
+                {
+                    "obj": "http://linkedlifedata.com/resource/umls/label/A0404593",
+                    "pred": "http://www.w3.org/2008/05/skos-xl#prefLabel",
+                    "score": 0.030893836,
+                    "subj": "http://linkedlifedata.com/resource/umls/id/C0241863"
+                },
+                {
+                    "obj": "DIABETIC",
+                    "pred": "http://www.w3.org/2008/05/skos-xl#literalForm",
+                    "score": 2.9685318,
+                    "subj": "http://linkedlifedata.com/resource/umls/label/A0404593"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Disease",
+            "predPhrase": "is a",
+            "score": 0.07692308,
+            "subjPhrase": "Diabetes mellitus",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/keywords/9995",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+                    "score": 0.6135895,
+                    "subj": "http://purl.uniprot.org/keywords/219"
+                },
+                {
+                    "obj": "Disease",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 0.0075719077,
+                    "subj": "http://purl.uniprot.org/keywords/9995"
+                },
+                {
+                    "obj": "Diabetes mellitus",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 1.8407686,
+                    "subj": "http://purl.uniprot.org/keywords/219"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Disease",
+            "predPhrase": "is a",
+            "score": 0.07692308,
+            "subjPhrase": "Diabetes insipidus",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/keywords/9995",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+                    "score": 0.6149049,
+                    "subj": "http://purl.uniprot.org/keywords/218"
+                },
+                {
+                    "obj": "Diabetes insipidus",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 1.8447146,
+                    "subj": "http://purl.uniprot.org/keywords/218"
+                },
+                {
+                    "obj": "Disease",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 0.0075719077,
+                    "subj": "http://purl.uniprot.org/keywords/9995"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Disease",
+            "predPhrase": "is in category",
+            "score": 0.071428575,
+            "subjPhrase": "Diabetes insipidus",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/keywords/9995",
+                    "pred": "http://purl.uniprot.org/core/category",
+                    "score": 0.6149049,
+                    "subj": "http://purl.uniprot.org/keywords/218"
+                },
+                {
+                    "obj": "Diabetes insipidus",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 1.8447146,
+                    "subj": "http://purl.uniprot.org/keywords/218"
+                },
+                {
+                    "obj": "Disease",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 0.0075719077,
+                    "subj": "http://purl.uniprot.org/keywords/9995"
+                }
+            ]
+        },
+        {
+            "objPhrase": "U000230",
+            "predPhrase": "is notated",
+            "score": 0.071428575,
+            "subjPhrase": "DIABETIC GASTROPARESIS",
+            "triples": [
+                {
+                    "obj": "U000230",
+                    "pred": "http://www.w3.org/2004/02/skos/core#notation",
+                    "score": 0.63043815,
+                    "subj": "http://linkedlifedata.com/resource/umls/label/A0546821"
+                },
+                {
+                    "obj": "http://linkedlifedata.com/resource/umls/label/A0546821",
+                    "pred": "http://www.w3.org/2008/05/skos-xl#prefLabel",
+                    "score": 0.030609105,
+                    "subj": "http://linkedlifedata.com/resource/umls/id/C0267176"
+                },
+                {
+                    "obj": "DIABETIC GASTROPARESIS",
+                    "pred": "http://www.w3.org/2008/05/skos-xl#literalForm",
+                    "score": 1.8913145,
+                    "subj": "http://linkedlifedata.com/resource/umls/label/A0546821"
+                }
+            ]
+        },
+        {
+            "objPhrase": "Disease",
+            "predPhrase": "is in category",
+            "score": 0.071428575,
+            "subjPhrase": "Diabetes mellitus",
+            "triples": [
+                {
+                    "obj": "http://purl.uniprot.org/keywords/9995",
+                    "pred": "http://purl.uniprot.org/core/category",
+                    "score": 0.6135895,
+                    "subj": "http://purl.uniprot.org/keywords/219"
+                },
+                {
+                    "obj": "Disease",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 0.0075719077,
+                    "subj": "http://purl.uniprot.org/keywords/9995"
+                },
+                {
+                    "obj": "Diabetes mellitus",
+                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "score": 1.8407686,
+                    "subj": "http://purl.uniprot.org/keywords/219"
+                }
+            ]
+        }
+    ]
+}

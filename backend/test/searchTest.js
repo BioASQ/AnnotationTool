@@ -7,10 +7,11 @@ var s = new Search();
 
 var searchTerms = [
     'diabetes AND hypertension',
-    '"polymerase chain reaction"'
+    '"polymerase chain reaction"',
+    'genetic markers'
 ];
 
-s.find(searchTerms[1], function (err, res) {
+s.find(searchTerms[2], function (err, res) {
     console.log(res);
     assert.ifError(err);
     process.exit(0);

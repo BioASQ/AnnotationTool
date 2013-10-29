@@ -52,12 +52,15 @@ exports.createServer = function (port, model, authentication) {
         });
     });
 
+    // set socket timeout to 10 min
+    server.setTimeout(600000);
+
     if (port) {
         server.listen(port);
     }
 
     return server;
-}
+};
 
 exports.start = function (options, callback) {
     var dbServer = new mongodb.Server(options.database.host, options.database.port, {}),

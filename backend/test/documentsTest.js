@@ -13,12 +13,13 @@ var queries = [
     'diabetes AND hypertension AND nebivolol'
 ];
 
-s.find(queries[4], 0, 10, function (err, res) {
+s.find(queries[0], 0, 10, function (err, res) {
     if (err) { return console.log(err); }
     res.forEach(function (entry) {
-        console.log('- ' + entry.title + ' (' + entry.uri + ')');
-        console.log(entry.abstract);
-        console.log('----------');
+        var e = JSON.parse(JSON.stringify(entry));
+        delete e.abstract;
+        delete e.sections;
+        console.log(e);
     });
     assert.ifError(err);
     process.exit(0);

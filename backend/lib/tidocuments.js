@@ -12,13 +12,19 @@ var TIDocuments = exports.TIDocuments = function (URL) {
 TIDocuments.prototype = Object.create(TIService.prototype);
 
 TIDocuments.prototype._transform = function (results) {
-    return results.map(function(result) {
-        return {
-            uri: pubMedBaseURI + result.pmid,
-            title: result.title ? result.title : result.documentAbstract.substr(0, 20) + '...',
-            abstract: result.documentAbstract,
-            sections: result.sections
+    return results.filter(function (res) {
+        // ignore title-only documents
+        return (typeof res.documentAbstract != 'undefined');
+    }).map(function(res) {
+        var result = {
+            uri: pubMedBaseURI + res.pmid,
+            title: res.title ? res.title : res.documentAbstract.substr(0, 20) + '...',
+            abstract: res.documentAbstract
         };
+        if (typeof res.sections != 'undefined') { result.sections = res.sections; }
+        if (typeof res.score != 'undefined') { result.score = res.score; }
+
+        return result;
     });
 };
 

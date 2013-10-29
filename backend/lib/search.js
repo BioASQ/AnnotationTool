@@ -30,7 +30,8 @@ Search.prototype._merge = function (sectionName/* variadic arguments */) {
                     uri:    current.concept.uri,
                     source: sources[i - 1],
                     score:  current.score,
-                    match:  current.matchedLabel
+                    match:  current.matchedLabel,
+                    ranges: current.ranges
                 });
             }
         }
