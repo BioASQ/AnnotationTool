@@ -15,7 +15,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         });
     }
 
-    // $scope.question = Questions.selectedQuestion();
+    $scope.question = Questions.selectedQuestion();
 
     $scope.editQuestion = function (question) {
         if (question.finalized) {
