@@ -25,10 +25,10 @@ Question.prototype.list = function (user, callback) {
     });
 };
 
-Question.prototype.history = function (id, cb) {
+Question.prototype.history = function (id, user, cb) {
     this.db.collection('log', function (err, log) {
         if (err) { return cb(err); }
-        log.distinct('params.query', { 'params.question': id }, function (err, res) {
+        log.distinct('params.query', { 'params.question': id, user: user }, function (err, res) {
             if (err) { return cb(err); }
             cb(null, res);
         });
@@ -41,7 +41,7 @@ Question.prototype.create = function (question, user, callback) {
     this._collection(callback, function (err, coll) {
         question.creator = user;
         coll.insert(question, { 'save': true }, function (err, inserted) {
-            if (err) { callback(err); }
+            if (err) { return callback(err); }
             callback(null, inserted[0]._id);
         });
     });
@@ -52,7 +52,8 @@ Question.prototype.load = function (id, user, callback) {
 
     this._collection(callback, function (err, coll) {
         coll.findOne({ '_id': ObjectID(id), 'creator': user }, function (err, res) {
-            if (err) { callback(err); }
+            if (err) { return callback(err); }
+            if (!res) { return callback(new Error('Question not found')); }
             callback(null, res);
         });
     });
@@ -64,7 +65,7 @@ Question.prototype.update = function (id, question, user, callback) {
     delete question._id; // remove _id field
     this._collection(callback, function (err, coll) {
         coll.update({ '_id': ObjectID(id), 'creator': user }, { $set: question }, { 'save': true }, function (err) {
-            if (err) { callback(err); }
+            if (err) { return callback(err); }
             callback(null);
         });
     });
@@ -75,7 +76,7 @@ Question.prototype.del = function (id, user, callback) {
 
     this._collection(callback, function (err, coll) {
         coll.remove({ '_id': ObjectID(id), 'creator': user }, { 'save': true }, function (err) {
-            if (err) { callback(err); }
+            if (err) { return callback(err); }
             callback(null);
         });
     });

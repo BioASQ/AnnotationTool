@@ -150,7 +150,7 @@ exports.createRouter = function (model, authentication) {
 
                 router.path(/\/history\//, function () {
                     this.get(idRegEx).bind(function (req, res, id) {
-                        model.history(id, function (err, queries) {
+                        model.history(id, req.session.data.user, function (err, queries) {
                             var logData = {
                                 user: req.session.data.user,
                                 path: 'questions/history/:id',
