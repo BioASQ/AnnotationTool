@@ -90,6 +90,14 @@ connection.open(function (err, conn) {
                             return s;
                         });
 
+                        doc.answer.statements = doc.answer.statements.map(function (s) {
+                            s.triples = [{ s: s.s, p: s.p, o: s.o }];
+                            delete s.s;
+                            delete s.p;
+                            delete s.o;
+                            return s;
+                        });
+
                         if (doc.type === 'decisive') {
                             doc.type = 'yesno';
                         }
