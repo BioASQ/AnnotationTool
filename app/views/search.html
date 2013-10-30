@@ -17,9 +17,15 @@
       <input class="span5" type="text" placeholder="Query &hellip;" style="margin-bottom: 0px;" data-ng-model="terms">
       <button class="btn" type="button" data-ng-click="search()">Search</button>
     </div>
-    <div class="span2"></div>
-    <div class="span4">
-      <select class="span4" name="results" id="results" style="margin-bottom: 0px;"></select>
+    <div class="span1"></div>
+    <div class="span5">
+      <select class="span5"
+              data-ng-model="terms"
+              data-ng-options="query for query in queries"
+              data-ng-change="search()"
+              style="margin-bottom: 0px;">
+              <option style="display:none" value="">Query history</option>
+            </select>
     </div>
   </div>
 

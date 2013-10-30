@@ -147,6 +147,27 @@ exports.createRouter = function (model, authentication) {
                         }
                     });
                 });
+
+                router.path(/\/history\//, function () {
+                    this.get(idRegEx).bind(function (req, res, id) {
+                        model.history(id, function (err, queries) {
+                            var logData = {
+                                user: req.session.data.user,
+                                path: 'questions/history/:id',
+                                method: 'GET',
+                                params: id
+                            };
+                            if (err) {
+                                logData.error = err;
+                                logger('error', 'query history failed', logData);
+                                res.send(500);
+                            } else {
+                                logger('info', 'query history', logData);
+                                res.send(200, {}, queries);
+                            }
+                        });
+                    });
+                });
             });
         });
 

@@ -25,6 +25,16 @@ Question.prototype.list = function (user, callback) {
     });
 };
 
+Question.prototype.history = function (id, cb) {
+    this.db.collection('log', function (err, log) {
+        if (err) { return cb(err); }
+        log.distinct('params.query', { 'params.question': id }, function (err, res) {
+            if (err) { return cb(err); }
+            cb(null, res);
+        });
+    });
+};
+
 Question.prototype.create = function (question, user, callback) {
     if (typeof user == 'undefined') { return callback(Error('No valid user.')); }
 

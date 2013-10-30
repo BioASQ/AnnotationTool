@@ -1,5 +1,5 @@
 angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
-.controller('SearchCtrl', function ($scope, Questions, $routeParams, Search) {
+.controller('SearchCtrl', function ($scope, Questions, $routeParams, $http, Search) {
     var itemsPerPage = 10;
     var pageSettings = {
         concepts:   { total: 0, current: 1 },
@@ -23,6 +23,14 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
             angular.forEach(question, function (value, key) {
                 $scope.question[key] = value;
             });
+        });
+    }
+
+    if ($routeParams.id) {
+        $scope.queries = [];
+        $http.get('/backend/questions/history/' + $routeParams.id)
+        .success(function (data) {
+            $scope.queries = data;
         });
     }
 
@@ -102,6 +110,11 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
 
         delete $scope.statements;
         fetchStatementsIfNeeded($scope.terms, $scope.pages.statements.current - 1, itemsPerPage);
+
+        $http.get('/backend/questions/history/' + $routeParams.id)
+        .success(function (data) {
+            $scope.queries = data;
+        });
     };
 
     $scope.toggleConceptSource = function (source) {

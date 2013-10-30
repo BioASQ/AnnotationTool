@@ -1,5 +1,5 @@
 angular.module('bioasq-at.services.search', [])
-.factory('Search', function ($http, $q) {
+.factory('Search', function ($http, $q, $routeParams) {
     var conceptResponse = null;
     // var kRequestTimeout = 235000;
     var kRequestTimeout = 300000;
@@ -70,7 +70,7 @@ angular.module('bioasq-at.services.search', [])
                 });
             } else {
                 $http.post('/backend/concepts',
-                           { query: query },
+                           { query: query, question: $routeParams.id },
                            { timeout: kRequestTimeout })
                 .success(function (data) {
                     conceptResponse = {
@@ -108,7 +108,7 @@ angular.module('bioasq-at.services.search', [])
         documents: function (query, page, pageSize) {
             var deferred = $q.defer();
             $http.post('/backend/documents',
-                       { query: query, page: page, itemsPerPage: pageSize },
+                       { query: query, page: page, itemsPerPage: pageSize, question: $routeParams.id },
                        { timeout: kRequestTimeout })
             .success(function (data) {
                 data.documents = data.documents.map(function (d) {
@@ -124,7 +124,7 @@ angular.module('bioasq-at.services.search', [])
         statements: function (query, page, pageSize) {
             var deferred = $q.defer();
             $http.post('/backend/statements',
-                       { query: query, page: page, itemsPerPage: pageSize },
+                       { query: query, page: page, itemsPerPage: pageSize, question: $routeParams.id },
                        { timeout: kRequestTimeout })
             .success(function (data, status) {
                 if (status === 200 && !data.statements) {
