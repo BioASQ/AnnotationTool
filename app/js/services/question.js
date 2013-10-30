@@ -25,10 +25,12 @@ angular.module('bioasq-at.services.question', [])
             case 'document':
                 return (lhs.uri == rhs.uri);
             case 'statement':
-                return (lhs.triples.length === rhs.triples.length &&
-                        lhs.subjPhrase === rhs.subjPhrase &&
-                        lhs.predPhrase === rhs.predPhrase &&
-                        lhs.objPhrase  === rhs.objPhrase);
+                if (lhs.triples && rhs.triples) {
+                    return (lhs.triples.length === rhs.triples.length &&
+                            lhs.subjPhrase === rhs.subjPhrase &&
+                            lhs.predPhrase === rhs.predPhrase &&
+                            lhs.objPhrase  === rhs.objPhrase);
+                }
             default:
                 return false;
         }
