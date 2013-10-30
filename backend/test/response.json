@@ -991,6 +991,18 @@
     ],
     "documents": [
         {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23231424",
+            "title": "Social position and chronic conditions across the life span and risk of stroke: a life course epidemiological analysis of 22 847 American adults in ages over 50.",
+            "abstract": "BACKGROUND: Evidence is limited on the impact of childhood socioeconomic status, adulthood socioeconomic status and chronic conditions on risk of incident stroke in later life. We aimed to examine these associations using data from a nationally representative sample of the Health and Retirement Study. METHODS: Stroke-free participants (n = 22 847) aged > 50 years in the Health and Retirement Study (1992-2008) were analyzed. Childhood and adulthood socioeconomic status were assessed using parental and participant's education attainments. Incident stroke was defined as self-reported first incident stroke. RESULTS: Of the study sample, 2298 subjects experienced first incident stroke (10·06%). Cox's regression models indicate that subjects with low childhood socioeconomic status had 1·36 times higher risk (95% confidence interval: 1·18-1·57) of first incident stroke than those with high childhood socioeconomic status. There was an 8% reduction of this association after adjustment for adulthood socioeconomic status. Adults with diabetes mellitus had the highest hazard ratio (1·91, 95% confidence interval: 1·63-2·23) for incident stroke, followed by heart disease (1·69, 1·48-1·93), and then hypertension (1·56, 1·40-1·75). Significant interaction effect of childhood socioeconomic status and diabetes mellitus, and combined effects of socioeconomic status and chronic conditions on risk of incident stroke were observed. CONCLUSIONS: Both low socioeconomic status in childhood and adulthood socioeconomic status predict the risk of stroke. There are significantly combined effects of socioeconomic status and chronic conditions on the risk of stroke. Improving socioeconomic status across the life span and aggressive control of chronic conditions may play pivotal roles in the prevention of stroke development.",
+            "sections": null
+        },
+        {
+            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/22974118",
+            "title": "Demographics, socio-economic characteristics, and risk factor prevalence in patients with non-cardioembolic ischaemic stroke in low- and middle-income countries: the OPTIC registry.",
+            "abstract": "BACKGROUND: There is a paucity of data on patients with stroke/transient ischaemic attack in low- and middle-income countries. We sought to describe the characteristics and management of patients with an ischaemic stroke and recent transient ischaemic attack or minor ischaemic strokes in low- or middle-income countries. METHODS: The Outcomes in Patients with TIA and Cerebrovascular disease registry is an international, prospective study. Patients ≥45 years who required secondary prevention of stroke (either following an acute transient ischaemic attack or minor ischaemic strokes (National Institutes of Health Stroke Scale <4) of <24 h duration, or recent (<6 months), stable, first-ever, non-disabling ischaemic stroke) were enrolled in 17 countries in Latin America, the Middle East, and Africa. The main measures of interest were risk factors, comorbidities, and socio-economic variables. RESULTS: Between January 2007 and December 2008, 3635 patients were enrolled in Latin America (n = 1543), the Middle East (n = 1041), North Africa (n = 834), and South Africa (n = 217). Of these, 63% had a stable, first-ever ischaemic stroke (median delay from symptom onset to inclusion, 25 days interquartile range, 7-77); 37% had an acute transient ischaemic attack or minor ischaemic stroke (median delay, two-days; interquartile range, 0-6). Prevalence of diabetes was 46% in the Middle East, 29% in Latin America, 35% in South Africa, and 38% in North Africa; 72% had abdominal obesity (range, 65-78%; adjusted P < 0·001); prevalence of metabolic syndrome was 78% (range, 72-84%, P < 0·001). Abnormal ankle brachial index (<0·9) was present in 22%, peripheral artery disease in 7·6%, and coronary artery disease in 13%. Overall, 24% of patients had no health insurance and 27% had a low educational level. INTERPRETATION: In this study, patients in low- and middle-income countries had a high burden of modifiable risk factors. High rates of low educational level and lack of health insurance in certain regions are potential obstacles to risk factor control. FUNDING: The Outcomes in Patients with TIA and Cerebrovascular disease registry is supported by Sanofi-Aventis, Paris, France.",
+            "sections": null
+        },
+        {
             "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23482536",
             "title": "Differential diagnosis of leg ulcers.",
             "abstract": "Leg and foot ulcers are symptoms of very different diseases. The aim of this paper is to demonstrate the differential diagnosis of leg ulcers. The majority of leg ulcers occur in the lower leg or foot. In non-venous ulcers the localization in the foot area is more frequent. The most frequent underlying disease is chronic venous disease. In 354 leg ulcers, Koerber found 75.25% venous leg ulcers, 3.66% arterial leg ulcers, 14.66% ulcers of mixed venous and arterial origin and 13.5% vasculitic ulcers. In the Swedish population of Skaraborg, Nelzen found a venous origin in 54% of the ulcer patients. Each leg ulcer needs a clinical and anamnestic evaluation. Duplex ultrasound is the basic diagnostic tool to exclude vascular anomalies especially chronic venous and arterial occlusive disease. Skin biopsies help to find a correct diagnosis in unclear or non-healing cases. In conclusion, chronic venous disease is the most frequent cause of leg ulcerations. Because 25% of the population have varicose veins or other chronic venous disease the coincidence of pathological venous findings and ulceration is very frequent even in non-venous ulcerations. Leg ulcers without the symptoms of chronic venous disease should be considered as non-venous.",
@@ -1011,7 +1023,7 @@
         {
             "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23484152",
             "title": "Abnormal cell responses and role of TNF-α in impaired diabetic wound healing.",
-            "abstract": "Impaired diabetic wound healing constitutes a major health problem. The impaired healing is caused by complex factors such as abnormal keratinocyte and fibroblast migration, proliferation, differentiation, and apoptosis, abnormal macrophage polarization, impaired recruitment of mesenchymal stem cells (MSCs) and endothelial progenitor cells (EPCs), and decreased vascularization. Diabetes-enhanced and prolonged expression of TNF- �� also contributes to impaired healing. In this paper, we discuss the abnormal cell responses in diabetic wound healing and the contribution of TNF- α .",
+            "abstract": "Impaired diabetic wound healing constitutes a major health problem. The impaired healing is caused by complex factors such as abnormal keratinocyte and fibroblast migration, proliferation, differentiation, and apoptosis, abnormal macrophage polarization, impaired recruitment of mesenchymal stem cells (MSCs) and endothelial progenitor cells (EPCs), and decreased vascularization. Diabetes-enhanced and prolonged expression of TNF- α also contributes to impaired healing. In this paper, we discuss the abnormal cell responses in diabetic wound healing and the contribution of TNF- α .",
             "sections": null
         },
         {
@@ -1037,478 +1049,446 @@
             "title": "Reduction in adiposity, β-cell function, insulin sensitivity, and cardiovascular risk factors: a prospective study among Japanese with obesity.",
             "abstract": "BACKGROUND: A reduction in adiposity may be associated with an improvement in insulin sensitivity and β-cell function as well as cardiovascular disease (CVD) risk factors; however, few studies have investigated these associations in a longitudinal setting. METHODS: To investigate these associations over a 1-year period, we conducted an observational analysis of 196 Japanese subjects with obesity in the Saku Control Obesity Program. We investigated the relations between changes in adiposity (body mass index [BMI], waist circumference, subcutaneous fat area [SFAT], and visceral fat area [VFAT]) and changes in HbA1c, fasting plasma glucose (FPG), insulin sensitivity index (ISI), the homeostasis model assessment β cell function (HOMA-β), lipids, and blood pressure. RESULTS: All adiposity changes were positively associated with HbA1c and FPG changes. Reductions in BMI and VFAT were associated with HOMA-β reduction. Reductions in all adiposity measures were associated with an improvement in the ISI. Changes in most adiposity measures were positively associated with changes in blood pressure and lipid levels, except for LDL. CONCLUSIONS: The present findings provide additional supportive evidence indicating that a reduction in adiposity may lead to an improvement in insulin sensitivity and the reduction of CVD risk factors in obese individuals.",
             "sections": null
-        },
-        {
-            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23483953",
-            "title": "Familial longevity is marked by better cognitive performance at middle age: the Leiden Longevity Study.",
-            "abstract": "BACKGROUND: Decline in cognitive performance is a highly prevalent health condition in elderly. We studied whether offspring of nonagenarian siblings with a familial history of longevity, perform better on cognitive tests compared to their partners as controls. This is relevant since it could provide insights into determinants underlying decline in cognitive performance. METHODS: Cross-sectional analysis within the longitudinal cohort of the Leiden Longevity Study consisting of middle-aged offspring of nonagenarian siblings together with their partners (n = 500, mean age (SD) 66.3 (6.1) and 65.7 (7.2) years, respectively) as controls. Memory function, attention and processing speed were tested using the 15-Picture Learning Test, Stroop test and Digit Symbol Substitution Test. Data were analyzed with regression adjusted for age, gender, years of education and additionally for diabetes mellitus, cardiovascular diseases, alcohol use, smoking, inflammatory markers and apolipoprotein E genotype. Robust standard errors were used to account for familial relationships among the offspring. RESULTS: Cognitive performance was worse at higher calendar age (p<0.001, all except Stroop test part 1). The offspring performed better compared to their partners on trial 3 (p = 0.005), the immediate (p = 0.016) and delayed (p = 0.004) recall of the 15-Picture Learning Test as well as on the interference and combined interference score of the Stroop test (p = 0.014 and p = 0.036, respectively) in the fully adjusted model. The difference between offspring and partners was estimated to be more than three years according to the observed difference in calendar age. CONCLUSIONS: Offspring of nonagenarian siblings with a familial history of longevity have better cognitive performance compared to the group of their partners of comparable age. This effect is independent of age-related diseases and known possible confounders. Possible explanations might be differences in subclinical vascular pathology between both groups.",
-            "sections": null
-        },
-        {
-            "uri": "http://www.ncbi.nlm.nih.gov/pubmed/23483942",
-            "title": "Level of unawareness and management of diabetes, hypertension, and dyslipidemia among adults in Luxembourg: findings from ORISCAV-LUX study.",
-            "abstract": "BACKGROUND: In the absence of evidence-based information, assessment of population awareness and management of diabetes, hypertension and dyslipidemia (treatable and preventable cardiovascular risk factors) are important to halt coronary and cerebrovascular diseases and to improve public health. METHODS: The analysis was based on a nationally representative sample of 1432 adult subjects, recruited for the ORISCAV-LUX survey (2007-2008). Descriptive and multivariable logistic regression analyses were performed. The 10-year Framingham risk score was calculated for each participant who classified at low, intermediate and high risk. RESULTS: Among the diagnosed cases, 32%, 60%, and 85% were respectively unaware of their diabetes, hypertension and dyslipidemia. Increasing age and BMI were the strongest protective factors against unawareness of hypertension and dyslipidemia. Having a family history decreased the risk of unawareness of hypertension (OR = 0.57; 95% CI 0.36, 0.92; P = 0.021), whereas, not having a family doctor increased double-fold the odd of being unaware of hypertension (P = 0.048). Poor health perception reduced significantly the risk of unawareness of dyslipidemia (OR = 0.27; 95% CI 0.11, 0.68). Concerning the management, diabetes was markedly better treated than hypertension and dyslipidemia. Among diabetic subjects (constituting 4% of the population), 3% were treated vs. 1% not treated. In contrast, 22% of the hypertensive participants (35% of the population) were not treated vs. 13% treated. Concerning dyslipidemia, only 9% of those with lipid disorder (70% of the population) were under medication vs. 61% not treated. For the treated cases of these pathologies, almost only one-third was under control. Framingham risk of developing CHD within 10 years was moderate to high among 62%, 27%, and 17% of the unaware/untreated diabetic, hypertensive, and dyslipidemic participants, respectively. CONCLUSIONS: The considerable lack of awareness and insufficient management underscore the urgent need for intensive efforts to reduce the gap in prevention strategies, and control of cases according to explicit clinical guidelines.",
-            "sections": null
         }
     ],
     "statements": [
         {
-            "objPhrase": "Diabetes",
-            "predPhrase": "is referenced in",
             "score": 0.083333336,
-            "subjPhrase": "Glucagon",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/citations/8482423",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.99527925,
-                    "subj": "http://purl.uniprot.org/uniprot/P01275"
+                    "s": "http://purl.uniprot.org/uniprot/P01275",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/8482423"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.9858377,
-                    "subj": "http://purl.uniprot.org/pubmed/8482423"
+                    "s": "http://purl.uniprot.org/pubmed/8482423",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "Glucagon",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.001977938,
-                    "subj": "http://linkedlifedata.com/resource/#_5030313237350023"
+                    "s": "http://linkedlifedata.com/resource/#_5030313237350023",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Glucagon"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/medline/93246081",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0048766383,
-                    "subj": "http://purl.uniprot.org/pubmed/8482423"
+                    "s": "http://purl.uniprot.org/pubmed/8482423",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/medline/93246081"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/8482423",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0048764898,
-                    "subj": "http://purl.uniprot.org/pubmed/8482423"
+                    "s": "http://purl.uniprot.org/pubmed/8482423",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/8482423"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/8482423",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0044874805,
-                    "subj": "http://purl.uniprot.org/citations/8482423"
+                    "s": "http://purl.uniprot.org/citations/8482423",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/8482423"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/citations/3956884",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.993738,
-                    "subj": "http://purl.uniprot.org/uniprot/P05110"
+                    "s": "http://purl.uniprot.org/uniprot/P05110",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/3956884"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.981214,
-                    "subj": "http://purl.uniprot.org/pubmed/3956884"
+                    "s": "http://purl.uniprot.org/pubmed/3956884",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "Glucagon",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.001977938,
-                    "subj": "http://linkedlifedata.com/resource/#_50303531313000C"
+                    "s": "http://linkedlifedata.com/resource/#_50303531313000C",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Glucagon"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/medline/86165412",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004814275,
-                    "subj": "http://purl.uniprot.org/pubmed/3956884"
+                    "s": "http://purl.uniprot.org/pubmed/3956884",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/medline/86165412"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/3956884",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0044885073,
-                    "subj": "http://purl.uniprot.org/citations/3956884"
+                    "s": "http://purl.uniprot.org/citations/3956884",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/3956884"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/3956884",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004818932,
-                    "subj": "http://purl.uniprot.org/pubmed/3956884"
+                    "s": "http://purl.uniprot.org/pubmed/3956884",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/3956884"
                 }
-            ]
+            ],
+            "title": "Glucagon is referenced in Diabetes"
         },
         {
-            "objPhrase": "Diabetes",
-            "predPhrase": "is referenced in",
             "score": 0.083333336,
-            "subjPhrase": "Insulin",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/citations/18162506",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.99527925,
-                    "subj": "http://purl.uniprot.org/uniprot/P01308"
+                    "s": "http://purl.uniprot.org/uniprot/P01308",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/18162506"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.9858377,
-                    "subj": "http://purl.uniprot.org/pubmed/18162506"
+                    "s": "http://purl.uniprot.org/pubmed/18162506",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/18162506",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0031852557,
-                    "subj": "http://purl.uniprot.org/citations/18162506"
+                    "s": "http://purl.uniprot.org/citations/18162506",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/18162506"
                 },
                 {
-                    "obj": "Insulin",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.0019778367,
-                    "subj": "http://linkedlifedata.com/resource/#_50303133303800AB"
+                    "s": "http://linkedlifedata.com/resource/#_50303133303800AB",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Insulin"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/18162506",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0048719253,
-                    "subj": "http://purl.uniprot.org/pubmed/18162506"
+                    "s": "http://purl.uniprot.org/pubmed/18162506",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/18162506"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/citations/18192540",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.9979871,
-                    "subj": "http://purl.uniprot.org/uniprot/P01308"
+                    "s": "http://purl.uniprot.org/uniprot/P01308",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/18192540"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/18192540",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0031849884,
-                    "subj": "http://purl.uniprot.org/citations/18192540"
+                    "s": "http://purl.uniprot.org/citations/18192540",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/18192540"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.9939613,
-                    "subj": "http://purl.uniprot.org/pubmed/18192540"
+                    "s": "http://purl.uniprot.org/pubmed/18192540",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/18192540",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004748997,
-                    "subj": "http://purl.uniprot.org/pubmed/18192540"
+                    "s": "http://purl.uniprot.org/pubmed/18192540",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/18192540"
                 },
                 {
-                    "obj": "Insulin",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.0019778367,
-                    "subj": "http://linkedlifedata.com/resource/#_50303133303800AB"
+                    "s": "http://linkedlifedata.com/resource/#_50303133303800AB",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Insulin"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/citations/6365663",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.99584293,
-                    "subj": "http://purl.uniprot.org/uniprot/P01313"
+                    "s": "http://purl.uniprot.org/uniprot/P01313",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/6365663"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/6365663",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0044868067,
-                    "subj": "http://purl.uniprot.org/citations/6365663"
+                    "s": "http://purl.uniprot.org/citations/6365663",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/6365663"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/medline/84133036",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0047785603,
-                    "subj": "http://purl.uniprot.org/pubmed/6365663"
+                    "s": "http://purl.uniprot.org/pubmed/6365663",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/medline/84133036"
                 },
                 {
-                    "obj": "Insulin",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.0019785417,
-                    "subj": "http://linkedlifedata.com/resource/#_503031333133009"
+                    "s": "http://linkedlifedata.com/resource/#_503031333133009",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Insulin"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/6365663",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004775539,
-                    "subj": "http://purl.uniprot.org/pubmed/6365663"
+                    "s": "http://purl.uniprot.org/pubmed/6365663",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/6365663"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.9875288,
-                    "subj": "http://purl.uniprot.org/pubmed/6365663"
+                    "s": "http://purl.uniprot.org/pubmed/6365663",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/citations/9166665",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.993738,
-                    "subj": "http://purl.uniprot.org/uniprot/Q62587"
+                    "s": "http://purl.uniprot.org/uniprot/Q62587",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/9166665"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.981214,
-                    "subj": "http://purl.uniprot.org/pubmed/9166665"
+                    "s": "http://purl.uniprot.org/pubmed/9166665",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "Insulin",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.001960024,
-                    "subj": "http://linkedlifedata.com/resource/#_513632353837008"
+                    "s": "http://linkedlifedata.com/resource/#_513632353837008",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Insulin"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/9166665",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004818785,
-                    "subj": "http://purl.uniprot.org/pubmed/9166665"
+                    "s": "http://purl.uniprot.org/pubmed/9166665",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/9166665"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/9166665",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0044874805,
-                    "subj": "http://purl.uniprot.org/citations/9166665"
+                    "s": "http://purl.uniprot.org/citations/9166665",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/9166665"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/medline/97309250",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004818932,
-                    "subj": "http://purl.uniprot.org/pubmed/9166665"
+                    "s": "http://purl.uniprot.org/pubmed/9166665",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/medline/97309250"
                 }
-            ]
+            ],
+            "title": "Insulin is referenced in Diabetes"
         },
         {
-            "objPhrase": "Diabetes",
-            "predPhrase": "is referenced in",
             "score": 0.083333336,
-            "subjPhrase": "Galanin",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/citations/1370155",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.9979871,
-                    "subj": "http://purl.uniprot.org/uniprot/P22466"
+                    "s": "http://purl.uniprot.org/uniprot/P22466",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/1370155"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.9939613,
-                    "subj": "http://purl.uniprot.org/pubmed/1370155"
+                    "s": "http://purl.uniprot.org/pubmed/1370155",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "Galanin",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.001960024,
-                    "subj": "http://linkedlifedata.com/resource/#_5032323436360013"
+                    "s": "http://linkedlifedata.com/resource/#_5032323436360013",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Galanin"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/medline/92090542",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0048155873,
-                    "subj": "http://purl.uniprot.org/pubmed/1370155"
+                    "s": "http://purl.uniprot.org/pubmed/1370155",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/medline/92090542"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/1370155",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0048749377,
-                    "subj": "http://purl.uniprot.org/pubmed/1370155"
+                    "s": "http://purl.uniprot.org/pubmed/1370155",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/1370155"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/1370155",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0031932096,
-                    "subj": "http://purl.uniprot.org/citations/1370155"
+                    "s": "http://purl.uniprot.org/citations/1370155",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/1370155"
                 }
-            ]
+            ],
+            "title": "Galanin is referenced in Diabetes"
         },
         {
-            "objPhrase": "Diabetes",
-            "predPhrase": "is referenced in",
             "score": 0.07692308,
-            "subjPhrase": "Syntaxin-4",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/citations/19033398",
-                    "pred": "http://purl.uniprot.org/core/citation",
                     "score": 0.993738,
-                    "subj": "http://purl.uniprot.org/uniprot/P70452"
+                    "s": "http://purl.uniprot.org/uniprot/P70452",
+                    "p": "http://purl.uniprot.org/core/citation",
+                    "o": "http://purl.uniprot.org/citations/19033398"
                 },
                 {
-                    "obj": "Diabetes",
-                    "pred": "http://purl.uniprot.org/core/name",
                     "score": 2.981214,
-                    "subj": "http://purl.uniprot.org/pubmed/19033398"
+                    "s": "http://purl.uniprot.org/pubmed/19033398",
+                    "p": "http://purl.uniprot.org/core/name",
+                    "o": "Diabetes"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/19033398",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.004814275,
-                    "subj": "http://purl.uniprot.org/pubmed/19033398"
+                    "s": "http://purl.uniprot.org/pubmed/19033398",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/19033398"
                 },
                 {
-                    "obj": "Syntaxin-4",
-                    "pred": "http://purl.uniprot.org/core/fullName",
                     "score": 0.0019363454,
-                    "subj": "http://linkedlifedata.com/resource/#_5037303435320025"
+                    "s": "http://linkedlifedata.com/resource/#_5037303435320025",
+                    "p": "http://purl.uniprot.org/core/fullName",
+                    "o": "Syntaxin-4"
                 },
                 {
-                    "obj": "http://purl.uniprot.org/pubmed/19033398",
-                    "pred": "http://www.w3.org/2004/02/skos/core#exactMatch",
                     "score": 0.0031852557,
-                    "subj": "http://purl.uniprot.org/citations/19033398"
+                    "s": "http://purl.uniprot.org/citations/19033398",
+                    "p": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "o": "http://purl.uniprot.org/pubmed/19033398"
                 }
-            ]
+            ],
+            "title": "Syntaxin-4 is referenced in Diabetes"
         },
         {
-            "objPhrase": "DXplain",
-            "predPhrase": "has note",
             "score": 0.07692308,
-            "subjPhrase": "DIABETIC",
             "triples": [
                 {
-                    "obj": "DXplain",
-                    "pred": "http://www.w3.org/2004/02/skos/core#note",
                     "score": 0.9895106,
-                    "subj": "http://linkedlifedata.com/resource/umls/label/A0404593"
+                    "s": "http://linkedlifedata.com/resource/umls/label/A0404593",
+                    "p": "http://www.w3.org/2004/02/skos/core#note",
+                    "o": "DXplain"
                 },
                 {
-                    "obj": "http://linkedlifedata.com/resource/umls/label/A0404593",
-                    "pred": "http://www.w3.org/2008/05/skos-xl#prefLabel",
                     "score": 0.030893836,
-                    "subj": "http://linkedlifedata.com/resource/umls/id/C0241863"
+                    "s": "http://linkedlifedata.com/resource/umls/id/C0241863",
+                    "p": "http://www.w3.org/2008/05/skos-xl#prefLabel",
+                    "o": "http://linkedlifedata.com/resource/umls/label/A0404593"
                 },
                 {
-                    "obj": "DIABETIC",
-                    "pred": "http://www.w3.org/2008/05/skos-xl#literalForm",
                     "score": 2.9685318,
-                    "subj": "http://linkedlifedata.com/resource/umls/label/A0404593"
+                    "s": "http://linkedlifedata.com/resource/umls/label/A0404593",
+                    "p": "http://www.w3.org/2008/05/skos-xl#literalForm",
+                    "o": "DIABETIC"
                 }
-            ]
+            ],
+            "title": "DIABETIC has note DXplain"
         },
         {
-            "objPhrase": "Disease",
-            "predPhrase": "is a",
             "score": 0.07692308,
-            "subjPhrase": "Diabetes mellitus",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/keywords/9995",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
                     "score": 0.6135895,
-                    "subj": "http://purl.uniprot.org/keywords/219"
+                    "s": "http://purl.uniprot.org/keywords/219",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+                    "o": "http://purl.uniprot.org/keywords/9995"
                 },
                 {
-                    "obj": "Disease",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 0.0075719077,
-                    "subj": "http://purl.uniprot.org/keywords/9995"
+                    "s": "http://purl.uniprot.org/keywords/9995",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Disease"
                 },
                 {
-                    "obj": "Diabetes mellitus",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 1.8407686,
-                    "subj": "http://purl.uniprot.org/keywords/219"
+                    "s": "http://purl.uniprot.org/keywords/219",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Diabetes mellitus"
                 }
-            ]
+            ],
+            "title": "Diabetes mellitus is a Disease"
         },
         {
-            "objPhrase": "Disease",
-            "predPhrase": "is a",
             "score": 0.07692308,
-            "subjPhrase": "Diabetes insipidus",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/keywords/9995",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
                     "score": 0.6149049,
-                    "subj": "http://purl.uniprot.org/keywords/218"
+                    "s": "http://purl.uniprot.org/keywords/218",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+                    "o": "http://purl.uniprot.org/keywords/9995"
                 },
                 {
-                    "obj": "Diabetes insipidus",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 1.8447146,
-                    "subj": "http://purl.uniprot.org/keywords/218"
+                    "s": "http://purl.uniprot.org/keywords/218",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Diabetes insipidus"
                 },
                 {
-                    "obj": "Disease",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 0.0075719077,
-                    "subj": "http://purl.uniprot.org/keywords/9995"
+                    "s": "http://purl.uniprot.org/keywords/9995",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Disease"
                 }
-            ]
+            ],
+            "title": "Diabetes insipidus is a Disease"
         },
         {
-            "objPhrase": "Disease",
-            "predPhrase": "is in category",
             "score": 0.071428575,
-            "subjPhrase": "Diabetes insipidus",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/keywords/9995",
-                    "pred": "http://purl.uniprot.org/core/category",
                     "score": 0.6149049,
-                    "subj": "http://purl.uniprot.org/keywords/218"
+                    "s": "http://purl.uniprot.org/keywords/218",
+                    "p": "http://purl.uniprot.org/core/category",
+                    "o": "http://purl.uniprot.org/keywords/9995"
                 },
                 {
-                    "obj": "Diabetes insipidus",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 1.8447146,
-                    "subj": "http://purl.uniprot.org/keywords/218"
+                    "s": "http://purl.uniprot.org/keywords/218",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Diabetes insipidus"
                 },
                 {
-                    "obj": "Disease",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 0.0075719077,
-                    "subj": "http://purl.uniprot.org/keywords/9995"
+                    "s": "http://purl.uniprot.org/keywords/9995",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Disease"
                 }
-            ]
+            ],
+            "title": "Diabetes insipidus is in category Disease"
         },
         {
-            "objPhrase": "U000230",
-            "predPhrase": "is notated",
             "score": 0.071428575,
-            "subjPhrase": "DIABETIC GASTROPARESIS",
             "triples": [
                 {
-                    "obj": "U000230",
-                    "pred": "http://www.w3.org/2004/02/skos/core#notation",
                     "score": 0.63043815,
-                    "subj": "http://linkedlifedata.com/resource/umls/label/A0546821"
+                    "s": "http://linkedlifedata.com/resource/umls/label/A0546821",
+                    "p": "http://www.w3.org/2004/02/skos/core#notation",
+                    "o": "U000230"
                 },
                 {
-                    "obj": "http://linkedlifedata.com/resource/umls/label/A0546821",
-                    "pred": "http://www.w3.org/2008/05/skos-xl#prefLabel",
                     "score": 0.030609105,
-                    "subj": "http://linkedlifedata.com/resource/umls/id/C0267176"
+                    "s": "http://linkedlifedata.com/resource/umls/id/C0267176",
+                    "p": "http://www.w3.org/2008/05/skos-xl#prefLabel",
+                    "o": "http://linkedlifedata.com/resource/umls/label/A0546821"
                 },
                 {
-                    "obj": "DIABETIC GASTROPARESIS",
-                    "pred": "http://www.w3.org/2008/05/skos-xl#literalForm",
                     "score": 1.8913145,
-                    "subj": "http://linkedlifedata.com/resource/umls/label/A0546821"
+                    "s": "http://linkedlifedata.com/resource/umls/label/A0546821",
+                    "p": "http://www.w3.org/2008/05/skos-xl#literalForm",
+                    "o": "DIABETIC GASTROPARESIS"
                 }
-            ]
+            ],
+            "title": "DIABETIC GASTROPARESIS is notated U000230"
         },
         {
-            "objPhrase": "Disease",
-            "predPhrase": "is in category",
             "score": 0.071428575,
-            "subjPhrase": "Diabetes mellitus",
             "triples": [
                 {
-                    "obj": "http://purl.uniprot.org/keywords/9995",
-                    "pred": "http://purl.uniprot.org/core/category",
                     "score": 0.6135895,
-                    "subj": "http://purl.uniprot.org/keywords/219"
+                    "s": "http://purl.uniprot.org/keywords/219",
+                    "p": "http://purl.uniprot.org/core/category",
+                    "o": "http://purl.uniprot.org/keywords/9995"
                 },
                 {
-                    "obj": "Disease",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 0.0075719077,
-                    "subj": "http://purl.uniprot.org/keywords/9995"
+                    "s": "http://purl.uniprot.org/keywords/9995",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Disease"
                 },
                 {
-                    "obj": "Diabetes mellitus",
-                    "pred": "http://www.w3.org/2000/01/rdf-schema#label",
                     "score": 1.8407686,
-                    "subj": "http://purl.uniprot.org/keywords/219"
+                    "s": "http://purl.uniprot.org/keywords/219",
+                    "p": "http://www.w3.org/2000/01/rdf-schema#label",
+                    "o": "Diabetes mellitus"
                 }
-            ]
+            ],
+            "title": "Diabetes mellitus is in category Disease"
         }
     ]
 }

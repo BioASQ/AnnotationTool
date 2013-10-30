@@ -174,11 +174,11 @@
             <tr data-ng-repeat="statement in question.answer.statements">
               <td style="width:2em;text-align:right">{{$index + 1}}.</td>
               <td data-ng-click="statement.infoShown=!statement.infoShown">
-                {{statement.subjPhrase}} {{statement.predPhrase}} {{statement.objPhrase}}
+                {{statement.title}}
                 <div data-collapse="!statement.infoShown">
                   <p>
                   <div class="triple" data-ng-repeat="triple in statement.triples">
-                    {{triple.subj | rdf}} {{triple.pred | rdf}} {{triple.obj | rdf}} .
+                    {{triple.s | rdf}} {{triple.p | rdf}} {{triple.o | rdf}} .
                   </div>
                   </p>
                 </div>

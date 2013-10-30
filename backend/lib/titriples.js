@@ -23,7 +23,24 @@ TITriples.prototype.find = function (/* String */ keywords, page, itemsPerPage, 
             { 'method': 'POST' }, { 'findStatementsPaged': [ keywords, page, itemsPerPage ] },
             function (err, response) {
                 if (err) { return cb(err); }
-                cb(null, { page: response.result.page, statements: response.result.statements });
+                cb(null, response.result.statements.map(function (s) {
+                        s.title = [ s.subjPhrase, s.predPhrase, s.objPhrase ].join(' ');
+                        delete s.subjPhrase;
+                        delete s.predPhrase;
+                        delete s.objPhrase;
+
+                        s.triples = s.triples.map(function (t) {
+                            t.s = t.subj;
+                            t.p = t.pred;
+                            t.o = t.obj;
+                            delete t.subj;
+                            delete t.pred;
+                            delete t.obj;
+                            return t;
+                        });
+
+                        return s;
+                    }));
             }
         );
     });

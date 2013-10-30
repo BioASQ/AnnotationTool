@@ -26,11 +26,22 @@ angular.module('bioasq-at.services.question', [])
                 return (lhs.uri == rhs.uri);
             case 'statement':
                 if (lhs.triples && rhs.triples) {
-                    return (lhs.triples.length === rhs.triples.length &&
-                            lhs.subjPhrase === rhs.subjPhrase &&
-                            lhs.predPhrase === rhs.predPhrase &&
-                            lhs.objPhrase  === rhs.objPhrase);
+                    // v2 statements
+                    if (lhs.triples.length !== rhs.triples.length) { return false; }
+                    for (var i = 0; i < lhs.triples.length; ++i) {
+                        if (lhs.triples[i].s !== rhs.triples[i].s ||
+                            lhs.triples[i].p !== rhs.triples[i].p ||
+                            lhs.triples[i].o !== rhs.triples[i].o) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (!lhs.triples && !rhs.triples) {
+                    // legacy statements
+                    return (lhs.s == rhs.s && lhs.p && rhs.p && lhs.o && rhs.o);
                 }
+                // mixed v2 and legacy statements, cannot be equal
+                return false;
             default:
                 return false;
         }

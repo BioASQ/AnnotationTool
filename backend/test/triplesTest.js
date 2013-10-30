@@ -10,7 +10,7 @@ var queries = [
     'hypertension AND juveniles AND treatment'
 ];
 
-s.find(queries[2], 0, 5, function (err, res) {
+s.find(queries[0], 0, 10, function (err, res) {
     if (err) {
         console.log(err.stack);
     } else {

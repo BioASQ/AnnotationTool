@@ -246,13 +246,11 @@ exports.createRouter = function (model, authentication) {
                         var fs = require('fs');
                         var cannedResponsePath = path.join(__dirname, '..', 'test', 'response.json');
                         var cannedResponse = fs.readFileSync(cannedResponsePath);
-                        setTimeout(function () {
-                            res.send(200, {}, {
-                                statements: JSON.parse(cannedResponse).statements,
-                                page: 0,
-                                size: 10
-                            });
-                        }, 300000);
+                        res.send(200, {}, {
+                            statements: JSON.parse(cannedResponse).statements,
+                            page: 0,
+                            size: 10
+                        });
                         return;
                     }
 
