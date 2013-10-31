@@ -275,16 +275,20 @@ exports.createRouter = function (model, authentication) {
                         return;
                     }
 
-                    tripleSearch.find(keywords.query, page, itemsPerPage, function (err, response) {
+                    tripleSearch.find(keywords.query, page, itemsPerPage, function (err, response, size) {
                         if (err) {
                             logData.error = err;
                             logger('error', 'search for statements failed', logData);
                             return res.send(502);
                         }
 
-                        if (response.statements.length) {
+                        if (response.length) {
                             logger('info', 'search for statements', logData);
-                            res.send(200, {}, response);
+                            res.send(200, {}, {
+                                statements: response,
+                                page: page,
+                                size: size
+                            });
                         } else {
                             logger('info', 'search for statements', logData);
                             res.send(200, {}, { statements: [], size: 0, page: 0 });

@@ -40,7 +40,7 @@ TITriples.prototype.find = function (/* String */ keywords, page, itemsPerPage, 
                         });
 
                         return s;
-                    }));
+                    }), response.result.size);
             }
         );
     });
