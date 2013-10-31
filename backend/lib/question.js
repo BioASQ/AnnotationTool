@@ -28,10 +28,22 @@ Question.prototype.list = function (user, callback) {
 Question.prototype.history = function (id, user, cb) {
     this.db.collection('log', function (err, log) {
         if (err) { return cb(err); }
-        log.distinct('params.query', { 'params.question': id, user: user }, function (err, res) {
-            if (err) { return cb(err); }
-            cb(null, res);
-        });
+        log.aggregate(
+            { $match: { 'params.question': id, user: user } },
+            { $group: { _id: '$params.query', timestamp: { $max: '$timestamp' } } },
+            { $sort: { 'timestamp': -1 } },
+            { $project: { terms: '$_id', _id: false } },
+            function (err, res) {
+                if (err) { return cb(err); }
+                cb(null, res);
+            }
+        );
+        /*
+         * log.distinct('params.query', { 'params.question': id, user: user }, function (err, res) {
+         *     if (err) { return cb(err); }
+         *     cb(null, res.sort());
+         * });
+         */
     });
 };
 

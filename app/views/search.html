@@ -21,7 +21,7 @@
     <div class="span5">
       <select class="span5"
               data-ng-model="terms"
-              data-ng-options="query for query in queries"
+              data-ng-options="query.terms as query.terms for query in queries"
               data-ng-change="search()"
               style="margin-bottom: 0px;">
               <option style="display:none" value="">Query history</option>
