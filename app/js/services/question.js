@@ -2,9 +2,10 @@ angular.module('bioasq-at.services.question', [])
 .factory('Questions', function ($http, $routeParams, $window, $q) {
     var _nextSnippetID = 0;
     var _selectedQuestion = null;
+    var kQuestionCacheKey = 'selectedQuestion';
 
     if ($window.localStorage && typeof $window.localStorage != 'undefined') {
-        var value = $window.localStorage.getItem('selectedQuestion');
+        var value = $window.localStorage.getItem(kQuestionCacheKey);
         if (value) {
             _selectedQuestion = angular.fromJson(value);
         }
@@ -13,7 +14,7 @@ angular.module('bioasq-at.services.question', [])
     $window.onunload = function () {
         if (_selectedQuestion && $window.localStorage && typeof $window.localStorage != 'undefined') {
             var value = angular.toJson(_selectedQuestion);
-            $window.localStorage.setItem('selectedQuestion', value);
+            $window.localStorage.setItem(kQuestionCacheKey, value);
         }
     };
 
@@ -77,7 +78,7 @@ angular.module('bioasq-at.services.question', [])
     return {
         clearCache: function () {
             _selectedQuestion = null;
-            $window.localStorage.removeItem('selectedQuestion');
+            $window.localStorage.removeItem(kQuestionCacheKey);
         },
         select: function (question) {
             if (_selectedQuestion) {
@@ -86,7 +87,7 @@ angular.module('bioasq-at.services.question', [])
             _selectedQuestion = question;
             if ($window.localStorage && typeof $window.localStorage != 'undefined') {
                 var value = angular.toJson(question);
-                $window.localStorage.setItem('selectedQuestion', value);
+                $window.localStorage.setItem(kQuestionCacheKey, value);
             }
         },
 
@@ -102,6 +103,11 @@ angular.module('bioasq-at.services.question', [])
         },
 
         save: function (question) {
+            if (question.answer && question.answer.snippets) {
+                angular.forEach(question.answer.snippets, function (s) {
+                    delete s._localID;
+                });
+            }
             $http.post('/backend/questions/' + question._id, question);
         },
 
@@ -118,7 +124,7 @@ angular.module('bioasq-at.services.question', [])
                 .then(function (response) {
                     if (response.data.answer && response.data.answer.snippets) {
                         angular.forEach(response.data.answer.snippets, function (s) {
-                            s.localID = _nextSnippetID++;
+                            s._localID = _nextSnippetID++;
                         });
                     }
                     deferred.resolve(response.data);

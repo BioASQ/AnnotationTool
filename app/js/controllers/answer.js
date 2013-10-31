@@ -98,7 +98,7 @@ angular.module('bioasq-at.controllers.answer', [])
 
     $scope.deleteSnippet = function (localID) {
         for (var i = 0; i < $scope.question.answer.snippets.length; i++) {
-            if ($scope.question.answer.snippets[i].localID === parseInt(localID, 10)) {
+            if ($scope.question.answer.snippets[i]._localID === parseInt(localID, 10)) {
                 $scope.question.answer.snippets.splice(i, 1);
                 break;
             }

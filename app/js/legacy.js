@@ -54,7 +54,7 @@ var highlightSnippetsInSection = function (scope, answer, document, section, sec
     orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
         var highlighted = annotationTemplate({
             text: snippetAnnotation.text,
-            id:   snippetAnnotation.localID
+            id:   snippetAnnotation._localID
         });
 
         section = section.substring(0, snippetAnnotation.beginIndex)

@@ -115,9 +115,9 @@
           <th style="width:20px"></th>
         </tr>
         <tr data-ng-repeat="document in documents">
-          <td data-ng-click="document.infoShown=!document.infoShown">
+          <td data-ng-click="infoShown=!infoShown">
             {{document.title}}
-            <div data-collapse="!document.infoShown">
+            <div data-collapse="!infoShown">
               <h4>{{document.title}}</h4>
               <p class="abstract">{{document.abstract}}</p>
               <p class="section" data-ng-repeat="section in document.sections">{{section}}</p>
@@ -168,9 +168,9 @@
           <th style="width:20px"></th>
         </tr>
         <tr data-ng-repeat="statement in statements">
-          <td data-ng-click="statement.infoShown=!statement.infoShown">
+          <td data-ng-click="infoShown=!infoShown">
             {{statement.title}}
-            <div data-collapse="!statement.infoShown">
+            <div data-collapse="!infoShown">
               <p>
               <div class="triple" data-ng-repeat="triple in statement.triples">
                 {{triple.s | rdf}} {{triple.p | rdf}} {{triple.o | rdf}} .

@@ -14,18 +14,21 @@ angular.module('bioasq-at.controllers.document', [])
                                                            false).text);
     }
 
-    $scope.$watch('selection.document', function () {
-        $scope.question.answer.snippets = $scope.question.answer.snippets || [];
-        if ($scope.selection.document) {
-            $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
-            $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');
-            $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
-                return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                                   $scope.question.answer,
-                                                                   $scope.selection.document,
-                                                                   s,
-                                                                   'sections.' + String(i)).text);
-            });
+    $scope.$watch('selection.document', function (oldValue, newValue) {
+        if (oldValue !== newValue) {
+            $scope.question.answer = $scope.question.answer || {};
+            $scope.question.answer.snippets = $scope.question.answer.snippets || [];
+            if ($scope.selection.document) {
+                $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
+                $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');
+                $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
+                    return $sce.trustAsHtml(highlightSnippetsInSection($scope,
+                                                                    $scope.question.answer,
+                                                                    $scope.selection.document,
+                                                                    s,
+                                                                    'sections.' + String(i)).text);
+                });
+            }
         }
     });
 
@@ -47,7 +50,7 @@ angular.module('bioasq-at.controllers.document', [])
         if (!snippet) { return; }
 
         snippet.document = $scope.selection.document.uri;
-        snippet.localID  = Questions.nextSnippetID();
+        snippet._localID  = Questions.nextSnippetID();
 
         var documentSnippets = _.filter($scope.question.answer.snippets, function (s) {
             return (s.document === snippet.document && 
