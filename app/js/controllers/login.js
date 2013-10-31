@@ -1,5 +1,5 @@
 angular.module('bioasq-at.controllers.login', [])
-.controller('LoginCtrl', function ($scope, $rootScope, $http, $location, $modal, $cookies) {
+.controller('LoginCtrl', function ($scope, $rootScope, $http, $location, $modal, $cookies, Questions) {
     $scope.login = function () {
         $scope.messages = [];
         if (!$scope.email) {
@@ -44,6 +44,7 @@ angular.module('bioasq-at.controllers.login', [])
 
     $scope.logout = function () {
         delete $rootScope.user;
+        Questions.clearCache();
         $http.get('/backend/logout')
         .then(function () {
             $location.path('/');

@@ -75,6 +75,10 @@ angular.module('bioasq-at.services.question', [])
     };
 
     return {
+        clearCache: function () {
+            _selectedQuestion = null;
+            $window.localStorage.removeItem('selectedQuestion');
+        },
         select: function (question) {
             if (_selectedQuestion) {
                 this.save(_selectedQuestion);
