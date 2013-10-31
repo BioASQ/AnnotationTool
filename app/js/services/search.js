@@ -1,8 +1,7 @@
 angular.module('bioasq-at.services.search', [])
 .factory('Search', function ($http, $q, $routeParams) {
     var conceptResponse = null;
-    // var kRequestTimeout = 235000;
-    var kRequestTimeout = 300000;
+    var kRequestTimeout = 600000; // 10 min
     function group(data) {
         var groups = [];
         var newGroup = {
