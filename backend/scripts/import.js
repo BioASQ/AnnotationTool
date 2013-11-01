@@ -67,13 +67,13 @@ connection.open(function (err, conn) {
                             doc.creator = program.overrideAuthor;
                         }
                         [ 'concepts', 'documents', 'statements', 'snippets' ].forEach(function (section) {
-                            doc.answer[section] = doc.answer.annotations.filter(function (a) {
+                            doc[section] = doc.answer.annotations.filter(function (a) {
                                 return (a.type === section.substr(0, section.length - 1));
                             });
                         });
                         delete doc.answer.annotations;
 
-                        doc.answer.documents = doc.answer.documents.map(function (d) {
+                        doc.documents = doc.documents.map(function (d) {
                             d.abstract = d.sections[0];
                             d.sections.splice(0, 1);
                             if (!d.sections.length) {
@@ -82,7 +82,7 @@ connection.open(function (err, conn) {
                             return d;
                         });
 
-                        doc.answer.snippets = doc.answer.snippets.map(function (s) {
+                        doc.snippets = doc.snippets.map(function (s) {
                             s.beginSection = fixSection(s.beginFieldName);
                             s.endSection   = fixSection(s.endFieldName);
                             delete s.beginFieldName;
@@ -90,7 +90,7 @@ connection.open(function (err, conn) {
                             return s;
                         });
 
-                        doc.answer.statements = doc.answer.statements.map(function (s) {
+                        doc.statements = doc.statements.map(function (s) {
                             s.triples = [{ s: s.s, p: s.p, o: s.o }];
                             delete s.s;
                             delete s.p;
@@ -112,7 +112,7 @@ connection.open(function (err, conn) {
                 },
                 function (err) {
                     if (err) {
-                        console.error(err);
+                        console.trace(err);
                         process.exit(-1);
                     }
                     process.exit(0);

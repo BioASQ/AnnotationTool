@@ -38,13 +38,13 @@ angular.module('bioasq-at.controllers.answer', [])
 
     $scope.setFinalized = function (finalized) {
         $scope.question.finalized = !!finalized;
-        Questions.save({ _id: $scope.question._id, finalized: !!finalized });
+        Questions.setFinalized(!!finalized);
     };
 
     $scope.selectDocument = function (documentURI) {
-        for (var i = 0; i < $scope.question.answer.documents.length; i++) {
-            if ($scope.question.answer.documents[i].uri === documentURI) {
-                $scope.selection.document = $scope.question.answer.documents[i];
+        for (var i = 0; i < $scope.question.documents.length; i++) {
+            if ($scope.question.documents[i].uri === documentURI) {
+                $scope.selection.document = $scope.question.documents[i];
                 $scope.selection.documents = true;
                 break;
             }
@@ -97,24 +97,24 @@ angular.module('bioasq-at.controllers.answer', [])
     };
 
     $scope.deleteSnippet = function (localID) {
-        for (var i = 0; i < $scope.question.answer.snippets.length; i++) {
-            if ($scope.question.answer.snippets[i]._localID === parseInt(localID, 10)) {
-                $scope.question.answer.snippets.splice(i, 1);
+        for (var i = 0; i < $scope.question.snippets.length; i++) {
+            if ($scope.question.snippets[i]._localID === parseInt(localID, 10)) {
+                $scope.question.snippets.splice(i, 1);
                 break;
             }
         }
     };
 
     $scope.deleteConcept = function (idx) {
-        $scope.question.answer.concepts.splice(idx, 1);
+        $scope.question.concepts.splice(idx, 1);
     };
 
     $scope.deleteDocument = function (idx) {
         // TODO: ask if document is linked snippets
-        $scope.question.answer.documents.splice(idx, 1);
+        $scope.question.documents.splice(idx, 1);
     };
 
     $scope.deleteStatement = function (idx) {
-        $scope.question.answer.statements.splice(idx, 1);
+        $scope.question.statements.splice(idx, 1);
     };
 });

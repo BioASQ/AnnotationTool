@@ -96,10 +96,10 @@
     <div class="span12">
       <h3>Annotations</h3>
       <div data-tabset>
-        <div data-tab data-heading="Concepts ({{question.answer.concepts.length || 0}})">
-          <div data-ng-if="!question.answer.concepts.length">No concepts selected.</div>
-          <table class="table table-bordered table-hover" data-ng-if="question.answer.concepts.length">
-            <tr data-ng-repeat="concept in question.answer.concepts">
+        <div data-tab data-heading="Concepts ({{question.concepts.length || 0}})">
+          <div data-ng-if="!question.concepts.length">No concepts selected.</div>
+          <table class="table table-bordered table-hover" data-ng-if="question.concepts.length">
+            <tr data-ng-repeat="concept in question.concepts">
               <td style="width:2em;text-align:right">{{$index + 1}}.</td>
               <td>{{concept.title}}</td>
               <td style="width:20px">
@@ -120,13 +120,13 @@
             </tr>
           </table>
         </div>
-        <div data-tab data-heading="Documents ({{question.answer.documents.length || 0}})"
+        <div data-tab data-heading="Documents ({{question.documents.length || 0}})"
              data-active="selection.documents">
-          <div data-ng-if="!question.answer.documents.length">No documents selected.</div>
+          <div data-ng-if="!question.documents.length">No documents selected.</div>
           <div class="row">
             <div class="span5">
-              <table class="table table-bordered" data-ng-if="question.answer.documents.length">
-                <tr data-ng-repeat="document in question.answer.documents"
+              <table class="table table-bordered" data-ng-if="question.documents.length">
+                <tr data-ng-repeat="document in question.documents"
                     data-ng-class="{ selected: (selection.document.uri === document.uri) }"
                     data-ng-click="selection.document=document"
                     style="cursor:pointer">
@@ -168,10 +168,10 @@
             </div>
           </div>
         </div>
-        <div data-tab data-heading="Statements ({{question.answer.statements.length || 0}})">
-          <div data-ng-if="!question.answer.statements.length">No statements selected.</div>
-          <table class="table table-bordered table-hover" data-ng-if="question.answer.statements.length">
-            <tr data-ng-repeat="statement in question.answer.statements">
+        <div data-tab data-heading="Statements ({{question.statements.length || 0}})">
+          <div data-ng-if="!question.statements.length">No statements selected.</div>
+          <table class="table table-bordered table-hover" data-ng-if="question.statements.length">
+            <tr data-ng-repeat="statement in question.statements">
               <td style="width:2em;text-align:right">{{$index + 1}}.</td>
               <td data-ng-click="infoShown=!infoShown">
                 {{statement.title}}
@@ -193,10 +193,10 @@
             </tr>
           </table>
         </div>
-        <div data-tab data-heading="Snippets ({{question.answer.snippets.length || 0}})">
-          <div data-ng-if="!question.answer.snippets.length">No snippets selected.</div>
-          <table class="table table-bordered table-hover" data-ng-if="question.answer.snippets.length">
-            <tr data-ng-repeat="snippet in question.answer.snippets">
+        <div data-tab data-heading="Snippets ({{question.snippets.length || 0}})">
+          <div data-ng-if="!question.snippets.length">No snippets selected.</div>
+          <table class="table table-bordered table-hover" data-ng-if="question.snippets.length">
+            <tr data-ng-repeat="snippet in question.snippets">
               <td style="width:2em;text-align:right">{{$index + 1}}.</td>
               <td>{{snippet.text}}</td>
               <td style="width:20px">

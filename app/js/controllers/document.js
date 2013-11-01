@@ -5,9 +5,9 @@ angular.module('bioasq-at.controllers.document', [])
 
     var annotateButton = angular.element($window.document.getElementById('annotate-button'));
 
-    function injectSnippets(answer, doc, sectionName) {
+    function injectSnippets(question, doc, sectionName) {
         return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                           answer,
+                                                           question,
                                                            doc,
                                                            doc[sectionName],
                                                            sectionName,
@@ -17,13 +17,13 @@ angular.module('bioasq-at.controllers.document', [])
     $scope.$watch('selection.document', function (oldValue, newValue) {
         if (oldValue !== newValue) {
             $scope.question.answer = $scope.question.answer || {};
-            $scope.question.answer.snippets = $scope.question.answer.snippets || [];
+            $scope.question.snippets = $scope.question.snippets || [];
             if ($scope.selection.document) {
-                $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
-                $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');
+                $scope.title    = injectSnippets($scope.question, $scope.selection.document, 'title');
+                $scope.abstract = injectSnippets($scope.question, $scope.selection.document, 'abstract');
                 $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
                     return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                                    $scope.question.answer,
+                                                                    $scope.question,
                                                                     $scope.selection.document,
                                                                     s,
                                                                     'sections.' + String(i)).text);
@@ -52,7 +52,7 @@ angular.module('bioasq-at.controllers.document', [])
         snippet.document = $scope.selection.document.uri;
         snippet._localID  = Questions.nextSnippetID();
 
-        var documentSnippets = _.filter($scope.question.answer.snippets, function (s) {
+        var documentSnippets = _.filter($scope.question.snippets, function (s) {
             return (s.document === snippet.document && 
                     s.beginSection === snippet.beginSection);
         });
@@ -63,11 +63,11 @@ angular.module('bioasq-at.controllers.document', [])
 
         Questions.addAnnotation(snippet);
 
-        $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
-        $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');
+        $scope.title    = injectSnippets($scope.question, $scope.selection.document, 'title');
+        $scope.abstract = injectSnippets($scope.question, $scope.selection.document, 'abstract');
         $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
             return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                               $scope.question.answer,
+                                                               $scope.question,
                                                                $scope.selection.document,
                                                                s,
                                                                'sections.' + String(i)).text);
@@ -83,11 +83,11 @@ angular.module('bioasq-at.controllers.document', [])
             return;
         }
         $scope.deleteSnippet(localID);
-        $scope.title    = injectSnippets($scope.question.answer, $scope.selection.document, 'title');
-        $scope.abstract = injectSnippets($scope.question.answer, $scope.selection.document, 'abstract');
+        $scope.title    = injectSnippets($scope.question, $scope.selection.document, 'title');
+        $scope.abstract = injectSnippets($scope.question, $scope.selection.document, 'abstract');
         $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
             return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                               $scope.question.answer,
+                                                               $scope.question,
                                                                $scope.selection.document,
                                                                s,
                                                                'sections.' + String(i)).text);

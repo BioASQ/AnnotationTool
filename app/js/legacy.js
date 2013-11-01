@@ -24,10 +24,10 @@ var compareSnippets = function (op1, op2) {
     }
 };
 
-var highlightSnippetsInSection = function (scope, answer, document, section, sectionName, allowOverlaps) {
+var highlightSnippetsInSection = function (scope, question, document, section, sectionName, allowOverlaps) {
     angularScope = scope;
     var hasMultipleSnippets = false;
-    var orderedSnippets = answer.snippets.filter(function (annotation) {
+    var orderedSnippets = question.snippets.filter(function (annotation) {
         return (annotation.document === document.uri &&
                 annotation.beginSection === sectionName);
     });

@@ -12,11 +12,15 @@ angular.module('bioasq-at.services.question', [])
     }
 
     $window.onunload = function () {
+        saveLocal();
+    };
+
+    var saveLocal = function () {
         if (_selectedQuestion && $window.localStorage && typeof $window.localStorage != 'undefined') {
             var value = angular.toJson(_selectedQuestion);
             $window.localStorage.setItem(kQuestionCacheKey, value);
         }
-    };
+    }
 
     var equal = function (lhs, rhs) {
         if (lhs.type !== rhs.type) { return false; }
@@ -67,8 +71,8 @@ angular.module('bioasq-at.services.question', [])
 
     var indexOf = function (annotation) {
         var key = keyForType(annotation.type);
-        for (var i = 0; i < _selectedQuestion.answer[key].length; i++) {
-            if (equal(_selectedQuestion.answer[key][i], annotation)) {
+        for (var i = 0; i < _selectedQuestion[key].length; i++) {
+            if (equal(_selectedQuestion[key][i], annotation)) {
                 return i;
             }
         }
@@ -85,10 +89,7 @@ angular.module('bioasq-at.services.question', [])
                 this.save(_selectedQuestion);
             }
             _selectedQuestion = question;
-            if ($window.localStorage && typeof $window.localStorage != 'undefined') {
-                var value = angular.toJson(question);
-                $window.localStorage.setItem(kQuestionCacheKey, value);
-            }
+            saveLocal();
         },
 
         selectedQuestion: function () {
@@ -103,12 +104,27 @@ angular.module('bioasq-at.services.question', [])
         },
 
         save: function (question) {
-            if (question.answer && question.answer.snippets) {
-                angular.forEach(question.answer.snippets, function (s) {
-                    delete s._localID;
+            // create shallow copy
+            var copy = _.clone(question);
+            if (question.snippets) {
+                copy.snippets = [];
+                // modify deeply copied snippets
+                angular.forEach(question.snippets, function (s) {
+                    var snippetCopy = _.clone(s);
+                    delete snippetCopy._localID;
+                    copy.snippets.push(snippetCopy);
                 });
             }
-            $http.post('/backend/questions/' + question._id, question);
+            $http.post('/backend/questions/' + copy._id, copy);
+            saveLocal();
+        },
+
+        setFinalized: function (finalized) {
+            _selectedQuestion.finalized = finalized;
+            $http.post('/backend/questions/' + _selectedQuestion._id, {
+                _id: _selectedQuestion._id,
+                finalized: !!finalized
+            });
         },
 
         delete: function (question) {
@@ -121,13 +137,16 @@ angular.module('bioasq-at.services.question', [])
                 deferred.resolve(_selectedQuestion);
             } else {
                 $http.get('/backend/questions/' + id)
-                .then(function (response) {
-                    if (response.data.answer && response.data.answer.snippets) {
-                        angular.forEach(response.data.answer.snippets, function (s) {
+                .success(function (data, status) {
+                    if (data.snippets) {
+                        angular.forEach(data.snippets, function (s) {
                             s._localID = _nextSnippetID++;
                         });
                     }
-                    deferred.resolve(response.data);
+                    deferred.resolve(data);
+                })
+                .error(function (data, status) {
+                    alert('Error loading question.');
                 });
             }
             return deferred.promise;
@@ -140,25 +159,25 @@ angular.module('bioasq-at.services.question', [])
         addAnnotation: function (annotation) {
             if (!_selectedQuestion) { throw RangeError('No question selected'); }
             var key = keyForType(annotation.type);
-            ensureSection('answer.' + key);
-            _selectedQuestion.answer[key].push(annotation);
+            ensureSection(key);
+            _selectedQuestion[key].push(annotation);
         },
 
         removeAnnotation: function (annotation) {
             if (!_selectedQuestion) { throw RangeError('No question selected'); }
             var key = keyForType(annotation.type);
-            ensureSection('answer.' + key);
+            ensureSection(key);
             var index = indexOf(annotation);
             if (index > -1) {
-                _selectedQuestion.answer[key].splice(index, 1);
+                _selectedQuestion[key].splice(index, 1);
             }
         },
 
         hasAnnotation: function (annotation) {
             if (!_selectedQuestion) { throw RangeError('No question selected'); }
             var key = keyForType(annotation.type);
-            ensureSection('answer.' + key);
-            return _.some(_selectedQuestion.answer[key], function (a) {
+            ensureSection(key);
+            return _.some(_selectedQuestion[key], function (a) {
                 return equal(a, annotation);
             });
         },
