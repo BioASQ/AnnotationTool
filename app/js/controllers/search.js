@@ -54,6 +54,7 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
 
     function fetchConceptsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.concepts) {
+            Cache.set('search.concepts.page', page);
             delete $scope.pages.concepts.message;
             $scope.conceptsPending = true;
             var sources = _.filter(_.keys(conceptSources), function (source) {
@@ -77,6 +78,7 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
 
     function fetchDocumentsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.documents) {
+            Cache.set('search.documents.page', page);
             delete $scope.pages.documents.message;
             $scope.documentsPending = true;
             Search.documents(terms, page, itemsPerPage)
@@ -95,6 +97,7 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
 
     function fetchStatementsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.statements) {
+            Cache.set('search.statements.page', page);
             delete $scope.pages.statements.message;
             $scope.statementsPending = true;
             Search.statements(terms, page, itemsPerPage)
@@ -118,6 +121,12 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         $scope.conceptsShown        = false;
         $scope.documentsShown       = false;
         $scope.statementsShown      = false;
+
+        _.forEach(['concepts', 'documents', 'statements'], function (key) {
+            if (Cache.has('search.' + key + '.page')) {
+                $scope.pages[key].current = Cache.get('search.' + key + '.page') + 1;
+            }
+        });
 
         delete $scope.concepts;
         fetchConceptsIfNeeded($scope.terms, $scope.pages.concepts.current - 1, itemsPerPage);
