@@ -21,7 +21,7 @@
     <div class="span5">
       <select class="span5"
               data-ng-model="terms"
-              data-ng-options="query.terms as query.terms for query in queries"
+              data-ng-options="query.terms as query.terms for query in queries | filter:termsAreSet"
               data-ng-change="search()"
               style="margin-bottom: 0px;">
               <option style="display:none" value="">Query history</option>
@@ -38,6 +38,7 @@
       <div class="search-source">
         Concepts
         <span data-ng-if="concepts">({{pages.concepts.all}})</span>
+        <span data-ng-if="pages.concepts.message">&mdash; {{pages.concepts.message}}</span>
       </div>
     </a>
     <div class="span12" data-collapse="!conceptsShown">
@@ -102,6 +103,7 @@
       <div class="search-source">
         Documents
         <span data-ng-if="documents">({{pages.documents.total}})</span>
+        <span data-ng-if="pages.documents.message">&mdash; {{pages.documents.message}}</span>
       </div>
     </a>
     <div class="span12" data-collapse="!documentsShown">

@@ -11,6 +11,7 @@ var dependencies = [
     'bioasq-at.controllers.login',
     'bioasq-at.controllers.user',
     'bioasq-at.services.question',
+    'bioasq-at.services.cache',
     'bioasq-at.filters'
 ];
 

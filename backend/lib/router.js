@@ -193,6 +193,10 @@ exports.createRouter = function (model, authentication) {
                         return;
                     }
 
+                    if (!keywords.query) {
+                        return res.send(400, {}, 'empty search terms');
+                    }
+
                     conceptSearch.find(keywords.query, function (err, conceptResult) {
                         if (err) {
                             logData.error = err;
@@ -234,6 +238,10 @@ exports.createRouter = function (model, authentication) {
                         return;
                     }
 
+                    if (!keywords.query) {
+                        return res.send(400, {}, 'empty search terms');
+                    }
+
                     documentSearch.find(keywords.query, page, itemsPerPage, function (err, documentResult, size) {
                         if (err) {
                             logData.error = err;
@@ -273,6 +281,10 @@ exports.createRouter = function (model, authentication) {
                             size: 10
                         });
                         return;
+                    }
+
+                    if (!keywords.query) {
+                        return res.send(400, {}, 'empty search terms');
                     }
 
                     tripleSearch.find(keywords.query, page, itemsPerPage, function (err, response, size) {

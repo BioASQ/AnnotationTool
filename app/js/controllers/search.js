@@ -1,5 +1,5 @@
 angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
-.controller('SearchCtrl', function ($scope, Questions, $routeParams, $http, Search) {
+.controller('SearchCtrl', function ($scope, Questions, $routeParams, $http, Search, Cache) {
     var itemsPerPage = 10;
     var pageSettings = {
         concepts:   { total: 0, current: 1 },
@@ -48,8 +48,13 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         }
     });
 
+    $scope.termsAreSet = function (item) {
+        return !!item.terms;
+    };
+
     function fetchConceptsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.concepts) {
+            delete $scope.pages.concepts.message;
             $scope.conceptsPending = true;
             var sources = _.filter(_.keys(conceptSources), function (source) {
                 return ($scope.pages.conceptSources[source] === true);
@@ -61,17 +66,28 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
                 $scope.concepts = response.concepts;
                 $scope.sources = response.sources;
                 $scope.conceptsPending = false;
+            }, function (reason) {
+                $scope.pages.concepts.total = 0;
+                $scope.pages.concepts.message = 'failed (' + reason + ')';
+                $scope.concepts = [];
+                $scope.conceptsPending = false;
             });
         }
     }
 
     function fetchDocumentsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.documents) {
+            delete $scope.pages.documents.message;
             $scope.documentsPending = true;
             Search.documents(terms, page, itemsPerPage)
             .then(function (response) {
                 $scope.pages.documents.total = response.size || response.documents.length;
                 $scope.documents = response.documents;
+                $scope.documentsPending = false;
+            }, function (reason) {
+                $scope.pages.documents.total = 0;
+                $scope.pages.documents.message = 'failed (' + reason + ')';
+                $scope.documents = [];
                 $scope.documentsPending = false;
             });
         }
@@ -79,6 +95,7 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
 
     function fetchStatementsIfNeeded(terms, page, itemsPerPage) {
         if (!$scope.statements) {
+            delete $scope.pages.statements.message;
             $scope.statementsPending = true;
             Search.statements(terms, page, itemsPerPage)
             .then(function (response) {
@@ -115,6 +132,8 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         .success(function (data) {
             $scope.queries = data;
         });
+
+        Cache.set('search.lastTerms', $scope.terms);
     };
 
     $scope.toggleConceptSource = function (source) {
@@ -166,4 +185,9 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
     $scope.isSelected = function (annotation) {
         return Questions.hasAnnotation(annotation);
     };
+
+    if (Cache.has('search.lastTerms')) {
+        $scope.terms = Cache.get('search.lastTerms');
+        $scope.search();
+    }
 });

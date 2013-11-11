@@ -1,6 +1,9 @@
 angular.module('bioasq-at.services.search', [])
 .factory('Search', function ($http, $q, $routeParams) {
-    var conceptResponse = null;
+    var conceptResponse = null,
+        documentsResponse = null,
+        statementsResponse = null,
+        lastTerms = null;
     var kRequestTimeout = 600000; // 10 min
     function group(data) {
         var groups = [];
@@ -41,6 +44,9 @@ angular.module('bioasq-at.services.search', [])
         case 0:
             reason = 'server not responding';
             break;
+        case 400:
+            reason = 'query error';
+            break;
         case 500:
             reason = 'server error';
             break;
@@ -51,7 +57,11 @@ angular.module('bioasq-at.services.search', [])
         return reason;
     }
     return {
+        lastSearch: function () {
+            return lastTerms;
+        },
         concepts: function (query, sources, groupByLabel, page, pageSize) {
+            lastTerms = query;
             var deferred = $q.defer();
             if (conceptResponse && conceptResponse.query === query) {
                 var index = page * pageSize;
@@ -106,39 +116,58 @@ angular.module('bioasq-at.services.search', [])
         },
         documents: function (query, page, pageSize) {
             var deferred = $q.defer();
-            $http.post('/backend/documents',
-                       { query: query, page: page, itemsPerPage: pageSize, question: $routeParams.id },
-                       { timeout: kRequestTimeout })
-            .success(function (data) {
-                data.documents = data.documents.map(function (d) {
-                    d.type = 'document';
-                    return d;
+            if (documentsResponse && documentsResponse.query === query && documentsResponse.page === page) {
+                deferred.resolve(documentsResponse.results);
+            } else {
+                $http.post('/backend/documents',
+                        { query: query, page: page, itemsPerPage: pageSize, question: $routeParams.id },
+                        { timeout: kRequestTimeout })
+                .success(function (data) {
+                    data.documents = data.documents.map(function (d) {
+                        d.type = 'document';
+                        return d;
+                    });
+                    documentsResponse = {
+                        query: query,
+                        page: page,
+                        results: data
+                    };
+                    deferred.resolve(documentsResponse.results);
+                })
+                .error(function (data, status) {
+                    deferred.reject(reasonForStatus(status));
                 });
-                deferred.resolve(data);
-            })
-            .error(function (data, status) {
-            });
+            }
             return deferred.promise;
         },
         statements: function (query, page, pageSize) {
             var deferred = $q.defer();
-            $http.post('/backend/statements',
-                       { query: query, page: page, itemsPerPage: pageSize, question: $routeParams.id },
-                       { timeout: kRequestTimeout })
-            .success(function (data, status) {
-                if (status === 200 && !data.statements) {
-                    deferred.reject('bogus response');
-                } else {
-                    data.statements = _.map(data.statements, function (s) {
-                        s.type = 'statement';
-                        return s;
-                    });
-                    deferred.resolve(data);
-                }
-            })
-            .error(function (data, status) {
-                deferred.reject(reasonForStatus(status));
-            });
+            if (statementsResponse && statementsResponse.query === query && statementsResponse.page === page) {
+                deferred.resolve(statementsResponse.results);
+            } else {
+                $http.post('/backend/statements',
+                        { query: query, page: page, itemsPerPage: pageSize, question: $routeParams.id },
+                        { timeout: kRequestTimeout })
+                .success(function (data, status) {
+                    if (status === 200 && !data.statements) {
+                        deferred.reject('bogus response');
+                    } else {
+                        data.statements = _.map(data.statements, function (s) {
+                            s.type = 'statement';
+                            return s;
+                        });
+                        statementsResponse = {
+                            query: query,
+                            page: page,
+                            results: data
+                        };
+                        deferred.resolve(statementsResponse.results);
+                    }
+                })
+                .error(function (data, status) {
+                    deferred.reject(reasonForStatus(status));
+                });
+            }
             return deferred.promise;
         }
     };
