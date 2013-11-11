@@ -4,6 +4,10 @@ angular.module('bioasq-at.services.question', [])
     var _selectedQuestion = null;
     var kQuestionCacheKey = 'selectedQuestion';
 
+    $scope.$on('questionSelected', function () {
+        _selectedQuestion = null;
+    });
+
     if ($window.localStorage && typeof $window.localStorage != 'undefined') {
         var value = $window.localStorage.getItem(kQuestionCacheKey);
         if (value) {

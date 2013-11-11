@@ -34,7 +34,6 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         for (var i = 0; i < $scope.questions.length; i++) {
             if ($scope.questions[i]._id === question._id) {
                 $scope.question = $scope.questions[i];
-                Questions.select(null);
                 $scope.editing = false;
                 $scope.$emit('questionSelected');
             }
