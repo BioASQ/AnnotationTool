@@ -19,6 +19,7 @@ angular.module('bioasq-at.controllers.login', [])
 
         $http.post('/backend/login', { email: $scope.email, password: $scope.password })
         .success(function (data) {
+            $rootScope.$emit('signin');
             $rootScope.user = {
                 name: data.username,
                 id:   data.usermail
@@ -26,6 +27,7 @@ angular.module('bioasq-at.controllers.login', [])
             $location.path('questions');
         })
         .error(function (data, status) {
+            $rootScope.$emit('signin');
             delete $rootScope.user;
 
             if (status === 401 || status === 403) {
@@ -44,7 +46,7 @@ angular.module('bioasq-at.controllers.login', [])
 
     $scope.logout = function () {
         delete $rootScope.user;
-        Questions.clearCache();
+        $rootScope.$emit('signout');
         $http.get('/backend/logout')
         .then(function () {
             $location.path('/');

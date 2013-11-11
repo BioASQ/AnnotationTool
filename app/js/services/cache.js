@@ -4,6 +4,9 @@ angular.module('bioasq-at.services.cache', [])
     $scope.$on('questionSelected', function () {
         _data = {};
     });
+    $scope.$on('signin', function () {
+        _data = {};
+    });
     return {
         set: function (key, value) {
             _data[key] = value;

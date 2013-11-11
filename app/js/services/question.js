@@ -1,11 +1,16 @@
 angular.module('bioasq-at.services.question', [])
-.factory('Questions', function ($http, $routeParams, $window, $q) {
+.factory('Questions', function ($http, $routeParams, $window, $q, $rootScope) {
     var _nextSnippetID = 0;
     var _selectedQuestion = null;
     var kQuestionCacheKey = 'selectedQuestion';
 
-    $scope.$on('questionSelected', function () {
+    $rootScope.$on('questionSelected', function () {
         _selectedQuestion = null;
+    });
+
+    $rootScope.$on('signin', function () {
+        _selectedQuestion = null;
+        $window.localStorage.removeItem(kQuestionCacheKey);
     });
 
     if ($window.localStorage && typeof $window.localStorage != 'undefined') {
@@ -24,7 +29,7 @@ angular.module('bioasq-at.services.question', [])
             var value = angular.toJson(_selectedQuestion);
             $window.localStorage.setItem(kQuestionCacheKey, value);
         }
-    }
+    };
 
     var equal = function (lhs, rhs) {
         if (lhs.type !== rhs.type) { return false; }
@@ -84,10 +89,6 @@ angular.module('bioasq-at.services.question', [])
     };
 
     return {
-        clearCache: function () {
-            _selectedQuestion = null;
-            $window.localStorage.removeItem(kQuestionCacheKey);
-        },
         select: function (question) {
             if (_selectedQuestion) {
                 this.save(_selectedQuestion);
