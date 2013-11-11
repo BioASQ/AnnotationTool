@@ -12,12 +12,14 @@ var journey = require('journey'),
     Verbalizer = require('./verbalizer').Verbalizer,
     path = require('path'),
     config = require(path.join(__dirname, '..', '..', 'config')).defaults,
-    logger = require('./logging.js').logger;
+    logger = require('./logging.js').logger,
+    Sharing = require('./sharing').Sharing;
 
 var conceptSearch = new Search(),
     documentSearch = new TIDocuments(config.search.documents),
     tripleSearch = new TITriples(config.search.triples2),
-    verbalizer = new Verbalizer(config.search.verbalizer);
+    verbalizer = new Verbalizer(config.search.verbalizer),
+    sharing = new Sharing(config.sharing);
 
 exports.createRouter = function (model, authentication) {
     var router = new (journey.Router)({
@@ -115,6 +117,7 @@ exports.createRouter = function (model, authentication) {
                             method: 'POST|PUT',
                             params: id
                         };
+
                         if (err) {
                             logData.error = err;
                             logger('error', 'updating question failed', logData);
@@ -124,6 +127,20 @@ exports.createRouter = function (model, authentication) {
                             res.send(200);
                         }
                     });
+
+                    if (config.sharing && !!config.sharing.enabled) {
+                        model.load2(id,
+                                    req.session.data.user,
+                                    { 'documents.sections': false, 'documents.abstract': false },
+                                    function (err, loadedQuestion) {
+                            sharing.updateQuestion(loadedQuestion, function (err) {
+                                if (err) {
+                                    return logger('info', 'error sharing question', err);
+                                }
+                                logger('info', 'question ' + id + ' shared to ' + config.sharing.address);
+                            });
+                        });
+                    }
                 });
 
                 /*

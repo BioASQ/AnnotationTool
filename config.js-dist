@@ -27,6 +27,15 @@ exports.defaults.database = {
 };
 
 /*
+ * Allows to post updated question to some service (i.e. Social Network)
+ */
+exports.defaults.sharing = {
+    enabled: false,
+    address: 'http://example.com:8080/updateQuestion',
+    secret:  '<shared secret>'
+};
+
+/*
  * Annotation tool server configuration.
  */
 exports.defaults.server = {

@@ -71,6 +71,18 @@ Question.prototype.load = function (id, user, callback) {
     });
 };
 
+Question.prototype.load2 = function (id, user, fields, callback) {
+    if (typeof user == 'undefined') { return callback(Error('No valid user.')); }
+
+    this._collection(callback, function (err, coll) {
+        coll.findOne({ '_id': ObjectID(id), 'creator': user }, { fields: fields }, function (err, res) {
+            if (err) { return callback(err); }
+            if (!res) { return callback(new Error('Question not found')); }
+            callback(null, res);
+        });
+    });
+};
+
 Question.prototype.update = function (id, question, user, callback) {
     if (typeof user == 'undefined') { return callback(Error('No valid user.')); }
 

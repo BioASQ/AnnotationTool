@@ -30,9 +30,9 @@ var logging = function logging() {
                 self._logger.log(level, message, meta);
             } else if (meta) {
                 console.error('loggings 3rd parameter needs to be an object or will be ignored');
-                self._logger.log(level, message, { date: time });
+                self._logger.log(level, message, { date: new Date().toISOString() });
             } else {
-                self._logger.log(level, message, { date: time });
+                self._logger.log(level, message, { date: new Date().toISOString() });
             }
         }
     };
