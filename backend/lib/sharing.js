@@ -22,14 +22,14 @@ Sharing.prototype.send = function (question, cb) {
 
     var parsed = url.parse(this._config.address),
         httpOptions = {
-        hostname: parsed.hostname,
-        port:     parsed.port,
-        path:     parsed.path,
-        method:   'POST',
-        headers: {
-            'content-type':  'application/json'
-        }
-    };
+            hostname: parsed.hostname,
+            port:     parsed.port,
+            path:     parsed.path,
+            method:   'POST',
+            headers: {
+                'content-type':  'application/json'
+            }
+        };
     var request = http.request(httpOptions);
     request.addListener('response', function (r) {
         cb(null, r);
