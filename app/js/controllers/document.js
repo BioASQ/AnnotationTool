@@ -14,20 +14,24 @@ angular.module('bioasq-at.controllers.document', [])
                                                            false).text);
     }
 
-    $scope.$watch('selection.document', function (oldValue, newValue) {
+    $scope.$watch('selection.document', function (newValue, oldValue) {
         if (oldValue !== newValue) {
             $scope.question.answer = $scope.question.answer || {};
             $scope.question.snippets = $scope.question.snippets || [];
-            if ($scope.selection.document) {
-                $scope.title    = injectSnippets($scope.question, $scope.selection.document, 'title');
-                $scope.abstract = injectSnippets($scope.question, $scope.selection.document, 'abstract');
-                $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
+            if (newValue) {
+                $scope.title    = injectSnippets($scope.question, newValue, 'title');
+                $scope.abstract = injectSnippets($scope.question, newValue, 'abstract');
+                $scope.sections = _.map(newValue.sections, function (s, i) {
                     return $sce.trustAsHtml(highlightSnippetsInSection($scope,
                                                                     $scope.question,
-                                                                    $scope.selection.document,
+                                                                    newValue,
                                                                     s,
                                                                     'sections.' + String(i)).text);
                 });
+            } else {
+                delete $scope.title;
+                delete $scope.abstract;
+                delete $scope.sections;
             }
         }
     });

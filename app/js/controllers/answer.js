@@ -111,6 +111,9 @@ angular.module('bioasq-at.controllers.answer', [])
 
     $scope.deleteDocument = function (idx) {
         // TODO: ask if document is linked snippets
+        if ($scope.question.documents[idx].uri === $scope.selection.document.uri) {
+            delete $scope.selection.document;
+        }
         $scope.question.documents.splice(idx, 1);
     };
 
