@@ -113,7 +113,7 @@
               <td style="width:20px">
                 <button data-ng-disabled="question.finalized" class="btn btn-mini"
                         title="Delete concept"
-                        data-ng-click="deleteConcept({{$index}})">
+                        data-ng-click="deleteConcept($index)">
                   <i class="icon-remove"></i>
                 </button>
               </td>
@@ -135,7 +135,7 @@
                   <td style="width:20px">
                     <button data-ng-disabled="question.finalized" class="btn btn-mini"
                             title="Delete document"
-                            data-ng-click="deleteDocument({{$index}})">
+                            data-ng-click="deleteDocument($index)">
                       <i class="icon-remove"></i>
                     </button>
                   </td>
@@ -186,7 +186,7 @@
               <td style="width:20px">
                 <button data-ng-disabled="question.finalized" class="btn btn-mini"
                         title="Delete statement"
-                        data-ng-click="deleteStatement({{$index}})">
+                        data-ng-click="deleteStatement($index)">
                   <i class="icon-remove"></i>
                 </button>
               </td>
@@ -202,14 +202,14 @@
               <td style="width:20px">
                 <button class="btn btn-mini"
                         title="Show containing document"
-                        data-ng-click="selectDocument('{{snippet.document}}')">
+                        data-ng-click="selectDocument(snippet.document)">
                   <i class=" icon-share-alt"></i>
                 </button>
               </td>
               <td style="width:20px">
                 <button data-ng-disabled="question.finalized" class="btn btn-mini"
                         title="Delete snippet"
-                        data-ng-click="deleteSnippet({{snippet._localID}})">
+                        data-ng-click="deleteSnippet(snippet._localID)">
                   <i class="icon-remove"></i>
                 </button>
               </td>
