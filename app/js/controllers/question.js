@@ -41,7 +41,14 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
     };
 
     $scope.newQuestion = function () {
-        $scope.questions.push({version: 2, creator: $scope.user.id });
+        $scope.questions.push({
+            version: 2,
+            creator: $scope.user.id,
+            concepts: [],
+            documents: [],
+            statements: [],
+            snippets: []
+        });
         $scope.editing  = true;
         $scope.creating = true;
         $scope.question = $scope.questions[$scope.questions.length - 1];
@@ -71,6 +78,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         }
         $scope.editing  = false;
         $scope.creating = false;
+        $scope.routes = $scope.allRoutes;
     };
 
     $scope.deleteQuestion = function (question) {
