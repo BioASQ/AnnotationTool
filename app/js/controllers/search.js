@@ -48,6 +48,13 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         }
     });
 
+    $scope.$watch('pages.statements.current', function (newValue, oldValue) {
+        if (oldValue && newValue !== oldValue) {
+            delete $scope.statements;
+            fetchStatementsIfNeeded($scope.terms, $scope.pages.statements.current - 1, itemsPerPage);
+        }
+    });
+
     $scope.termsAreSet = function (item) {
         return !!item.terms;
     };
