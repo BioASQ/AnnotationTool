@@ -21,14 +21,15 @@ angular.module('bioasq-at.services.question', [])
     }
 
     $window.onunload = function () {
-        saveLocal();
+        saveLocal(_selectedQuestion);
     };
 
-    var saveLocal = function () {
-        if (_selectedQuestion && $window.localStorage && typeof $window.localStorage != 'undefined') {
-            var value = angular.toJson(_selectedQuestion);
+    var saveLocal = function (question) {
+        if (question && $window.localStorage && typeof $window.localStorage != 'undefined') {
+            var value = angular.toJson(question);
             $window.localStorage.setItem(kQuestionCacheKey, value);
         }
+        _selectedQuestion = question;
     };
 
     var equal = function (lhs, rhs) {
@@ -94,7 +95,7 @@ angular.module('bioasq-at.services.question', [])
                 this.save(_selectedQuestion);
             }
             _selectedQuestion = question;
-            saveLocal();
+            saveLocal(_selectedQuestion);
         },
 
         selectedQuestion: function () {
@@ -121,7 +122,7 @@ angular.module('bioasq-at.services.question', [])
                 });
             }
             $http.post('/backend/questions/' + copy._id, copy);
-            saveLocal();
+            saveLocal(question);
         },
 
         setFinalized: function (finalized) {
