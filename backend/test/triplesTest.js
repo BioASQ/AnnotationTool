@@ -7,10 +7,11 @@ var s = new TITriples('http://gopubmed.org/web/bioasq/linkedlifedata2/triples');
 var queries = [
     'viral KP4',
     'hypertension',
-    'hypertension AND juveniles AND treatment'
+    'hypertension AND juveniles AND treatment',
+    '"tuberous sclerosis" AND genetic'
 ];
 
-s.find(queries[0], 0, 10, function (err, res) {
+s.find(queries[3], 0, 10, function (err, res) {
     if (err) {
         console.log(err.stack);
     } else {
