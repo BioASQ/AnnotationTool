@@ -144,6 +144,9 @@ angular.module('bioasq-at.services.question', [])
             } else {
                 $http.get('/backend/questions/' + id)
                 .success(function (data, status) {
+                    if (!data.answer) {
+                        data.answer = {};
+                    }
                     if (data.snippets) {
                         angular.forEach(data.snippets, function (s) {
                             s._localID = _nextSnippetID++;
