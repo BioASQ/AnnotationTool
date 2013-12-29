@@ -44,6 +44,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
         $scope.questions.push({
             version: 2,
             creator: $scope.user.id,
+            answer: {},
             concepts: [],
             documents: [],
             statements: [],
