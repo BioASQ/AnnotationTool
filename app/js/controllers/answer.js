@@ -19,6 +19,8 @@ angular.module('bioasq-at.controllers.answer', [])
         }
     }
 
+    delete $scope.message;
+
     if (!$scope.selectedQuestion && $routeParams.id) {
         $scope.question = {};
         Questions.load($routeParams.id).then(function (question) {
@@ -32,7 +34,23 @@ angular.module('bioasq-at.controllers.answer', [])
 
     $scope.saveQuestion = function () {
         if ($scope.question) {
-            Questions.save($scope.question);
+            Questions.save($scope.question)
+            .success(function (data, status) {
+                $scope.message = {
+                    type: 'success',
+                    text: 'Question successfully saved.'
+
+                }
+            })
+            .error(function (data, status) {
+                if (status === 0) {
+                    status = 'server not reachable';
+                }
+                $scope.message = {
+                    type: 'error',
+                    text: 'Could not save question (' + status + ')!'
+                }
+            });
         }
     };
 

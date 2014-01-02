@@ -121,8 +121,8 @@ angular.module('bioasq-at.services.question', [])
                     copy.snippets.push(snippetCopy);
                 });
             }
-            $http.post('/backend/questions/' + copy._id, copy);
             saveLocal(question);
+            return $http.post('/backend/questions/' + copy._id, copy);
         },
 
         setFinalized: function (finalized) {

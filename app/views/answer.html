@@ -6,6 +6,12 @@
   </div>
 </div>
 
+<div class="container" data-ng-if="message">
+  <div class="alert alert-{{message.type}}">
+    {{message.text}}
+  </div>
+</div>
+
 <div class="container" data-ng-show="question">
   <div class="row">
     <h2 class="span" style="color:#999">{{question.body}}</h2>
