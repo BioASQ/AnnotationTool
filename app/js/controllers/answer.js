@@ -56,7 +56,11 @@ angular.module('bioasq-at.controllers.answer', [])
 
     $scope.setFinalized = function (finalized) {
         $scope.question.finalized = !!finalized;
-        Questions.setFinalized(!!finalized);
+        if (!!finalized) {
+            $scope.saveQuestion();
+        } else {
+            Questions.setFinalized(!!finalized);
+        }
     };
 
     $scope.selectDocument = function (documentURI) {
