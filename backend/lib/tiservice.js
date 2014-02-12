@@ -60,23 +60,23 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
             responseData += chunk;
         }).on('end', function () {
             if (responseData.exception) {
-                cb(responseData.exception);
+                cb(responseData.exception, null, req.headers);
             } else {
-                cb(null, responseData);
+                c1(null, responseData, req.headers);
             }
         }).on('close', function () {
             res.emit('end');
         });
     });
     req.on('error', function (e) {
-        cb(e);
+        cb(e, null, req.headers);
     });
     req.write(dataStr);
     req.end();
 };
 
 TIService.prototype._requestJSON = function (URL, options, /* Object */ query, cb) {
-    this._request(URL, options, query, function (err, data) {
+    this._request(URL, options, query, function (err, data, headers) {
         if (err) { return cb(err); }
 
         var response;
@@ -89,10 +89,11 @@ TIService.prototype._requestJSON = function (URL, options, /* Object */ query, c
             } catch (e2) {
                 // still not working? give up
                 process.stderr.write('Could not parse response: ' + data);
-                return cb(e);
+                process.stderr.write('    headers: ' + headers);
+                return cb(e2);
             }
         }
-        
+
         // catch TI-specific exception
         if (response.exception) {
             return cb(Error(response.exception + ', query: ' + JSON.stringify(query)));
