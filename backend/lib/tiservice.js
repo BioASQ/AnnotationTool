@@ -62,7 +62,7 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
             if (responseData.exception) {
                 cb(responseData.exception, null, req.headers);
             } else {
-                c1(null, responseData, req.headers);
+                cb(null, responseData, req.headers);
             }
         }).on('close', function () {
             res.emit('end');
