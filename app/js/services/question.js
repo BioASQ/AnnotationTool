@@ -140,6 +140,11 @@ angular.module('bioasq-at.services.question', [])
         load: function (id) {
             var deferred = $q.defer();
             if (_selectedQuestion && _selectedQuestion._id === id) {
+                if (_selectedQuestion.snippets) {
+                    angular.forEach(_selectedQuestion.snippets, function (s) {
+                        s._localID = _nextSnippetID++;
+                    });
+                }
                 deferred.resolve(_selectedQuestion);
             } else {
                 $http.get('/backend/questions/' + id)
