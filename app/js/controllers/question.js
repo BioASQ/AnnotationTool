@@ -68,8 +68,36 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
     };
 
     $scope.saveQuestion = function () {
+        if ($scope.question.type !== $scope.question._type) {
+            if (!confirm('\
+Changing the type of question will delete your current exact answer. If \
+necessary, take note of your current exact answer (or make a screenshot) \
+and recreate it according to the new question type. Are you sure you want \
+to change the question type?\n\nIf you select "Cancel", the question will \
+be saved without changing its type.')) {
+                $scope.question.type = $scope.question._type;
+            } else {
+                $scope.question.answer = $scope.question.answer || {};
+                switch ($scope.question.type) {
+                case 'yesno':
+                    delete $scope.question.answer.exact;
+                    break;
+                case 'list':
+                    $scope.question.answer.exact = [];
+                    break;
+                case 'factoid':
+                    $scope.question.answer.exact = [];
+                    break;
+                case 'summary':
+                    delete $scope.question.answer.exact;
+                    break;
+                }
+            }
+        }
+
         delete $scope.question._body;
         delete $scope.question._type;
+
         if ($scope.creating) {
             Questions.create($scope.question, function (result) {
                 $scope.question._id = result.id;
