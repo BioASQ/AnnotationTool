@@ -6,12 +6,41 @@ angular.module('bioasq-at.controllers.document', [])
     var annotateButton = angular.element($window.document.getElementById('annotate-button'));
 
     function injectSnippets(question, doc, sectionName) {
-        return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                           question,
-                                                           doc,
-                                                           doc[sectionName],
-                                                           sectionName,
-                                                           false).text);
+        return $sce.trustAsHtml(snippetDescription(question, doc, sectionName, false).text);
+    }
+
+    function snippetDescription(question, doc, sectionName, allowOverlap) {
+        return highlightSnippetsInSection($scope,
+                                          question,
+                                          doc,
+                                          doc[sectionName],
+                                          sectionName,
+                                          allowOverlap);
+    }
+
+    function prepareScopeVars($scope, doc) {
+        $scope.sectionConfig = {};
+        var titleDescription = snippetDescription($scope.question, doc, 'title', false);
+        $scope.title = $sce.trustAsHtml(titleDescription.text);
+        $scope.sectionConfig['title'] = { hasMultipleSnippets: titleDescription.hasMultipleSnippets };
+
+        var abstractDescription = snippetDescription($scope.question, doc, 'abstract', false);
+        $scope.abstract = $sce.trustAsHtml(abstractDescription.text);
+        $scope.sectionConfig['abstract'] = { hasMultipleSnippets: abstractDescription.hasMultipleSnippets };
+
+        $scope.sections = [];
+        if (doc.sections) {
+            doc.sections.forEach(function (s, i) {
+                var sectionDescription = highlightSnippetsInSection($scope,
+                                                                    $scope.question,
+                                                                    doc,
+                                                                    s,
+                                                                    'sections.' + String(i));
+                $scope.sections[i] = $sce.trustAsHtml(sectionDescription.text);
+                $scope.sectionConfig['sections.' + String(i)] =
+                        { hasMultipleSnippets: sectionDescription.hasMultipleSnippets };
+            });
+        }
     }
 
     $scope.$watch('selection.document', function (newValue, oldValue) {
@@ -19,15 +48,7 @@ angular.module('bioasq-at.controllers.document', [])
             $scope.question.answer = $scope.question.answer || {};
             $scope.question.snippets = $scope.question.snippets || [];
             if (newValue) {
-                $scope.title    = injectSnippets($scope.question, newValue, 'title');
-                $scope.abstract = injectSnippets($scope.question, newValue, 'abstract');
-                $scope.sections = _.map(newValue.sections, function (s, i) {
-                    return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                                    $scope.question,
-                                                                    newValue,
-                                                                    s,
-                                                                    'sections.' + String(i)).text);
-                });
+                prepareScopeVars($scope, newValue);
             } else {
                 delete $scope.title;
                 delete $scope.abstract;
@@ -48,6 +69,16 @@ angular.module('bioasq-at.controllers.document', [])
         }
     };
 
+    $scope.nextSnippetInSection = function (sectionName) {
+        nextSnippetInSection(sectionName);
+        prepareScopeVars($scope, $scope.selection.document);
+    };
+
+    $scope.previousSnippetInSection = function (sectionName) {
+        previousSnippetInSection(sectionName);
+        prepareScopeVars($scope, $scope.selection.document);
+    };
+
     $scope.createSnippet = function () {
         var snippet = snippetForSelection(annotateButton);
 
@@ -55,6 +86,9 @@ angular.module('bioasq-at.controllers.document', [])
 
         snippet.document = $scope.selection.document.uri;
         snippet._localID  = Questions.nextSnippetID();
+        if ($scope.mode === 'assessment') {
+            snippet.golden = true;
+        }
 
         var documentSnippets = _.filter($scope.question.snippets, function (s) {
             return (s.document === snippet.document && 
@@ -67,15 +101,7 @@ angular.module('bioasq-at.controllers.document', [])
 
         Questions.addAnnotation(snippet);
 
-        $scope.title    = injectSnippets($scope.question, $scope.selection.document, 'title');
-        $scope.abstract = injectSnippets($scope.question, $scope.selection.document, 'abstract');
-        $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
-            return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                               $scope.question,
-                                                               $scope.selection.document,
-                                                               s,
-                                                               'sections.' + String(i)).text);
-        });
+        prepareScopeVars($scope, $scope.selection.document);
     };
 
     $scope.setKeepSelection = function (keep) {
@@ -87,15 +113,7 @@ angular.module('bioasq-at.controllers.document', [])
             return;
         }
         $scope.deleteSnippet(localID);
-        $scope.title    = injectSnippets($scope.question, $scope.selection.document, 'title');
-        $scope.abstract = injectSnippets($scope.question, $scope.selection.document, 'abstract');
-        $scope.sections = _.map($scope.selection.document.sections, function (s, i) {
-            return $sce.trustAsHtml(highlightSnippetsInSection($scope,
-                                                               $scope.question,
-                                                               $scope.selection.document,
-                                                               s,
-                                                               'sections.' + String(i)).text);
-        });
+        prepareScopeVars($scope, $scope.selection.document);
         if (!$scope.$$phase) {
             $scope.$apply();
         }

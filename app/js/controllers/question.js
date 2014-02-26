@@ -129,7 +129,7 @@ be saved without changing its type.')) {
     };
 
     $scope.proceed = function () {
-        var path = $scope.mode === 'assessment' ? 'answer' : 'search'
+        var path = ($scope.mode === 'assessment' ? 'assessment' : 'search')
                  + '/' + $scope.question._id;
         $location.path(path);
     };

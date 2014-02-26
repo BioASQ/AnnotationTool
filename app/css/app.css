@@ -75,12 +75,6 @@ input {
  * }
  */
 
-.selected {
-  background-color: #dd4814;
-  color: white;
-  border-radius: 4px;
-}
-
 .selected:hover {
   background-color: #dd4814;
   color: white;
@@ -130,16 +124,30 @@ h3 {
   border-radius: 4px;
 }
 
+.selected {
+  background-color: #dd4814 !important;
+  color: white;
+  border-radius: 4px;
+}
+
+.golden td:last-child {
+  background-color: #ffdd88 !important;
+  color: black;
+}
+
 .triple {
   font-family: monospace;
   font-size: 80%;
 }
 
 .snippet-annotation {
-  /* background-color: #f368c7; */
   background-color: #ffdd88;
   border-radius: 0.4em;
   padding: 0 2px;
+}
+
+.snippet-annotation.system {
+  background-color: #f368c7;
 }
 
 .concept-highlight {

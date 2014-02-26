@@ -15,10 +15,10 @@
               data-ng-class="{active: $uiRoute}"
               data-ui-route="#/{{route.name}}.*">
             <a data-ng-if="route.path" data-ng-href="#!/{{route.name}}/{{question._id}}">
-              {{route.name | inflector:humanize}}
+              {{route.label || route.name | inflector:humanize}}
             </a>
             <a data-ng-if="!route.path" data-ng-href="#!/{{route.name}}">
-              {{route.name | inflector:humanize}}
+              {{route.label || route.name | inflector:humanize}}
             </a>
           </li>
         </ul>

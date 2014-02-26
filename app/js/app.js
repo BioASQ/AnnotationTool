@@ -7,6 +7,7 @@ var dependencies = [
     'bioasq-at.controllers.question',
     'bioasq-at.controllers.search',
     'bioasq-at.controllers.answer',
+    'bioasq-at.controllers.assessment',
     'bioasq-at.controllers.document',
     'bioasq-at.controllers.login',
     'bioasq-at.controllers.user',
@@ -28,7 +29,21 @@ angular.module('bioasq-at', dependencies)
     {   name:           'answer',
         path:           ':id',
         controllerName: 'AnswerCtrl',
-        modes:          [ 'annotation', 'assessment' ] },
+        modes:          [ 'annotation' ] },
+    {   name:           'ideal',
+        label:          'Ideal Answer',
+        path:           ':id',
+        controllerName: 'AssessmentCtrl',
+        modes:          [ 'assessment' ] },
+    {   name:           'exact',
+        label:          'Exact Answer',
+        path:           ':id',
+        controllerName: 'AssessmentCtrl',
+        modes:          [ 'assessment' ] },
+    {   name:           'annotations',
+        path:           ':id',
+        controllerName: 'AssessmentCtrl',
+        modes:          [ 'assessment' ] },
     {   name:           'user',
         controllerName: 'UserCtrl',
         navigation:     false,
@@ -42,7 +57,7 @@ angular.module('bioasq-at', dependencies)
 .config(['$routeProvider', '$locationProvider', 'Routes', function ($route, $location, Routes) {
     angular.forEach(Routes, function (route) {
         $route.when('/' + route.name + (route.path ? '/' + route.path + '?' : ''), {
-            templateUrl: 'views/' + route.name + '.html',
+            templateUrl: 'views/' + (route.template ? route.template : route.name) + '.html',
             controller:  route.controllerName
         });
     });
@@ -70,8 +85,8 @@ angular.module('bioasq-at', dependencies)
     }]);
 }])
 .run(['$rootScope', '$cookies', 'Routes', function ($scope, $cookies, Routes) {
-    $scope.mode = 'annotation';
-    // $scope.mode = 'assessment';
+    // $scope.mode = 'annotation';
+    $scope.mode = 'assessment';
 
     $scope.$watch('user', function (newValue, oldValue) {
         if (!newValue || !oldValue || newValue.id !== oldValue.id) {

@@ -1,0 +1,227 @@
+<div data-ng-include="'views/partials/navigation.html'"></div>
+
+<div class="container" data-ng-if="!question">
+  <div class="alert alert-error">
+    <strong>Error!</strong> No question selected.
+  </div>
+</div>
+
+<div class="container" data-ng-if="message">
+  <div class="alert alert-{{message.type}}">
+    {{message.text}}
+  </div>
+</div>
+
+<div class="container" data-ng-show="question">
+  <div class="row">
+    <h2 class="span" style="color:#999">{{question.body}}</h2>
+    <hr class="span12">
+  </div>
+  <div class="row">
+    <ul class="inline pull-right">
+      <li data-ng-if="question.finalized">
+        <span class="is-finalized">Question finalized &#x2713;</span>
+      </li>
+      <li>
+        <button class="btn" style="width:15em"
+                data-ng-click="setFinalized(!question.finalized)">
+          <span data-ng-if="question.finalized">Unfinalize Question</span>
+          <span data-ng-if="!question.finalized">&#x2713; Save &amp; Finalize Question</span>
+        </button>
+      </li>
+      <li>
+        <button data-ng-disabled="question.finalized"
+                class="btn btn-success"
+                data-ng-click="saveQuestion()">Save Question</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  <div class="row">
+    <div class="span12">
+      <h3>Annotations</h3>
+      <div data-tabset>
+        <div data-tab data-heading="Concepts ({{question.concepts.length || 0}})">
+          <div data-ng-if="!question.concepts.length">No concepts found.</div>
+          <table class="table table-bordered" data-ng-if="question.concepts.length">
+            <tr ng-class="{golden:concept.golden}" data-ng-repeat="concept in question.concepts">
+              <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+              <td>{{concept.title}}</td>
+              <td style="width:20px">
+                <a class="btn btn-mini"
+                   href="{{concept.uri}}"
+                   target="_blank"
+                   title="Show concept on the Web">
+                  <i class="icon-share-alt"></i>
+                </a>
+              </td>
+              <td style="width:20px" data-ng-disabled="question.finalized">
+                <button data-ng-if="concept.golden" class="btn btn-mini"
+                        title="Remove from golden set"
+                        data-ng-click="concept.golden=false">
+                  <i class="icon-minus-sign"></i>
+                </button>
+                <button data-ng-if="!concept.golden" class="btn btn-mini"
+                        title="Add to golden set"
+                        data-ng-click="concept.golden=true">
+                  <i class="icon-plus-sign"></i>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div data-tab data-heading="Documents ({{question.documents.length || 0}})"
+             data-active="selection.documents">
+          <div data-ng-if="!question.documents.length">No documents found.</div>
+          <div class="row">
+            <div class="span5">
+              <table class="table table-bordered" data-ng-if="question.documents.length">
+                <tr data-ng-repeat="document in question.documents"
+                    data-ng-class="{ selected: (selection.document.uri === document.uri), golden:document.golden }"
+                    data-ng-click="selection.document=document"
+                    style="cursor:pointer">
+                  <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+                  <td>{{document.title}}</td>
+                  <td style="width:20px">
+                    <button data-ng-if="document.golden" class="btn btn-mini"
+                            title="Remove from golden set"
+                            data-ng-click="document.golden=false">
+                      <i class="icon-minus-sign"></i>
+                    </button>
+                    <button data-ng-if="!document.golden" class="btn btn-mini"
+                            title="Add to golden set"
+                            data-ng-click="document.golden=true">
+                      <i class="icon-plus-sign"></i>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div id="viewer"
+                 data-ng-controller="DocumentCtrl"
+                 class="span7"
+                 data-ng-mousedown="startAnnotation()"
+                 data-ng-mouseup="endAnnotation()">
+              <button class="btn btn-info"
+                      id="annotate-button"
+                      data-ng-mousedown="setKeepSelection(true)"
+                      data-ng-click="createSnippet($event)"
+                      style="position:absolute;display:none">
+                Annotate with selected snippet
+              </button>
+              <button class="btn btn-mini"
+                      title="Display previous snippet in this section"
+                      data-ui-if="sectionConfig['title'].hasMultipleSnippets"
+                      data-ng-click="previousSnippetInSection('title')">
+                <i class="icon-arrow-left" style="margin-bottom:2px"></i>
+              </button>
+              <button class="btn btn-mini"
+                      title="Display next snippet in this section"
+                      data-ui-if="sectionConfig['title'].hasMultipleSnippets"
+                      data-ng-click="nextSnippetInSection('title')">
+                <i class="icon-arrow-right" style="margin-bottom:2px"></i>
+              </button>
+              <h4 class="section"
+                  data-section-name="title"
+                  data-ng-bind-html="title"
+                  style="margin-top:0"></h4>
+              <button class="btn btn-mini"
+                      title="Display previous snippet in this section"
+                      data-ui-if="sectionConfig['abstract'].hasMultipleSnippets"
+                      data-ng-click="previousSnippetInSection('abstract')">
+                <i class="icon-arrow-left" style="margin-bottom:2px"></i>
+              </button>
+              <button class="btn btn-mini"
+                      title="Display next snippet in this section"
+                      data-ui-if="sectionConfig['abstract'].hasMultipleSnippets"
+                      data-ng-click="nextSnippetInSection('abstract')">
+                <i class="icon-arrow-right" style="margin-bottom:2px"></i>
+              </button>
+              <p class="section abstract"
+                 data-section-name="abstract"
+                 data-ng-bind-html="abstract"></p>
+                <div data-ng-repeat="section in sections" data-ng-init="sectionName='sections.'+{{$index}}">
+                <button class="btn btn-mini"
+                        title="Display previous snippet in this section"
+                        data-ui-if="sectionConfig[sectionName].hasMultipleSnippets"
+                        data-ng-click="previousSnippetInSection(sectionName)">
+                  <i class="icon-arrow-left" style="margin-bottom:2px"></i>
+                </button>
+                <button class="btn btn-mini"
+                        title="Display next snippet in this section"
+                        data-ui-if="sectionConfig[sectionName].hasMultipleSnippets"
+                        data-ng-click="nextSnippetInSection(sectionName)">
+                  <i class="icon-arrow-right" style="margin-bottom:2px"></i>
+                </button>
+                <p class="section"
+                  data-section-name="sections.{{$index}}"
+                  data-ng-bind-html="section"></p>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div data-tab data-heading="Statements ({{question.statements.length || 0}})">
+          <div data-ng-if="!question.statements.length">No statements found.</div>
+          <table class="table table-bordered" data-ng-if="question.statements.length">
+            <tr ng-class="{golden:statement.golden}" data-ng-repeat="statement in question.statements">
+              <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+              <td data-ng-click="infoShown=!infoShown">
+                {{statement.title}}
+                <div data-collapse="!infoShown">
+                  <p>
+                  <div class="triple" data-ng-repeat="triple in statement.triples">
+                    {{triple.s | rdf}} {{triple.p | rdf}} {{triple.o | rdf}} .
+                  </div>
+                  </p>
+                </div>
+              </td>
+              <td style="width:20px">
+                <button data-ng-if="statement.golden" class="btn btn-mini"
+                        title="Remove from golden set"
+                        data-ng-click="statement.golden=false">
+                  <i class="icon-minus-sign"></i>
+                </button>
+                <button data-ng-if="!statement.golden" class="btn btn-mini"
+                        title="Add to golden set"
+                        data-ng-click="statement.golden=true">
+                  <i class="icon-plus-sign"></i>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div data-tab data-heading="Snippets ({{question.snippets.length || 0}})">
+          <div data-ng-if="!question.snippets.length">No snippets found.</div>
+          <table class="table table-bordered" data-ng-if="question.snippets.length">
+            <tr ng-class="{golden:snippet.golden}" data-ng-repeat="snippet in question.snippets">
+              <td style="width:2em;text-align:right">{{$index + 1}}.</td>
+              <td>{{snippet.text}}</td>
+              <td style="width:20px">
+                <button class="btn btn-mini"
+                        title="Show containing document"
+                        data-ng-click="selectDocument(snippet.document)">
+                  <i class=" icon-share-alt"></i>
+                </button>
+              </td>
+              <td style="width:20px">
+                <button data-ng-if="snippet.golden" class="btn btn-mini"
+                        title="Remove from golden set"
+                        data-ng-click="snippet.golden=false">
+                  <i class="icon-minus-sign"></i>
+                </button>
+                <button data-ng-if="!snippet.golden" class="btn btn-mini"
+                        title="Add to golden set"
+                        data-ng-click="snippet.golden=true">
+                  <i class="icon-plus-sign"></i>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- container -->

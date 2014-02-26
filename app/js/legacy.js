@@ -1,4 +1,4 @@
-var annotationTemplate = Handlebars.compile('<span class="snippet-annotation">{{text}}<a class="delete-annotation" data-id="{{id}}" title="Delete snippet"><i class="icon-remove"></i></a></span>');
+var annotationTemplate = Handlebars.compile('<span class="{{cssClass}}">{{text}}<a class="delete-annotation" data-id="{{id}}" title="Delete snippet"><i class="icon-remove"></i></a></span>');
 
 rangy.init();
 var tempClassApplier = rangy.createCssClassApplier('temp-highlight'),
@@ -24,7 +24,21 @@ var compareSnippets = function (op1, op2) {
     }
 };
 
+var nextSnippetInSection = function (sectionName) {
+    sectionConfig[sectionName].currentSnippet
+            = (sectionConfig[sectionName].currentSnippet + 1) % sectionConfig[sectionName].numberOfSnippets;
+};
+
+var previousSnippetInSection = function (sectionName) {
+    if (sectionConfig[sectionName].currentSnippet === 0) {
+        sectionConfig[sectionName].currentSnippet = sectionConfig[sectionName].numberOfSnippets - 1;
+    } else {
+    sectionConfig[sectionName].currentSnippet = sectionConfig[sectionName].currentSnippet - 1;
+    }
+};
+
 var highlightSnippetsInSection = function (scope, question, document, section, sectionName, allowOverlaps) {
+    allowOverlaps = true;
     angularScope = scope;
     var hasMultipleSnippets = false;
     var orderedSnippets = question.snippets.filter(function (annotation) {
@@ -53,8 +67,9 @@ var highlightSnippetsInSection = function (scope, question, document, section, s
     var originalLength = section.length;
     orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
         var highlighted = annotationTemplate({
-            text: snippetAnnotation.text,
-            id:   snippetAnnotation._localID
+            cssClass: 'snippet-annotation' + (snippetAnnotation.golden ? '' : ' system'),
+            text:     snippetAnnotation.text,
+            id:       snippetAnnotation._localID
         });
 
         section = section.substring(0, snippetAnnotation.beginIndex)

@@ -1,0 +1,77 @@
+<div data-ng-include="'views/partials/navigation.html'"></div>
+
+<div class="container" data-ng-if="!question">
+  <div class="alert alert-error">
+    <strong>Error!</strong> No question selected.
+  </div>
+</div>
+
+<div class="container" data-ng-if="message">
+  <div class="alert alert-{{message.type}}">
+    {{message.text}}
+  </div>
+</div>
+
+<div class="container" data-ng-show="question">
+  <div class="row">
+    <h2 class="span" style="color:#999">{{question.body}}</h2>
+    <hr class="span12">
+  </div>
+  <div class="row">
+    <ul class="inline pull-right">
+      <li data-ng-if="question.finalized">
+        <span class="is-finalized">Question finalized &#x2713;</span>
+      </li>
+      <li>
+        <button class="btn" style="width:15em"
+                data-ng-click="setFinalized(!question.finalized)">
+          <span data-ng-if="question.finalized">Unfinalize Question</span>
+          <span data-ng-if="!question.finalized">&#x2713; Save &amp; Finalize Question</span>
+        </button>
+      </li>
+      <li>
+        <button data-ng-disabled="question.finalized"
+                class="btn btn-success"
+                data-ng-click="saveQuestion()">Save Question</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  <div class="row">
+    <h3 class="span12">Ideal answer</h3>
+  </div>
+  <div class="row" data-ng-repeat="i in question.answer.ideal">
+      <div class="span7">
+        <textarea disabled class="span7" ng-class="{golden:i.golden}" rows="5" data-source="i.source" data-ng-model="i.body"></textarea>
+      </div>
+      <div class="span4">
+        <table data-ng-if="i.source != 'expert'">
+          <tr data-ng-repeat="dimension in dimensions">
+            <td>
+              <label data-toggle="tooltip" title="{{dimension.info}}" class="checkbox inline">
+                {{dimension.label}}:&nbsp;
+              </label>
+            </td>
+            <td data-ng-repeat="value in dimensionValues">
+              <input type="radio" title="{{dimension.info}}" value="{{value}}" data-ng-model="i.scores[dimension.name]" />&nbsp;
+            </td>
+          </tr>
+          <tr>
+          <td></td>
+          <td data-ng-repeat="value in dimensionValues" style="text-align:center">{{value}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="span1">
+        <button data-ng-if="!i.golden" class="btn btn-mini" data-ng-click="i.golden=true">
+          <i class="icon-plus-sign"></i>
+        </button>
+        <button data-ng-if="i.golden" class="btn btn-mini" data-ng-click="i.golden=false">
+          <i class="icon-minus-sign"></i>
+        </button>
+      </div>
+  </div>
+
+</div> <!-- container -->
