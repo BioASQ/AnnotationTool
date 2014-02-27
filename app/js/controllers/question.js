@@ -68,7 +68,7 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
     };
 
     $scope.saveQuestion = function () {
-        if ($scope.question.type !== $scope.question._type) {
+        if (!$scope.creating && ($scope.question.type !== $scope.question._type)) {
             if (!confirm('\
 Changing the type of question will delete your current exact answer. If \
 necessary, take note of your current exact answer (or make a screenshot) \
