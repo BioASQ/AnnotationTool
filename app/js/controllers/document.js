@@ -15,7 +15,8 @@ angular.module('bioasq-at.controllers.document', [])
                                           doc,
                                           doc[sectionName],
                                           sectionName,
-                                          allowOverlap);
+                                          allowOverlap,
+                                          $scope.mode === 'assessment');
     }
 
     function prepareScopeVars($scope, doc) {

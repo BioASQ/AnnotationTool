@@ -37,7 +37,7 @@ var previousSnippetInSection = function (sectionName) {
     }
 };
 
-var highlightSnippetsInSection = function (scope, question, document, section, sectionName, allowOverlaps) {
+var highlightSnippetsInSection = function (scope, question, document, section, sectionName, allowOverlaps, assessmentMode) {
     allowOverlaps = true;
     angularScope = scope;
     var hasMultipleSnippets = false;
@@ -67,7 +67,7 @@ var highlightSnippetsInSection = function (scope, question, document, section, s
     var originalLength = section.length;
     orderedSnippets.forEach(function (snippetAnnotation, snippetIndex) {
         var highlighted = annotationTemplate({
-            cssClass: 'snippet-annotation' + (snippetAnnotation.golden ? '' : ' system'),
+            cssClass: 'snippet-annotation' + (assessmentMode && !snippetAnnotation.golden ? ' system' : ''),
             text:     snippetAnnotation.text,
             id:       snippetAnnotation._localID
         });
