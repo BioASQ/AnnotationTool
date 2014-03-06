@@ -88,7 +88,10 @@ exports.createRouter = function (model, authentication) {
                  * GET to /questions/:id returns question with id
                  */
                 this.get(idRegEx).bind(function (req, res, id) {
-                    model.load(id, req.session.data.user, function (err, question) {
+                    model.load2(id,
+                                req.session.data.user,
+                                { 'documents.sections': false, 'documents.abstract': false },
+                                function (err, question) {
                         var logData = {
                             user: req.session.data.user,
                             path: 'questions/:id',
@@ -185,6 +188,44 @@ exports.createRouter = function (model, authentication) {
                         });
                     });
                 });
+                
+                router.path(idRegEx, function () {
+                    router.path(/\/documents\//, function () {
+                        this.get(/([0-9]+)/).bind(function (req, res, id, docID) {
+                            docID = String(docID);
+                            model.load(id, req.session.data.user, function (err, question) {
+                                var logData = {
+                                    user: req.session.data.user,
+                                    path: 'questions/:id/documents/:docID',
+                                    method: 'GET',
+                                    params: [ id, docID ]
+                                };
+
+                                var doc;
+                                if (question && question.documents) {
+                                    for (var i = 0; i < question.documents.length; i++) {
+                                        var documentID = question.documents[i].uri.substr(-docID.length);
+                                        if (documentID === docID) {
+                                            doc = question.documents[i];
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (doc) {
+                                    logger('info', 'retrieving question document', logData);
+                                    res.send(200, {}, doc);
+                                } else {
+                                    if (err) {
+                                        logData.error = err;
+                                    }
+                                    logger('error', 'question or document not found', logData);
+                                    res.send(404);
+                                }
+                            });
+                        });
+                    });
+                })
             });
         });
 

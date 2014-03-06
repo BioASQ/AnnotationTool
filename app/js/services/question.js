@@ -89,9 +89,19 @@ angular.module('bioasq-at.services.question', [])
         return -1;
     };
 
+    var findDocument = function (question, pubMedURI) {
+        for (var i = 0; i < question.documents.length; i++) {
+            if (question.documents[i].uri === pubMedURI) {
+                return i;
+            }
+        }
+
+        return -1;
+    };
+
     return {
         select: function (question) {
-            if (_selectedQuestion) {
+            if (_selectedQuestion && (_selectedQuestion._id !== question._id)) {
                 this.save(_selectedQuestion);
             }
             _selectedQuestion = question;
@@ -166,8 +176,28 @@ angular.module('bioasq-at.services.question', [])
             return deferred.promise;
         },
 
+        loadDocument: function (pubMedURI) {
+            var deferred = $q.defer(),
+                pubMedID = pubMedURI.replace(/.*\/([0-9]+)$/, '$1'),
+                idx = findDocument(_selectedQuestion, pubMedURI);
+            if (idx === -1) {
+                deferred.reject();
+            } else {
+                $http.get('/backend/questions/' + _selectedQuestion._id + '/documents/' + pubMedID)
+                .success(function (data, status) {
+                    if (data['abstract']) { _selectedQuestion.documents[idx]['abstract'] = data['abstract']; }
+                    if (data['sections']) { _selectedQuestion.documents[idx]['sections'] = data['sections']; }
+                    deferred.resolve(data);
+                })
+                .error(function (data, status) {
+                    deferred.reject();
+                });
+            }
+            return deferred.promise;
+        },
+
         isSelected: function (question) {
-            return (_selectedQuestion && (_selectedQuestion.id === question.id));
+            return (_selectedQuestion && (_selectedQuestion_.id === question._id));
         },
 
         addAnnotation: function (annotation) {

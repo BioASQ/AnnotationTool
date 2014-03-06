@@ -88,9 +88,20 @@ Question.prototype.update = function (id, question, user, callback) {
 
     delete question._id; // remove _id field
     this._collection(callback, function (err, coll) {
-        coll.update({ '_id': ObjectID(id), 'creator': user }, { $set: question }, { 'save': true }, function (err) {
+        coll.findOne({ _id: ObjectID(id), 'creator': user }, function (err, res) {
             if (err) { return callback(err); }
-            callback(null);
+            if (!res) { return callback(new Error('Question not found')); }
+
+            // custom update
+            Object.keys(question).forEach(function (key) {
+                if (key !== 'documents') {
+                    res[key] = question[key];
+                } else {
+                    res.documents = mergeDocuments(res.documents, question.documents);
+                }
+            });
+
+            coll.save(res, { 'save': true }, callback);
         });
     });
 };
@@ -106,3 +117,18 @@ Question.prototype.del = function (id, user, callback) {
     });
 };
 
+function mergeDocuments(existing, updated) {
+    var existingIndexed = {};
+
+    existing.forEach(function (doc) { existingIndexed[doc.uri] = doc; });
+
+    // restore abstract and sections
+    updated.forEach(function (doc) {
+        if (existingIndexed[doc.uri]) {
+            if (existingIndexed[doc.uri]['abstract']) { doc['abstract'] = existingIndexed[doc.uri]['abstract']; }
+            if (existingIndexed[doc.uri]['sections']) { doc['sections'] = existingIndexed[doc.uri]['sections']; }
+        }
+    });
+
+    return updated;
+};

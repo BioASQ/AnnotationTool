@@ -10,24 +10,31 @@ angular.module('bioasq-at.controllers.document', [])
     }
 
     function snippetDescription(question, doc, sectionName, allowOverlap) {
-        return highlightSnippetsInSection($scope,
-                                          question,
-                                          doc,
-                                          doc[sectionName],
-                                          sectionName,
-                                          allowOverlap,
-                                          $scope.mode === 'assessment');
+        if (doc[sectionName]) {
+            return highlightSnippetsInSection($scope,
+                                            question,
+                                            doc,
+                                            doc[sectionName],
+                                            sectionName,
+                                            allowOverlap,
+                                            $scope.mode === 'assessment');
+        }
+        return null;
     }
 
     function prepareScopeVars($scope, doc) {
         $scope.sectionConfig = {};
         var titleDescription = snippetDescription($scope.question, doc, 'title', false);
-        $scope.title = $sce.trustAsHtml(titleDescription.text);
-        $scope.sectionConfig['title'] = { hasMultipleSnippets: titleDescription.hasMultipleSnippets };
+        if (titleDescription) {
+            $scope.title = $sce.trustAsHtml(titleDescription.text);
+            $scope.sectionConfig['title'] = { hasMultipleSnippets: titleDescription.hasMultipleSnippets };
+        }
 
         var abstractDescription = snippetDescription($scope.question, doc, 'abstract', false);
-        $scope.abstract = $sce.trustAsHtml(abstractDescription.text);
-        $scope.sectionConfig['abstract'] = { hasMultipleSnippets: abstractDescription.hasMultipleSnippets };
+        if (abstractDescription) {
+            $scope.abstract = $sce.trustAsHtml(abstractDescription.text);
+            $scope.sectionConfig['abstract'] = { hasMultipleSnippets: abstractDescription.hasMultipleSnippets };
+        }
 
         $scope.sections = [];
         if (doc.sections) {
@@ -44,12 +51,34 @@ angular.module('bioasq-at.controllers.document', [])
         }
     }
 
+    var findDocument = function (question, pubMedURI) {
+        for (var i = 0; i < question.documents.length; i++) {
+            if (question.documents[i].uri === pubMedURI) {
+                return i;
+            }
+        }
+
+        return -1;
+    };
+
     $scope.$watch('selection.document', function (newValue, oldValue) {
         if (oldValue !== newValue) {
             $scope.question.answer = $scope.question.answer || {};
             $scope.question.snippets = $scope.question.snippets || [];
             if (newValue) {
-                prepareScopeVars($scope, newValue);
+                if (newValue.abstract) {
+                    prepareScopeVars($scope, newValue);
+                } else {
+                    Questions.loadDocument(newValue.uri)
+                    .then(function (doc) {
+                        var idx = findDocument($scope.question, newValue.uri);
+                        if (idx > -1) {
+                            if (doc['abstract']) { $scope.question.documents[idx]['abstract'] = doc['abstract']; }
+                            if (doc['sections']) { $scope.question.documents[idx]['sections'] = doc['sections']; }
+                            prepareScopeVars($scope, doc);
+                        }
+                    });
+                }
             } else {
                 delete $scope.title;
                 delete $scope.abstract;
