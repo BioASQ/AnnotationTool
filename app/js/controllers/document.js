@@ -43,7 +43,9 @@ angular.module('bioasq-at.controllers.document', [])
                                                                     $scope.question,
                                                                     doc,
                                                                     s,
-                                                                    'sections.' + String(i));
+                                                                    'sections.' + String(i),
+                                                                    false,
+                                                                    $scope.mode === 'assessment');
                 $scope.sections[i] = $sce.trustAsHtml(sectionDescription.text);
                 $scope.sectionConfig['sections.' + String(i)] =
                         { hasMultipleSnippets: sectionDescription.hasMultipleSnippets };
