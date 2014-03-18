@@ -94,9 +94,13 @@
       <h3>System responses</h3>
       <div data-ng-switch="question.type">
         <div data-ng-switch-when="factoid">
-          <ul class="inline" style="display:inline-block">
-            <li data-ng-repeat="e in question.answer.systemResponses track by $index">
-              {{question.answer.systemResponses[$index]}}
+          <ul>
+            <li data-ng-repeat="s in question.answer.systemResponses">
+              <ul style="display:inline-block" class="inline" data-ng-init="parentIndex=$index">
+                <li data-ng-repeat="a in s track by parentIndex-$index">
+                  {{a}}
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
