@@ -28,6 +28,9 @@ var matchingService = function (term) {
 var labelCache = exports.labelCache = {};
 
 exports.descriptionForConcept = function (conceptURI, cb) {
+    if (conceptURI.uri && conceptURI.title) {
+        return cb(null, conceptURI);
+    }
     var service = matchingService(conceptURI);
     if (null === service) { return cb(Error('Could not match term ID to service.')); }
     service.retrieve([ conceptURI ], function (err, result) {
@@ -42,6 +45,9 @@ exports.descriptionForConcept = function (conceptURI, cb) {
 var documentsService = new TIDocuments('http://www.gopubmed.org/web/gopubmedbeta/bioasq/pubmed');
 
 exports.descriptionForDocument = function (documentURI, cb) {
+    if (documentURI.uri && documentURI.title) {
+        return cb(documentURI);
+    }
     var pmid = documentURI.replace(/^.*[/#]/, ''),
         filePath = '/Volumes/JSON/'
                  + pmid
@@ -67,6 +73,7 @@ exports.descriptionForDocument = function (documentURI, cb) {
         cb(null, {
             uri: documentURI,
             title: parsed.title,
+            abstract: parsed.documentAbstract,
             sections: parsed.sections
         });
     });
