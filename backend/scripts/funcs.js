@@ -110,7 +110,8 @@ var addIdealAnswer = exports.addIdealAnswer = function (mapped, question) {
             question.answer.ideal.push({
                 body: util.isArray(mapped.ideal_answer) ? mapped.ideal_answer[0] : mapped.ideal_answer,
                 source: mapped.systemName,
-                golden: false
+                golden: false,
+                scores: {}
             });
         }
     }
@@ -167,7 +168,9 @@ var addSystemSnippets = exports.addSystemSnippets = function (mapped, question, 
     if (typeof mapped.snippets !== 'undefined') {
         Array.prototype.push.apply(
             systemSnippets,
-            mapped.snippets.map(function (snippet) {
+            mapped.snippets.filter(function (snippet) {
+                return (null !== snippet.text);
+            }).map(function (snippet) {
                 return fixSnippetSyntax(snippet, false);
             }).filter(function (s) {
                 return (nonNull(s) && !systemSnippets.some(function (ss) {
@@ -221,7 +224,8 @@ var recursiveFilesWithExtension = exports.recursiveFilesWithExtension = function
 }
 
 var addSystemAnswers = exports.addSystemAnswers = function (systemResponse, fileName, system) {
-    systemResponse.questions.forEach(function (systemQuestion) {
+    var questions = util.isArray(systemResponse.questions) ? systemResponse.questions : systemResponse;
+    questions.forEach(function (systemQuestion) {
         systemQuestion.systemName = fileName.substring(0, fileName.lastIndexOf('.')).replace(/\//g, '_');
         system[systemQuestion.id] = system[systemQuestion.id] || [];
         system[systemQuestion.id].push(systemQuestion);

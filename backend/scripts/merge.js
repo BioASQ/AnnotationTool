@@ -8,9 +8,11 @@ var fs         = require('fs'),
 program
     .option('-g, --golden-answers <file name>', 'JSON file with golden answers')
     .option('-s, --system-answers <file name>', 'JSON file or directory with JSON files containing system answers')
+    .option('-c, --common-questions [file name]', 'JSON file with common questions')
+    .option('-m, --common-map [file name]', 'JSON file mapping each question ID to its common counterpart')
     .option('-u, --filter-user [user ID]', 'Only write question for a certain user ID')
     .option('-q, --filter-question [question ID]', 'Only write question with ID')
-    .option('-l, --label-cache [file name] JSON file with labels')
+    .option('-l, --label-cache [file name]', 'JSON file with labels')
     .option('-p, --print-uris', 'Only write URIs in requested statements to stdout')
     .parse(process.argv);
 
@@ -24,6 +26,23 @@ try {
 } catch (error) {
     process.stderr.write('Could not parse file with golden answers.\n');
     process.exit(-1);
+}
+
+var common = {}, commonMap = {};
+if (program.commonQuestions) {
+    try {
+        common = JSON.parse(fs.readFileSync(program.commonQuestions));
+        common.forEach(function (commonQuestion) {
+            if (!golden.some(function (goldenQuestion) {
+                return (goldenQuestion._id === commonQuestion._id);
+            })) {
+                golden.push(commonQuestion);
+            }
+        });
+        commonMap = JSON.parse(fs.readFileSync(program.commonMap));
+    } catch (error) {
+        process.stderr.write('Could not parse file with common questions.\n');
+    }
 }
 
 // create question index
@@ -87,6 +106,9 @@ step(
             // reserve callback slot
             var questionCallback = questionsGroup();
 
+            // unfinalize for assessment
+            question.finalized = false;
+
             question.concepts = question.concepts.map(function (c) {
                 c.golden = true;
                 return c;
@@ -135,20 +157,45 @@ step(
                 }];
             }
 
-            var systemConcepts   = {}
-                systemDocuments  = {}
+            if (commonMap[question._id]) {
+                common.filter(function (q) {
+                    return (q._id == commonMap[question._id]);
+                }).forEach(function (commonQuestion) {
+                    var buf = new Buffer(commonQuestion.creator);
+                    funcs.addIdealAnswer({
+                        ideal_answer: commonQuestion.answer.ideal,
+                        systemName: buf.toString('base64')
+                    }, question);
+                });
+            }
+
+            var systemConcepts   = {},
+                systemDocuments  = {},
                 systemSnippets   = [],
                 systemStatements = [];
 
-            system[question._id].forEach(function (mapped, systemIndex, systems) {
-                if (!mapped) { return; }
-                funcs.addIdealAnswer(mapped, question);
-                funcs.addExactSystemResponses(mapped, question);
-                funcs.addSystemConcepts(mapped, question, systemConcepts);
-                funcs.addSystemDocuments(mapped, question, systemDocuments);
-                funcs.addSystemSnippets(mapped, question, systemSnippets);
-                funcs.addSystemStatements(mapped, question, systemStatements);
-            });
+            if (system[question._id]) {
+                system[question._id].forEach(function (mapped, systemIndex, systems) {
+                    if (!mapped) { return; }
+                    funcs.addIdealAnswer(mapped, question);
+                    funcs.addExactSystemResponses(mapped, question);
+                    funcs.addSystemConcepts(mapped, question, systemConcepts);
+                    funcs.addSystemDocuments(mapped, question, systemDocuments);
+                    funcs.addSystemSnippets(mapped, question, systemSnippets);
+                    funcs.addSystemStatements(mapped, question, systemStatements);
+                });
+            }
+
+            if (system[commonMap[question._id]]) {
+                system[commonMap[question._id]].forEach(function (mapped) {
+                    funcs.addIdealAnswer(mapped, question);
+                    funcs.addExactSystemResponses(mapped, question);
+                    funcs.addSystemConcepts(mapped, question, systemConcepts);
+                    funcs.addSystemDocuments(mapped, question, systemDocuments);
+                    funcs.addSystemSnippets(mapped, question, systemSnippets);
+                    funcs.addSystemStatements(mapped, question, systemStatements);
+                });
+            }
 
             step(
                 function () {
@@ -204,6 +251,7 @@ step(
                         })) {
                             var statementCallback = statementGroup();
                             statementCallback(null, statement);
+                            // TODO(nheino) incorporate verbalizer
                         }
                     });
                 },
