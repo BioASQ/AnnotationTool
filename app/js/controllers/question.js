@@ -4,6 +4,8 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
     $scope.$watch('question', function () {
         if (!$scope.question || $scope.editing) {
             $scope.routes = $scope.allRoutes.slice(0, 1);
+        } else if ($scope.mode === 'assessment' && $scope.question.type === 'summary') {
+            $scope.routes = $scope.allRoutes.filter(function (r) { return (r.name !== 'exact'); });
         } else {
             $scope.routes = $scope.allRoutes;
         }
@@ -16,6 +18,11 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
     }
 
     $scope.question = Questions.selectedQuestion();
+
+    /*
+     * if ($scope.question && $scope.question.type === 'summary' && $scope.mode === 'assessment') {
+     * }
+     */
 
     $scope.editQuestion = function (question) {
         if (question.finalized) {

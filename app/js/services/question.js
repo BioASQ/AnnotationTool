@@ -6,6 +6,7 @@ angular.module('bioasq-at.services.question', [])
 
     $rootScope.$on('questionSelected', function () {
         _selectedQuestion = null;
+        $window.localStorage.removeItem(kQuestionCacheKey);
     });
 
     $rootScope.$on('signin', function () {

@@ -2,6 +2,17 @@ angular.module('bioasq-at.controllers.assessment', [])
 .controller('AssessmentCtrl', function ($scope, Questions, $routeParams) {
     $scope.question = Questions.selectedQuestion();
     $scope.selection = {};
+    $scope.allRoutes = $scope.routes;
+
+    if ($scope.mode === 'assessment') {
+        $scope.routes = $scope.allRoutes.filter(function (r) { return (r.name !== 'exact'); });
+    }
+
+    $scope.$watch('question.type', function (newValue, oldValue) {
+        if (newValue && $scope.mode === 'assessment' && $scope.question.type !== 'summary') {
+            $scope.routes = $scope.allRoutes;
+        }
+    });
 
     function initAnswerIfNeeded () {
         $scope.question.answer = $scope.question.answer || {};
@@ -43,7 +54,7 @@ angular.module('bioasq-at.controllers.assessment', [])
     $scope.dimensionValues = [1, 2, 3, 4, 5];
 
     if (!$scope.selectedQuestion && $routeParams.id) {
-        $scope.question = {};
+        $scope.question = $scope.question || {};
         Questions.load($routeParams.id).then(function (question) {
             Questions.select(question);
             // trigger change on all question keys
