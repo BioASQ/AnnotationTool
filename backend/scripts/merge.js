@@ -267,17 +267,17 @@ step(
                 }
             );  // step()
         });
-},
-function (err, questions) {
-    if (err) {
-        if (err.stack) { process.stderr.write(err.stack); }
-        else { process.stderr.write(util.inspect(err)); }
-        process.exit(-1);
-    }
+    },
+    function (err, questions) {
+        if (err) {
+            if (err.stack) { process.stderr.write(err.stack); }
+            else { process.stderr.write(util.inspect(err)); }
+            process.exit(-1);
+        }
 
-    questions = questions.filter(function (q) { return (typeof q !== 'undefined'); });
-    process.stdout.write(JSON.stringify(questions, null, 4));
-    process.stdout.write('\n');
-    process.exit(0);
-}
+        questions = questions.filter(function (q) { return (typeof q !== 'undefined'); });
+        process.stdout.write(JSON.stringify(questions, null, 4));
+        process.stdout.write('\n');
+        process.exit(0);
+    }
 );
