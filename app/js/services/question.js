@@ -163,6 +163,11 @@ angular.module('bioasq-at.services.question', [])
                     if (!data.answer) {
                         data.answer = {};
                     }
+                    if ($rootScope.mode === 'assessment' && data.answer.ideal) {
+                        angular.forEach(data.answer.ideal, function (i) {
+                            i.scores = i.scores || {};
+                        });
+                    }
                     if (data.snippets) {
                         angular.forEach(data.snippets, function (s) {
                             s._localID = _nextSnippetID++;
