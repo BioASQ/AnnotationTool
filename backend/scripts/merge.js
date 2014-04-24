@@ -1,9 +1,10 @@
-var fs         = require('fs'),
-    util       = require('util'),
-    step       = require('step'),
-    program    = require('commander'),
-    funcs      = require('./funcs'),
-    resolver   = require('./resolver');
+var fs       = require('fs'),
+    util     = require('util'),
+    assert   = require('assert'),
+    step     = require('step'),
+    program  = require('commander'),
+    funcs    = require('./funcs'),
+    resolver = require('./resolver');
 
 program
     .option('-g, --golden-answers <file name>', 'JSON file with golden answers')
@@ -16,7 +17,7 @@ program
     .option('-p, --print-uris', 'Only write URIs in requested statements to stdout')
     .parse(process.argv);
 
-if (typeof program.goldenAnswers === 'undefined' || 
+if (typeof program.goldenAnswers === 'undefined' ||
     typeof program.systemAnswers === 'undefined') {
     program.help();
 }
@@ -245,18 +246,28 @@ step(
                         }
                     });
 
-                    systemStatements.forEach(function (statement) {
-                        if (!question.statements.some(function (s) {
+                    var triples = systemStatements.filter(function (statement) {
+                        return !question.statements.some(function (s) {
                             return funcs.statementsEqual(s, statement);
-                        })) {
-                            var statementCallback = statementGroup();
-                            statementCallback(null, statement);
-                            // TODO(nheino) incorporate verbalizer
+                        });
+                    }).map(function (statement) {
+                        return statement.triples[0];
+                    });
+                    var statementCallback = statementGroup();
+                    resolver.descriptionForTriples(triples, function (err, result) {
+                        if (err)
+                            console.error('error verbalizing statements: ' + util.inspect(err));
+                        else {
+                            result.forEach(function (title, tripleIdx) {
+                                systemStatements[tripleIdx].title = title;
+                            });
                         }
+                        statementCallback(null, systemStatements);
                     });
                 },
                 function (err, concepts, documents, snippets, statements) {
-                    if (err) return questionCallback(err);
+                    if (err)
+                        return questionCallback(err);
 
                     Array.prototype.push.apply(question.concepts, concepts.filter(funcs.nonNull));
                     Array.prototype.push.apply(question.documents, documents.filter(funcs.nonNull));
@@ -270,6 +281,7 @@ step(
     },
     function (err, questions) {
         if (err) {
+            console.error(err);
             if (err.stack) { process.stderr.write(err.stack); }
             else { process.stderr.write(util.inspect(err)); }
             process.exit(-1);

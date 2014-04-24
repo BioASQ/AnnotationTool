@@ -31,6 +31,10 @@ exports.descriptionForConcept = function (conceptURI, cb) {
     if (conceptURI.uri && conceptURI.title) {
         return cb(null, conceptURI);
     }
+    /*
+     * // FIXME: comment out early return
+     * return cb(null, { uri: conceptURI });
+     */
     var service = matchingService(conceptURI);
     if (null === service) { return cb(Error('Could not match term ID to service.')); }
     service.retrieve([ conceptURI ], function (err, result) {
@@ -55,6 +59,10 @@ exports.descriptionForDocument = function (documentURI, cb) {
 
     fs.readFile(filePath, function (err, data) {
         if (err) {
+            /*
+             * // FIXME: comment out early return
+             * return cb(null, { uri: documentURI });
+             */
             return setTimeout(function () {
                 documentsService.find(pmid + '[uid]', 0, 10, function (err, results) {
                     if (err) { return cb(err); }
@@ -83,12 +91,55 @@ var tripleService = new TITriples('http://www.gopubmed.org/web/bioasq/linkedlife
     verbalizer    = new Verbalizer('http://139.18.2.164:9998/batchverbalizer');
 
 var labelForURI = function (URI, cb) {
+    if (typeof URI == 'undefined' || URI == null)
+        return cb(null, '');
     var label = URI;
     if (typeof labelCache[URI] !== 'undefined' && typeof labelCache[URI][0].o !== 'undefined') {
         label = labelCache[URI][0].o;
     }
 
     cb(null, label.replace(/^.*[/#]/, ''));
+};
+
+exports.descriptionForTriples = function (triples, cb) {
+    if (typeof triples == 'undefined' || triples === null)
+        return cb(null, []);
+
+    step(
+        function () {
+            var subjectGroup   = this.group(),
+                predicateGroup = this.group(),
+                objectGroup    = this.group();
+
+            triples.forEach(function (t) {
+                labelForURI(t.s, subjectGroup());
+                labelForURI(t.p, predicateGroup());
+                labelForURI(t.o, objectGroup());
+            });
+        },
+        function (err, subjects, predicates, objects) {
+            if (err) { return cb(err); }
+
+            var params = [];
+            for (var i = 0; i < subjects.length; ++i) {
+                params.push({
+                    s: subjects[i],
+                    p: predicates[i],
+                    o: objects[i]
+                });
+            }
+            verbalizer.verbalize(params, function (err, results) {
+                if (err) { return cb(err); }
+                var verbalizationResult;
+                try {
+                    verbalizationResult = JSON.parse(results);
+                    cb(null, verbalizationResult);
+                } catch (e) {
+                    cb(e);
+                }
+            });
+        }
+    );  // step()
 };
 
 exports.descriptionForTriple = function (triple, cb) {
@@ -117,4 +168,3 @@ exports.descriptionForTriple = function (triple, cb) {
         });
     });
 };
-
