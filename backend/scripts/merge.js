@@ -202,8 +202,7 @@ step(
                 function () {
                     var conceptGroup   = this.group(),
                         documentGroup  = this.group(),
-                        snippetGroup   = this.group(),
-                        statementGroup = this.group();
+                        snippetGroup   = this.group();
 
                     Object.keys(systemConcepts).forEach(function (conceptURI) {
                         if (!question.concepts.some(function (c) {
@@ -254,24 +253,23 @@ step(
                         return statement.triples[0];
                     });
                     resolver.descriptionForTriples(triples, function (err, result) {
-                        if (err)
+                        if (err) {
                             console.error('error verbalizing statements: ' + util.inspect(err));
+                        }
                         else {
                             result.forEach(function (title, tripleIdx) {
                                 systemStatements[tripleIdx].title = title;
-                                statementGroup()(null, systemStatements[tripleIdx]);
                             });
                         }
                     });
                 },
-                function (err, concepts, documents, snippets, statements) {
-                    if (err)
-                        return questionCallback(err);
+                function (err, concepts, documents, snippets) {
+                    if (err) { return questionCallback(err); }
 
                     Array.prototype.push.apply(question.concepts, concepts.filter(funcs.nonNull));
                     Array.prototype.push.apply(question.documents, documents.filter(funcs.nonNull));
                     Array.prototype.push.apply(question.snippets, snippets.filter(funcs.nonNull));
-                    Array.prototype.push.apply(question.statements, statements.filter(funcs.nonNull));
+                    Array.prototype.push.apply(question.statements, systemStatements.filter(funcs.nonNull));
 
                     questionCallback(null, question);
                 }
