@@ -132,7 +132,7 @@ var addExactSystemResponses = exports.addExactSystemResponses = function (mapped
             return false;
         });
 
-        if (!alreadyStored) {
+        if (!alreadyStored && mapped.exact_answer && mapped.exact_answer.length) {
             question.answer.systemResponses.push(mapped.exact_answer);
         }
     }

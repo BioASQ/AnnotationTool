@@ -253,16 +253,15 @@ step(
                     }).map(function (statement) {
                         return statement.triples[0];
                     });
-                    var statementCallback = statementGroup();
                     resolver.descriptionForTriples(triples, function (err, result) {
                         if (err)
                             console.error('error verbalizing statements: ' + util.inspect(err));
                         else {
                             result.forEach(function (title, tripleIdx) {
                                 systemStatements[tripleIdx].title = title;
+                                statementGroup()(null, systemStatements[tripleIdx]);
                             });
                         }
-                        statementCallback(null, systemStatements);
                     });
                 },
                 function (err, concepts, documents, snippets, statements) {
