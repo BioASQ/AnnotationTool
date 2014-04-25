@@ -70,6 +70,7 @@ exports.descriptionForDocument = function (documentURI, cb) {
                     return cb(null, {
                         uri: documentURI,
                         title: results[0].title,
+                        abstract: results[0].abstract,
                         sections: results[0].sections
                     });
                 });
