@@ -67,6 +67,9 @@ angular.module('bioasq-at.controllers.document', [])
         if (oldValue !== newValue) {
             $scope.question.answer = $scope.question.answer || {};
             $scope.question.snippets = $scope.question.snippets || [];
+            delete $scope.title;
+            delete $scope.abstract;
+            delete $scope.sections;
             if (newValue) {
                 if (newValue.abstract) {
                     prepareScopeVars($scope, newValue);
@@ -81,10 +84,6 @@ angular.module('bioasq-at.controllers.document', [])
                         }
                     });
                 }
-            } else {
-                delete $scope.title;
-                delete $scope.abstract;
-                delete $scope.sections;
             }
         }
     });
