@@ -73,7 +73,7 @@ if (program.printUris) {
                 if (typeof response.triples !== 'undefined') {
                     response.triples.forEach(function (t) {
                         uris[t.s] = true;
-                        if (t.o.search(/^(https?|mailto|tel|urn):/) === 0) {
+                        if (t.o && t.o.search(/^(https?|mailto|tel|urn):/) === 0) {
                             uris[t.o] = true;
                         }
                     });
