@@ -52,8 +52,14 @@ exports.descriptionForDocument = function (documentURI, cb) {
     if (documentURI.uri && documentURI.title) {
         return cb(documentURI);
     }
+    
     var pmid = documentURI.replace(/^.*[/#]/, ''),
-        filePath = '/Volumes/JSON/'
+        /*
+         * filePath = '/Volumes/JSON/'
+         *          + pmid
+         *          + '.json';
+         */
+        filePath = '/Users/norman/Projects/BioASQ/JSON/'
                  + pmid
                  + '.json';
 
@@ -74,7 +80,7 @@ exports.descriptionForDocument = function (documentURI, cb) {
                         sections: results[0].sections
                     });
                 });
-            }, 1000);
+            }, 500);
         }
 
         var parsed = JSON.parse(data);
@@ -82,7 +88,7 @@ exports.descriptionForDocument = function (documentURI, cb) {
         cb(null, {
             uri: documentURI,
             title: parsed.title,
-            abstract: parsed.documentAbstract,
+            abstract: parsed.abstract,
             sections: parsed.sections
         });
     });
