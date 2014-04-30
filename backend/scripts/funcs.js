@@ -188,10 +188,12 @@ var addSystemStatements = exports.addSystemStatements = function (mapped, questi
             mapped.triples.map(function (sn) {
                 sn.type = 'statement';
                 sn.golden = false;
-                sn.triples = [ { s: sn.s, p: sn.p, o: sn.o }];
-                delete sn.s;
-                delete sn.p;
-                delete sn.o;
+                if (typeof sn.s != 'undefiend' && typeof sn.p != 'undefined' && sn.o != 'undefined') {
+                    sn.triples = [ { s: sn.s, p: sn.p, o: sn.o }];
+                    delete sn.s;
+                    delete sn.p;
+                    delete sn.o;
+                }
                 return sn;
             }).filter(function (sn) {
                 return (nonNull(sn) && !systemStatements.some(function (ss) {
