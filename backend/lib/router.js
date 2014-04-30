@@ -92,12 +92,15 @@ exports.createRouter = function (model, authentication) {
                                 req.session.data.user,
                                 { 'documents.sections': false, 'documents.abstract': false },
                                 function (err, question) {
+                        var time = Date.now();
                         var logData = {
                             user: req.session.data.user,
                             path: 'questions/:id',
                             method: 'POST',
-                            params: id
+                            params: id,
+                            dataTime: time
                         };
+                        question.retrieved = time;
                         if (err) {
                             logData.error = err;
                             logger('error', 'retrieving question failed', logData);
@@ -118,7 +121,9 @@ exports.createRouter = function (model, authentication) {
                             user: req.session.data.user,
                             path: 'questions/:id',
                             method: 'POST|PUT',
-                            params: id
+                            params: id,
+                            host: req.headers.host,
+                            dataTime: question.retrieved
                         };
 
                         if (err) {
