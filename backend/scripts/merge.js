@@ -32,15 +32,25 @@ try {
 var common = {}, commonMap = {};
 if (program.commonQuestions) {
     try {
-        common = JSON.parse(fs.readFileSync(program.commonQuestions));
+        commonMap = JSON.parse(fs.readFileSync(program.commonMap));
+        common    = JSON.parse(fs.readFileSync(program.commonQuestions));
+        /*
+         * A common question is added to the golden set, iff
+         * its common pendant is in the golden set and it is not itself
+         * already in the golden set.
+         */
         common.forEach(function (commonQuestion) {
-            if (!golden.some(function (goldenQuestion) {
+            var otherIsGolden = golden.some(function (goldenQuestion) {
+                return (goldenQuestion._id === commonMap[commonQuestion._id]);
+            });
+            var inGolden = golden.some(function (goldenQuestion) {
                 return (goldenQuestion._id === commonQuestion._id);
-            })) {
+            });
+            if (otherIsGolden && !inGolden) {
+                console.error('adding duplicate question: ' + commonQuestion._id);
                 golden.push(commonQuestion);
             }
         });
-        commonMap = JSON.parse(fs.readFileSync(program.commonMap));
     } catch (error) {
         process.stderr.write('Could not parse file with common questions.\n');
     }
@@ -160,7 +170,7 @@ step(
 
             if (commonMap[question._id]) {
                 common.filter(function (q) {
-                    return (q._id == commonMap[question._id]);
+                    return (q._id === commonMap[question._id]);
                 }).forEach(function (commonQuestion) {
                     var buf = new Buffer(commonQuestion.creator);
                     funcs.addIdealAnswer({
