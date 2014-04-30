@@ -10,10 +10,12 @@ var queries = [
     'hypertension AND proteomics AND diabetes AND genetics AND pcr AND fish',
     '23082254[uid]',
     '22836204[uid]',
+    '24638193[uid]',
     'diabetes AND hypertension AND nebivolol'
 ];
 
-s.find(queries[0], 0, 10, function (err, res) {
+s.find(queries[4], 0, 10, function (err, res) {
+    console.log(res);
     if (err) { return console.log(err); }
     res.forEach(function (entry) {
         var e = JSON.parse(JSON.stringify(entry));

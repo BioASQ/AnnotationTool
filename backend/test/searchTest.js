@@ -8,10 +8,11 @@ var s = new Search();
 var searchTerms = [
     'diabetes AND hypertension',
     '"polymerase chain reaction"',
-    'genetic markers'
+    'genetic markers',
+    'mitofusin 2 receptor parkin'
 ];
 
-s.find(searchTerms[2], function (err, res) {
+s.find(searchTerms[3], function (err, res) {
     console.log(res);
     assert.ifError(err);
     process.exit(0);
