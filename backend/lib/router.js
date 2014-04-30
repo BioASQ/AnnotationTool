@@ -89,12 +89,15 @@ exports.createRouter = function (model, authentication) {
                  */
                 this.get(idRegEx).bind(function (req, res, id) {
                     model.load(id, req.session.data.user, function (err, question) {
+                        var time = Date.now();
                         var logData = {
                             user: req.session.data.user,
                             path: 'questions/:id',
                             method: 'POST',
-                            params: id
+                            params: id,
+                            dataTime: time
                         };
+                        question.retrieved = time;
                         if (err) {
                             logData.error = err;
                             logger('error', 'retrieving question failed', logData);
@@ -115,7 +118,9 @@ exports.createRouter = function (model, authentication) {
                             user: req.session.data.user,
                             path: 'questions/:id',
                             method: 'POST|PUT',
-                            params: id
+                            params: id,
+                            host: req.headers.host,
+                            dataTime: question.retrieved
                         };
 
                         if (err) {
