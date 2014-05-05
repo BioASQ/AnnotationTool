@@ -11,10 +11,11 @@ var queries = [
     '23082254[uid]',
     '22836204[uid]',
     '24638193[uid]',
-    'diabetes AND hypertension AND nebivolol'
+    'diabetes AND hypertension AND nebivolol',
+    'immunogenic histone-like protein'
 ];
 
-s.find(queries[4], 0, 10, function (err, res) {
+s.find(queries[6], 0, 10, function (err, res) {
     console.log(res);
     if (err) { return console.log(err); }
     res.forEach(function (entry) {
