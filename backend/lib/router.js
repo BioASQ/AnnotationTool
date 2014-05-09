@@ -100,12 +100,12 @@ exports.createRouter = function (model, authentication) {
                             params: id,
                             dataTime: time
                         };
-                        question.retrieved = time;
                         if (err) {
                             logData.error = err;
                             logger('error', 'retrieving question failed', logData);
                             res.send(404);
                         } else {
+                            question.retrieved = time;
                             logger('info', 'retrieving question', logData);
                             res.send(200, {}, question);
                         }
