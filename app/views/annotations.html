@@ -194,7 +194,7 @@
         </div>
         <div data-tab data-heading="Snippets ({{question.snippets.length || 0}})">
           <div data-ng-if="!question.snippets.length">No snippets found.</div>
-          <table class="table table-bordered" data-ng-if="question.snippets.length">
+          <table style="table-layout:fixed" class="table table-bordered" data-ng-if="question.snippets.length">
             <tr ng-class="{golden:snippet.golden}" data-ng-repeat="snippet in question.snippets">
               <td style="width:2em;text-align:right">{{$index + 1}}.</td>
               <td>{{snippet.text}}</td>
