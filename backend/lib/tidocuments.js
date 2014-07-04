@@ -14,7 +14,8 @@ TIDocuments.prototype = Object.create(TIService.prototype);
 TIDocuments.prototype._transform = function (results) {
     return results.filter(function (res) {
         // ignore title-only documents
-        return (typeof res.documentAbstract != 'undefined');
+        return true;
+        // return (typeof res.documentAbstract != 'undefined');
     }).map(function(res) {
         var result = {
             uri: pubMedBaseURI + res.pmid,
