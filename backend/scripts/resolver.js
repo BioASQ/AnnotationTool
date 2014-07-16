@@ -54,12 +54,7 @@ exports.descriptionForDocument = function (documentURI, cb) {
     }
     
     var pmid = documentURI.replace(/^.*[/#]/, ''),
-        /*
-         * filePath = '/Volumes/JSON/'
-         *          + pmid
-         *          + '.json';
-         */
-        filePath = '/Users/norman/Projects/BioASQ/JSON/'
+        filePath = '/Users/norman/Projects/BioASQ/JSON.noindex/'
                  + pmid
                  + '.json';
 

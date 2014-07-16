@@ -77,11 +77,18 @@ URIStream.on('end', function () {
                     question.snippets.forEach(function (snippet) {
                         var documentURI = snippet['document'];
                         if (typeof documentCache[documentURI] != 'undefined') {
-                            setDocument(question, documentURI, documentCache[documentURI]);
+                            setSections(question, documentURI, documentCache[documentURI]);
                             var logTitle = documentCache[documentURI].title.replace(/[ \n]+/g, ' ');
-                            log(program.csv, question.creator, question._id, documentURI, logTitle);
+                            log(process.stdout,
+                                program.csv,
+                                question.creator,
+                                question._id,
+                                documentURI,
+                                logTitle);
                         }
                     });
+                    question.finalized = false;
+                    question.revisit = true;
                     coll.save(question, { w: 1 }, cb);
                 });
             },
@@ -104,7 +111,7 @@ function fetchDocumentIfNeeded(documentCache, URI, cb) {
     }
 }
 
-function setDocument(question, documentURI, doc) {
+function setSections(question, documentURI, doc) {
     var existingDoc = null;
     for (var i = 0; i < question.documents.length; ++i) {
         if (question.documents[i].uri === documentURI) {
@@ -116,11 +123,28 @@ function setDocument(question, documentURI, doc) {
     if (!existingDoc) {
         question.documents.push({});
         existingDoc = question.documents[question.documents.length - 1];
+        return false;
     }
 
-    for (var key in doc) {
-        existingDoc[key] = doc[key];
+    var modified = false;
+    if (existingDoc.title !== doc.title) {
+        log(process.stderr, false, existingDoc.uri, 'title mismatch');
+        modified = true;
     }
+
+    if (existingDoc.abstract !== doc.abstract) {
+        log(process.stderr, false, existingDoc.uri, 'abstract mismatch');
+        modified = true;
+    }
+
+    if (doc.sections && doc.sections.length) {
+        existingDoc.sections = doc.sections;
+    } else {
+        console.error(doc);
+        log(process.stderr, false, existingDoc.uri, 'no sections found');
+    }
+
+    return modified;
 }
 
 var collection_ = null;
@@ -145,13 +169,13 @@ function collection(cb) {
     });
 }
 
-function log(csv /*, ... */) {
-    var data = Array.prototype.slice.call(arguments, 1).map(function (str) {
-        return String(str).replace(';', '.');
+function log(writer, csv /*, ... */) {
+    var data = Array.prototype.slice.call(arguments, 2).map(function (str) {
+        return String(str).replace(/"/g, '\x5c"');
     });
     if (csv) {
-        process.stdout.write('"' + data.join('";"') + '"\n');
+        writer.write('"' + data.join('";"') + '"\n');
     } else {
-        process.stdout.write(data.join(' ') + '\n');
+        writer.write(data.join(' ') + '\n');
     }
 }
