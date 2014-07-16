@@ -14,6 +14,7 @@ var queries = [
     '22836204[uid]',
     '24638193[uid]',
     '23621888[uid]',
+    '19151715[uid]',
     'diabetes AND hypertension AND nebivolol',
     'immunogenic histone-like protein',
     'HUR AND functionality',
@@ -21,8 +22,8 @@ var queries = [
     '"metabolism" AND ("autoimmunity" OR "autoimmune"))[Title]',
 ];
 
-s.find(queries[1], 0, 1000, function (err, res) {
-    // console.log(res);
+s.find(queries[8], 0, 1000, function (err, res) {
+    console.log(res);
     if (err) { return console.log(err); }
     res.forEach(function (entry) {
         var e = JSON.parse(JSON.stringify(entry));
