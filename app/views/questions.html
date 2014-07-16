@@ -32,8 +32,8 @@
             style="cursor:pointer">
           <td style="width:2em;text-align:right">{{$index + 1}}.</td>
           <td>{{question.body}}</td>
-          <td style="width:20px">
-            <span data-ng-if="question.finalized" title="Question is finalized">&#x2713;</span>
+          <td style="width:20px" data-ng-init="publication = question.publication[0] || 'p'">
+            <span title="Publication livel">{{ publication | uppercase }}</span>
           </td>
         </tr>
       </table>

@@ -160,6 +160,7 @@ angular.module('bioasq-at.services.question', [])
             } else {
                 $http.get('/backend/questions/' + id)
                 .success(function (data, status) {
+                    data.publication = data.publication || 'private';
                     if (!data.answer) {
                         data.answer = {};
                     }

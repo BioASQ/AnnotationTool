@@ -23,11 +23,12 @@
         <span class="is-finalized">Question finalized &#x2713;</span>
       </li>
       <li>
-        <button class="btn" style="width:15em"
-                data-ng-click="setFinalized(!question.finalized)">
-          <span data-ng-if="question.finalized">Unfinalize Question</span>
-          <span data-ng-if="!question.finalized">&#x2713; Save &amp; Finalize Question</span>
-        </button>
+        <label>Publication level</label>
+        <select data-ng-model="question.publication" required>
+          <option value="private">Private</option>
+          <option value="restricted">Restricted</option>
+          <option value="public">Public</option>
+        </select>
       </li>
       <li>
         <button data-ng-disabled="question.finalized"
