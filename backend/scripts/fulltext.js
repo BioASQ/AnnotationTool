@@ -87,7 +87,6 @@ URIStream.on('end', function () {
                                 logTitle);
                         }
                     });
-                    question.finalized = false;
                     question.revisit = true;
                     coll.save(question, { w: 1 }, cb);
                 });

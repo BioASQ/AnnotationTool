@@ -19,13 +19,15 @@
   </div>
   <div class="row">
     <ul class="inline pull-right">
-      <li data-ng-if="question.finalized">
-        <span class="is-finalized">Question finalized &#x2713;</span>
-      </li>
       <li>
-        <button data-ng-disabled="question.finalized"
-                class="btn btn-success"
-                data-ng-click="saveQuestion()">Save Question</button>
+        <label>Publication level</label>
+        <select data-ng-model="question.publication" required>
+          <option value="private">Private</option>
+          <option value="restricted">Restricted</option>
+          <option value="public">Public</option>
+        </select>
+      <li>
+        <button class="btn btn-success" data-ng-click="saveQuestion()">Save Question</button>
       </li>
     </ul>
   </div>
@@ -50,7 +52,7 @@
                   <i class="icon-share-alt"></i>
                 </a>
               </td>
-              <td style="width:20px" data-ng-disabled="question.finalized">
+              <td style="width:20px">
                 <button data-ng-if="concept.golden" class="btn btn-mini"
                         title="Remove from golden set"
                         data-ng-click="concept.golden=false">

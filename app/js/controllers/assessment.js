@@ -86,15 +86,6 @@ angular.module('bioasq-at.controllers.assessment', [])
         }
     };
 
-    $scope.setFinalized = function (finalized) {
-        $scope.question.finalized = !!finalized;
-        if (!!finalized) {
-            $scope.saveQuestion();
-        } else {
-            Questions.setFinalized(!!finalized);
-        }
-    };
-
     $scope.selectDocument = function (documentURI) {
         for (var i = 0; i < $scope.question.documents.length; i++) {
             if ($scope.question.documents[i].uri === documentURI) {

@@ -89,15 +89,11 @@ angular.module('bioasq-at.controllers.document', [])
     });
 
     $scope.startAnnotation = function () {
-        if (!$scope.question.finalized) {
-            viewerMouseDown(annotateButton);
-        }
+        viewerMouseDown(annotateButton);
     };
 
     $scope.endAnnotation = function () {
-        if (!$scope.question.finalized) {
-            viewerMouseUp(annotateButton);
-        }
+        viewerMouseUp(annotateButton);
     };
 
     $scope.nextSnippetInSection = function (sectionName) {
@@ -140,9 +136,6 @@ angular.module('bioasq-at.controllers.document', [])
     };
 
     $scope.$on('delete-annotation', function (event, localID) {
-        if ($scope.question.finalized) {
-            return;
-        }
         $scope.deleteSnippet(localID);
         prepareScopeVars($scope, $scope.selection.document);
         if (!$scope.$$phase) {

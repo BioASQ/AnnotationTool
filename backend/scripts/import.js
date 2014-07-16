@@ -105,7 +105,6 @@ connection.open(function (err, conn) {
                         if (doc.type === 'yesno') {
                             doc.answer.exact = doc.answer.exact.substr(0, 3).toLowerCase();
                         }
-                        doc.finalized = true;
                         questions.insert(doc, { safe: true }, callbackFactory.parallel());
                     });
 

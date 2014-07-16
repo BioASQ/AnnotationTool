@@ -136,14 +136,6 @@ angular.module('bioasq-at.services.question', [])
             return $http.post('/backend/questions/' + copy._id, copy);
         },
 
-        setFinalized: function (finalized) {
-            _selectedQuestion.finalized = finalized;
-            $http.post('/backend/questions/' + _selectedQuestion._id, {
-                _id: _selectedQuestion._id,
-                finalized: !!finalized
-            });
-        },
-
         delete: function (question) {
             $http.delete('/backend/questions/' + question._id);
         },

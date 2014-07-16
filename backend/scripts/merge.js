@@ -117,9 +117,6 @@ step(
             // reserve callback slot
             var questionCallback = questionsGroup();
 
-            // unfinalize for assessment
-            question.finalized = false;
-
             question.concepts = question.concepts.map(function (c) {
                 c.golden = true;
                 return c;

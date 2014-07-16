@@ -25,12 +25,6 @@ angular.module('bioasq-at.controllers.question', ['bioasq-at.services.question']
      */
 
     $scope.editQuestion = function (question) {
-        if (question.finalized) {
-            if (!confirm('Question is finalized. Do you want to unfinalize it?')) {
-                return;
-            }
-            $scope.question.finalized = false;
-        }
         $scope.question._body = $scope.question.body;
         $scope.question._type = $scope.question.type;
         $scope.editing  = true;

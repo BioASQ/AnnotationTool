@@ -19,13 +19,8 @@
   </div>
   <div class="row">
     <ul class="inline pull-right">
-      <li data-ng-if="question.finalized">
-        <span class="is-finalized">Question finalized &#x2713;</span>
-      </li>
       <li>
-        <button data-ng-disabled="question.finalized"
-                class="btn btn-success"
-                data-ng-click="saveQuestion()">Save Question</button>
+        <button class="btn btn-success" data-ng-click="saveQuestion()">Save Question</button>
       </li>
     </ul>
   </div>

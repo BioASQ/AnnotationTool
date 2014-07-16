@@ -19,9 +19,6 @@
   </div>
   <div class="row">
     <ul class="inline pull-right">
-      <li data-ng-if="question.finalized">
-        <span class="is-finalized">Question finalized &#x2713;</span>
-      </li>
       <li>
         <label>Publication level</label>
         <select data-ng-model="question.publication" required>
@@ -31,8 +28,7 @@
         </select>
       </li>
       <li>
-        <button data-ng-disabled="question.finalized"
-                class="btn btn-success"
+        <button class="btn btn-success"
                 data-ng-click="saveQuestion()">Save Question</button>
       </li>
     </ul>
@@ -43,7 +39,7 @@
   <div class="row">
     <div class="span12">
       <h3>Ideal answer</h3>
-      <textarea data-ng-disabled="question.finalized" class="span12" rows="6" data-ng-model="question.answer.ideal"></textarea>
+      <textarea class="span12" rows="6" data-ng-model="question.answer.ideal"></textarea>
     </div>
   </div>
 
@@ -55,21 +51,21 @@
       <div data-ng-switch="question.type">
         <div data-ng-switch-when="yesno">
           <label>
-            <input data-ng-disabled="question.finalized" type="radio" data-ng-model="question.answer.exact" value="yes" style="margin:-5px 8px 0 0"/>
+            <input type="radio" data-ng-model="question.answer.exact" value="yes" style="margin:-5px 8px 0 0"/>
             Yes
           </label>
           <label>
-            <input data-ng-disabled="question.finalized" type="radio" data-ng-model="question.answer.exact" value="no" style="margin:-5px 8px 0 0"/>
+            <input type="radio" data-ng-model="question.answer.exact" value="no" style="margin:-5px 8px 0 0"/>
             No
           </label>
         </div>
         <div data-ng-switch-when="factoid">
           <ul class="inline" style="display:inline-block">
             <li data-ng-repeat="e in question.answer.exact track by $index">
-              <input data-ng-disabled="question.finalized" type="text" data-ng-model="question.answer.exact[$index]">
+              <input type="text" data-ng-model="question.answer.exact[$index]">
             </li>
           </ul>
-          <button data-ng-disabled="question.finalized || !canAddSynonym()" title="Add a synonym" class="btn"
+          <button data-ng-disabled="!canAddSynonym()" title="Add a synonym" class="btn"
               data-ng-click="addSynonym()">
             <i class="icon-chevron-right"></i>
           </button>
@@ -79,16 +75,16 @@
             <li data-ng-repeat="e in question.answer.exact">
               <ul style="display:inline-block" class="inline" data-ng-init="parentIndex=$index">
                 <li data-ng-repeat="ee in e track by parentIndex-$index">
-                  <input data-ng-disabled="question.finalized" type="text" data-ng-model="question.answer.exact[parentIndex][$index]">
+                  <input type="text" data-ng-model="question.answer.exact[parentIndex][$index]">
                 </li>
               </ul>
-              <button data-ng-disabled="question.finalized || !canAddSynonym(parentIndex)" title="Add a synonym" class="btn"
+              <button data-ng-disabled="!canAddSynonym(parentIndex)" title="Add a synonym" class="btn"
                   data-ng-click="addSynonym(parentIndex)">
                 <i class="icon-chevron-right"></i>
               </button>
             </li>
           </ul>
-          <button data-ng-disabled="question.finalized || !canAddEntry()" title="Add a new list entry" class="btn"
+          <button data-ng-disabled="!canAddEntry()" title="Add a new list entry" class="btn"
              data-ng-click="addEntry()">
             <i class="icon-chevron-down"></i>
           </button>
@@ -118,7 +114,7 @@
                 </a>
               </td>
               <td style="width:20px">
-                <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                <button class="btn btn-mini"
                         title="Delete concept"
                         data-ng-click="deleteConcept($index)">
                   <i class="icon-remove"></i>
@@ -140,7 +136,7 @@
                   <td style="width:2em;text-align:right">{{$index + 1}}.</td>
                   <td>{{document.title}}</td>
                   <td style="width:20px">
-                    <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                    <button class="btn btn-mini"
                             title="Delete document"
                             data-ng-click="deleteDocument($index)">
                       <i class="icon-remove"></i>
@@ -192,7 +188,7 @@
                 </div>
               </td>
               <td style="width:20px">
-                <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                <button class="btn btn-mini"
                         title="Delete statement"
                         data-ng-click="deleteStatement($index)">
                   <i class="icon-remove"></i>
@@ -215,7 +211,7 @@
                 </button>
               </td>
               <td style="width:20px">
-                <button data-ng-disabled="question.finalized" class="btn btn-mini"
+                <button class="btn btn-mini"
                         title="Delete snippet"
                         data-ng-click="deleteSnippet(snippet._localID)">
                   <i class="icon-remove"></i>

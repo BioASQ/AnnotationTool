@@ -79,7 +79,7 @@
           </td>
           <td>
             <button class="btn btn-mini"
-                    data-ng-disabled="!question || question.finalized"
+                    data-ng-disabled="!question"
                     data-ng-click="toggleSelection(concept)">
               <i data-ng-class="{ 'icon-minus': isSelected(concept), 'icon-plus': !isSelected(concept) }"></i>
             </button>
@@ -133,7 +133,7 @@
           </td>
           <td>
             <button class="btn btn-mini"
-                    data-ng-disabled="!question || question.finalized"
+                    data-ng-disabled="!question"
                     data-ng-click="toggleSelection(document)">
               <i data-ng-class="{ 'icon-minus': isSelected(document), 'icon-plus': !isSelected(document) }"></i>
             </button>
@@ -183,7 +183,7 @@
           <!-- <td>{{statement.score | number:4}}</td> -->
           <td>
             <button class="btn btn-mini"
-                    data-ng-disabled="!question || question.finalized"
+                    data-ng-disabled="!question"
                     data-ng-click="toggleSelection(statement)"
                     title="Add {{statement.triples.length || 0}} triples">
               <i data-ng-class="{ 'icon-minus': isSelected(statement), 'icon-plus': !isSelected(statement) }"></i>
