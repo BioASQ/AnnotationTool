@@ -140,13 +140,24 @@ exports.createRouter = function (model, authentication) {
                         model.load2(id,
                                     req.session.data.user,
                                     { 'documents.sections': false, 'documents.abstract': false },
-                                    function (err, loadedQuestion) {
-                            sharing.updateQuestion(loadedQuestion, function (err) {
-                                if (err) {
-                                    return logger('info', 'error sharing question', err);
-                                }
-                                logger('info', 'question ' + id + ' shared to ' + config.sharing.address);
-                            });
+                        function (err, loadedQuestion) {
+                            if (loadedQuestion.publication === 'restricted'
+                                || loadedQuestion.publication === 'public') {
+
+                                sharing.updateQuestion(loadedQuestion, function (err) {
+                                    if (err) {
+                                        return logger('info', 'error sharing question', err);
+                                    }
+                                    logger('info', 'question ' + id + ' shared to ' + config.sharing.address);
+                                });
+                            } else if (loadedQuestion.isShared && loadedQuestion.publication === 'private') {
+                                sharing.removeQuestion(loadedQuestion.id, function (err) {
+                                    if (err) {
+                                        return logger('info', 'error sharing question', err);
+                                    }
+                                    logger('info', 'question ' + id + ' removed from sharing to ' + config.sharing.address);
+                                });
+                            }
                         });
                     }
                 });
