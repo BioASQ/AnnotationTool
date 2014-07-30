@@ -85,8 +85,8 @@ angular.module('bioasq-at', dependencies)
     }]);
 }])
 .run(['$rootScope', '$cookies', 'Routes', function ($scope, $cookies, Routes) {
-    // $scope.mode = 'annotation';
-    $scope.mode = 'assessment';
+    $scope.mode = 'annotation';
+    // $scope.mode = 'assessment';
 
     $scope.$watch('user', function (newValue, oldValue) {
         if (!newValue || !oldValue || newValue.id !== oldValue.id) {
