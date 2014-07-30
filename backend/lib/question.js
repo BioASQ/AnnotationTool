@@ -101,7 +101,7 @@ Question.prototype.update = function (id, question, user, callback) {
                 }
             });
 
-            coll.save(res, { 'save': true }, callback);
+            coll.save(res, { 'w': 1 }, callback);
         });
     });
 };
@@ -110,7 +110,7 @@ Question.prototype.del = function (id, user, callback) {
     if (typeof user == 'undefined') { return callback(Error('No valid user.')); }
 
     this._collection(callback, function (err, coll) {
-        coll.remove({ '_id': ObjectID(id), 'creator': user }, { 'save': true }, function (err) {
+        coll.remove({ '_id': ObjectID(id), 'creator': user }, { 'w': 1 }, function (err) {
             if (err) { return callback(err); }
             callback(null);
         });

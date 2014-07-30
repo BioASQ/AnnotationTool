@@ -6,11 +6,18 @@ var Sharing = exports.Sharing = function (config) {
     this._enabled = !!config.enabled;
 };
 
+Sharing.prototype.enabled = function () {
+    return this._enabled;
+};
+
 Sharing.prototype.updateQuestion = function (question, cb) {
     if (!this._enabled) { return; }
-    if (question.finalized) {
-        this.send(question, cb);
-    }
+    this.send(question, cb);
+};
+
+Sharing.prototype.removeQuestion = function (questionID, cb) {
+    if (!this._enabled) { return; }
+    this.send({ _id: questionID, publication: 'private' }, cb);
 };
 
 Sharing.prototype.send = function (question, cb) {
@@ -32,10 +39,13 @@ Sharing.prototype.send = function (question, cb) {
         };
     var request = http.request(httpOptions);
     request.addListener('response', function (r) {
-        cb(null, r);
-    });
-    request.addListener('error', function (e) {
-        cb(e);
+        r.addListener('close', function () {
+            cb(null, data);
+        });
+        r.addListener('error', function (e) {
+            cb(e);
+        });
+        r.resume();
     });
 
     request.write(data);

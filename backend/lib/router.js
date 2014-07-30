@@ -90,7 +90,7 @@ exports.createRouter = function (model, authentication) {
                 this.get(idRegEx).bind(function (req, res, id) {
                     model.load2(id,
                                 req.session.data.user,
-                                { 'documents.sections': false, 'documents.abstract': false },
+                                { 'documents.sections': false, 'documents.abstract': false, is_shared: false },
                                 function (err, question) {
                         var time = Date.now();
                         var logData = {
@@ -134,32 +134,36 @@ exports.createRouter = function (model, authentication) {
                             logger('info', 'updating question', logData);
                             res.send(200);
                         }
+
+                        if (sharing.enabled()) {
+                            model.load2(id,
+                                        req.session.data.user,
+                                        { 'documents.sections': false, 'documents.abstract': false },
+                            function (err, loadedQuestion) {
+                                if (err) {
+                                    return logger('info', 'error retrieving question for sharing', err);
+                                }
+                                var shared = (loadedQuestion.publication !== 'private');
+                                if (shared) {
+                                    sharing.updateQuestion(loadedQuestion, function (err) {
+                                        if (err) { return logger('info', 'error sharing question: ' + id, err); }
+                                        logger('info', 'question ' + id + ' shared to ' + config.sharing.address);
+                                    });
+                                } else if (loadedQuestion.is_shared && loadedQuestion.publication === 'private') {
+                                    sharing.removeQuestion(id, function (err) {
+                                        if (err) { return logger('info', 'error sharing question: ' + id, err); }
+                                        logger('info', 'question ' + id + ' removed from sharing to ' + config.sharing.address);
+                                    });
+                                }
+                                model.update(id, { is_shared: shared }, req.session.data.user, function (err) {
+                                    if (err) {
+                                        logger('error', 'could not update shared question: ' + id, err);
+                                        return;
+                                    }
+                                });
+                            });
+                        }
                     });
-
-                    if (config.sharing && !!config.sharing.enabled) {
-                        model.load2(id,
-                                    req.session.data.user,
-                                    { 'documents.sections': false, 'documents.abstract': false },
-                        function (err, loadedQuestion) {
-                            if (loadedQuestion.publication === 'restricted'
-                                || loadedQuestion.publication === 'public') {
-
-                                sharing.updateQuestion(loadedQuestion, function (err) {
-                                    if (err) {
-                                        return logger('info', 'error sharing question', err);
-                                    }
-                                    logger('info', 'question ' + id + ' shared to ' + config.sharing.address);
-                                });
-                            } else if (loadedQuestion.isShared && loadedQuestion.publication === 'private') {
-                                sharing.removeQuestion(loadedQuestion.id, function (err) {
-                                    if (err) {
-                                        return logger('info', 'error sharing question', err);
-                                    }
-                                    logger('info', 'question ' + id + ' removed from sharing to ' + config.sharing.address);
-                                });
-                            }
-                        });
-                    }
                 });
 
                 /*
