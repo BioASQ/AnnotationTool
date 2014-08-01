@@ -42,10 +42,10 @@ Sharing.prototype.send = function (question, cb) {
         r.addListener('close', function () {
             cb(null, data);
         });
-        r.addListener('error', function (e) {
-            cb(e);
-        });
         r.resume();
+    });
+    request.addListener('error', function (e) {
+        cb(e);
     });
 
     request.write(data);
