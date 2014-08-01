@@ -32,8 +32,12 @@
             style="cursor:pointer">
           <td style="width:2em;text-align:right">{{$index + 1}}.</td>
           <td>{{question.body}}</td>
-          <td style="width:20px" data-ng-init="publication = question.publication[0] || 'p'">
-            <span title="Publication livel">{{ publication | uppercase }}</span>
+          <td style="width:20px">
+            <div data-ng-switch="question.publication">
+              <i data-ng-switch-when="public" class="icon-eye-open" title="public"></i>
+              <i data-ng-switch-when="restricted" class="icon-check" title="restricted"></i>
+              <i data-ng-switch-default class="icon-lock" title="private"></i>
+            </div>
           </td>
         </tr>
       </table>
