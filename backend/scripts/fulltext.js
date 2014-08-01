@@ -21,8 +21,6 @@ if (typeof program.databaseName == 'undefined' || typeof program.collectionName 
     process.exit(-1);
 }
 
-var experts = [ 'a.bunevicius@yahoo.com', 'christoforos.nikolaou@gmail.com', 'cpantos@med.uoa.gr', 'dsanoudou@bioacademy.gr', 'iervasi@ifc.cnr.it', 'mvoutsin@bio.demokritos.gr', 'rob@ktl.mii.lt', 'roderic.guigo@crg.cat', 'samiotaki@fleming.gr', 'skossida@bioacademy.gr', 'toni_staykova@yahoo.co.nz', 'vasilis.promponas@gmail.com' ];
-
 var mongodb  = require('mongodb'),
     server   = new mongodb.Server('127.0.0.1', '27017', {}),
     database = new mongodb.Db(program.databaseName, server, { safe: false }),
@@ -40,7 +38,6 @@ URIStream.on('data', function (URI) {
 URIStream.on('end', function () {
     collection(function (coll) {
         var cursor = coll.find({
-            'creator': { '$in': experts },
             'snippets.document': { '$in': Object.keys(documentCache) }
         });
         step(
