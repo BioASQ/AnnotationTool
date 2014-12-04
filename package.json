@@ -24,6 +24,7 @@
       "journey": "0.4.0-pre-3",
       "nodemailer": "0.3.37",
       "winston": "0.6.2",
-      "winston-mongodb": "0.4.0"
+      "winston-mongodb": "0.4.0",
+      "eyes": "0.1.8"
   }
 }
