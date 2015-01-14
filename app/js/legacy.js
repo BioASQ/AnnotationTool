@@ -90,8 +90,15 @@ var snippetForSelection = function ($annotateButton) {
         return;
     }
 
-    var startSectionName = $(range.startContainer).closest('.section').data('sectionName'),
+    var startSection = $(range.startContainer).closest('.section'),
+        startSectionName = startSection.data('sectionName'),
         endSectionName   = $(range.endContainer).closest('.section').data('sectionName');
+
+    // bug fix when selection starts with the 1st letter.
+    if(startSectionName === null){
+        startSection = $(range.startContainer).next();
+        startSectionName = startSection.data('sectionName');
+    }
 
     if (startSectionName !== endSectionName) {
         alert('Snippets spanning sections are currently not supported!');
@@ -100,7 +107,7 @@ var snippetForSelection = function ($annotateButton) {
 
     var cRange, newSnippet;
     if (typeof startSectionName !== 'undefined' && typeof endSectionName !== 'undefined') {
-        cRange = range.toCharacterRange($(range.startContainer).closest('.section').get(0));
+        cRange = range.toCharacterRange(startSection.get(0));
         newSnippet = {
             type: 'snippet',
             beginSection: startSectionName,
