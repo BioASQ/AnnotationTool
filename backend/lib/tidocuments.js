@@ -21,7 +21,7 @@ TIDocuments.prototype._transform = function (results) {
             title: res.title ? res.title : res.documentAbstract.substr(0, 20) + '...',
             abstract: res.documentAbstract
         };
-        if (typeof res.sections != 'undefined') { result.sections = res.sections; }
+        //if (typeof res.sections != 'undefined') { result.sections = res.sections; }
         if (typeof res.score != 'undefined') { result.score = res.score; }
 
         return result;
