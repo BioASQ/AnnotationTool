@@ -167,23 +167,27 @@ angular.module('bioasq-at.controllers.assessment', [])
     };
 
     $scope.makeGolden = function (snippet) {
+
         var documentIsGolden = $scope.question.documents.some(function (doc) {
             return (doc.golden && (doc.uri === snippet.document));
         });
         if (!documentIsGolden && confirm('Do you also want to add the referred document to the golden set?')) {
             var doc = findDocument($scope.question, snippet.document);
-            $scope.question.documents.push(doc);
+            if(doc > -1){
+              $scope.question.documents[doc].golden = true;
+            }else{
+              alert('Could not find the document to that snippet.');
+            }
         }
         snippet.golden = true;
     }
-    
+
     var findDocument = function (question, pubMedURI) {
         for (var i = 0; i < question.documents.length; i++) {
             if (question.documents[i].uri === pubMedURI) {
                 return i;
             }
         }
-
         return -1;
     };
 });
