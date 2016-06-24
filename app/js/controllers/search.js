@@ -139,6 +139,8 @@ angular.module('bioasq-at.controllers.search', ['bioasq-at.services.search'])
         fetchConceptsIfNeeded($scope.terms, $scope.pages.concepts.current - 1, itemsPerPage);
 
         delete $scope.documents;
+		// for each new query show results from page 1
+		$scope.pages.documents.current = 1;
         fetchDocumentsIfNeeded($scope.terms, $scope.pages.documents.current - 1, itemsPerPage);
 
         delete $scope.statements;
