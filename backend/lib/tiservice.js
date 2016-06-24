@@ -36,12 +36,12 @@ TIService.prototype._request = function (URL, options, /* Object */ data, cb) {
      * the last of which is the callback.
      */
     cb = cb || data;
-
     this._resetTimeout();
     var urlObj = url.parse(URL);
     var dataStr = '';
     var httpOptions = {
-        'hostname': urlObj.host,
+		//urlObj.hostname used because urlObj.host includes port number (urlObj.port) which is added separately too.
+        'hostname': urlObj.hostname,
         'port': urlObj.port ? urlObj.port : 80,
         'path': urlObj.path,
         'method': options.method ? options.method : 'POST',
